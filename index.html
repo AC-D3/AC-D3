@@ -1,107 +1,106 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-    <meta charset="utf-8">
-    <title>Simple Bubble Chart</title>
-</head>
+  <head>
+      <meta charset="utf-8">
+      <title>AC-D3 Bubble Chart</title>
+  </head>
 
-<body>
+  <body>
 
-    <div id='vis'></div>
+      <div id='vis'></div>
 
-    <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script>
-      dataset = {
-          "children": [{
-              "src": "http://upload.wikimedia.org/wikipedia/commons/7/79/Big_Buck_Bunny_small.ogv",
-              "views": 2
-          }, {
-              "src": "http://yt-dash-mse-test.commondatastorage.googleapis.com/media/car-20120827-85.mp4",
-              "views": 2
-          }, {
-              "src": "https://upload.wikimedia.org/wikipedia/commons/f/f9/STS-132_Liftoff_Space_Shuttle_Atlantis.ogv",
-              "views": 1
-          }, {
-              "src": "https://upload.wikimedia.org/wikipedia/commons/0/04/Play_fight_of_polar_bears_edit_1.ogv",
-              "views": 2
-          }, {
-              "src": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Enallagma_cyathigerum_2.ogv",
-              "views": 3
-          }, {
-              "src": "https://upload.wikimedia.org/wikipedia/commons/8/82/Sarychev_Peak_eruption_on_12_June_2009%2C_oblique_satellite_view.ogv",
-              "views": 1
-          }, {
-              "src": "https://upload.wikimedia.org/wikipedia/commons/8/82/Sarychev_Peak_eruption_on_12_June_2009%2C_oblique_satellite_view.ogv",
-              "views": 1
-          }, {
-              "src": "https://upload.wikimedia.org/wikipedia/commons/8/82/Sarychev_Peak_eruption_on_12_June_2009%2C_oblique_satellite_view.ogv",
-              "views": 1
-          }, {
-              "src": "https://upload.wikimedia.org/wikipedia/commons/8/82/Sarychev_Peak_eruption_on_12_June_2009%2C_oblique_satellite_view.ogv",
-              "views": 1
-          }, {
-              "src": "https://upload.wikimedia.org/wikipedia/commons/8/82/Sarychev_Peak_eruption_on_12_June_2009%2C_oblique_satellite_view.ogv",
-              "views": 1
-          }, {
-              "src": "https://upload.wikimedia.org/wikipedia/commons/8/82/Sarychev_Peak_eruption_on_12_June_2009%2C_oblique_satellite_view.ogv",
-              "views": 1
-          }]
-      };
+      <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+      <script type="text/javascript">
 
-      var diameter = 600;
+        let data = {
+            "children": [{
+                "src": "http://upload.wikimedia.org/wikipedia/commons/7/79/Big_Buck_Bunny_small.ogv",
+                "views": 2
+            }, {
+                "src": "http://yt-dash-mse-test.commondatastorage.googleapis.com/media/car-20120827-85.mp4",
+                "views": 2
+            }, {
+                "src": "https://upload.wikimedia.org/wikipedia/commons/f/f9/STS-132_Liftoff_Space_Shuttle_Atlantis.ogv",
+                "views": 1
+            }, {
+                "src": "https://upload.wikimedia.org/wikipedia/commons/0/04/Play_fight_of_polar_bears_edit_1.ogv",
+                "views": 2
+            }, {
+                "src": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Enallagma_cyathigerum_2.ogv",
+                "views": 3
+            }, {
+                "src": "https://upload.wikimedia.org/wikipedia/commons/8/82/Sarychev_Peak_eruption_on_12_June_2009%2C_oblique_satellite_view.ogv",
+                "views": 1
+            }, {
+                "src": "https://upload.wikimedia.org/wikipedia/commons/8/82/Sarychev_Peak_eruption_on_12_June_2009%2C_oblique_satellite_view.ogv",
+                "views": 1
+            }, {
+                "src": "https://upload.wikimedia.org/wikipedia/commons/8/82/Sarychev_Peak_eruption_on_12_June_2009%2C_oblique_satellite_view.ogv",
+                "views": 1
+            }, {
+                "src": "https://upload.wikimedia.org/wikipedia/commons/8/82/Sarychev_Peak_eruption_on_12_June_2009%2C_oblique_satellite_view.ogv",
+                "views": 1
+            }, {
+                "src": "https://upload.wikimedia.org/wikipedia/commons/8/82/Sarychev_Peak_eruption_on_12_June_2009%2C_oblique_satellite_view.ogv",
+                "views": 1
+            }, {
+                "src": "https://upload.wikimedia.org/wikipedia/commons/8/82/Sarychev_Peak_eruption_on_12_June_2009%2C_oblique_satellite_view.ogv",
+                "views": 1
+            }]
+        }
 
-      var bubble = d3.pack(dataset)
-              .size([diameter, diameter])
-              .padding(1.5);
-      var svg = d3.select("#vis")
-              .append("svg")
-              .attr("width", diameter)
-              .attr("height", diameter)
-              .attr("class", "bubble");
+        const diameter = 600;
 
-      //calculates radius, x and y positions for all child nodes
-      var root = d3.hierarchy(dataset)
-              .sum(function(d) { return d.views; });
+        const bubble = d3.pack(data)
+                .size([diameter, diameter])
+                .padding(1.5);
 
-      var node = svg.selectAll(".node")
-              .data(bubble(root).descendants())
-              .enter()
-              //only keeps objects that don't have children property
-              .filter((d) => !d.children)
+        const svg = d3.select("#vis")
+                .append("svg")
+                .attr("width", diameter)
+                .attr("height", diameter)
+                .attr("class", "bubble");
 
-      var g = node.append('g')
-                .attr("class", "node")
-                .attr("transform", (d) => "translate(" + d.x + "," + d.y + ")")
+        //calculates radius, x and y positions for all child nodes
+        const root = d3.hierarchy(data)
+                .sum(function(d) { return d.views; });
 
-      var foreignObject = g.append('foreignObject')
-                .attr('width', (d) => d.r * 2)
-                .attr('height', (d) => d.r * 2)
-                .attr('x', (d) => -d.r)
-                .attr('y', (d) => -d.r);
+        const node = svg.selectAll(".node")
+                .data(bubble(root).descendants())
+                .enter()
+                //only keeps objects that don't have children property
+                .filter((d) => !d.children)
+
+        const g = node.append('g')
+                  .attr("class", "node")
+                  .attr("transform", (d) => "translate(" + d.x + "," + d.y + ")")
+
+        const foreignObject = g.append('foreignObject')
+                  .attr('width', (d) => d.r * 2)
+                  .attr('height', (d) => d.r * 2)
+                  .attr('x', (d) => -d.r)
+                  .attr('y', (d) => -d.r);
 
 
-      var video = foreignObject.append('xhtml:video')
-                .attr('src', (d) => d.data.src)
-                .property('volume', '0.0')
-                .attr('autoplay', '')
-                .attr('loop', '')
-                .attr('width', (d) => d.r * 2)
-                .attr('height', (d) => d.r * 2)
-                .style('position', 'fixed')
-                .style('border-radius', '50%')
-                .style('object-fit', 'cover')
-                .style('width', '100%')
-                .style('height', '100%');
+        const video = foreignObject.append('xhtml:video')
+                  .attr('src', (d) => d.data.src)
+                  .property('volume', '0.0')
+                  .attr('autoplay', '')
+                  .attr('loop', '')
+                  .attr('width', (d) => d.r * 2)
+                  .attr('height', (d) => d.r * 2)
+                  .style('position', 'fixed')
+                  .style('border-radius', '50%')
+                  .style('object-fit', 'cover')
+                  .style('width', '100%')
+                  .style('height', '100%');
 
-      //position circle below video bubble for event listeners
-      g.append("circle")
-              .attr("r", (d) => d.r)
-              .style("fill", function(d) {
-                  return color(d.src);
-              });
-    </script>
+        //position circle below video bubble to handle mouse events
+        const circle = g.append("circle")
+                  .attr("r", (d) => d.r);
+      </script>
 
-</body>
+  </body>
 
 </html>
