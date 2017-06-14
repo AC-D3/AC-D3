@@ -10,18 +10,18 @@ var parseTime = d3.timeParse("%d-%b-%y");
 // set the ranges
 var x = d3.scaleTime().range([0, width]);
 var y = d3.scaleLinear().range([height, 0]);
-var r = d3.scaleLinear().range([20,60]);
+var r = d3.scaleLinear().range([20, 60]);
 
 /* x(input) = ((Jan, 2 2000)/(Jan, 1 2000))*input + 0 */
-    // console.log(' parseTime("18-Apr-12") --> ', parseTime("1-Jan-00"))
-    // console.log(' x(parseTime("18-Apr-12")) --> ', x(parseTime("1-Jan-00")))
-    // console.log(' parseTime("18-Apr-12") --> ', parseTime("2-Jan-00"))
-    // console.log(' x(parseTime("18-Apr-12")) --> ', x(parseTime("2-Jan-00")))
+// console.log(' parseTime("18-Apr-12") --> ', parseTime("1-Jan-00"))
+// console.log(' x(parseTime("18-Apr-12")) --> ', x(parseTime("1-Jan-00")))
+// console.log(' parseTime("18-Apr-12") --> ', parseTime("2-Jan-00"))
+// console.log(' x(parseTime("18-Apr-12")) --> ', x(parseTime("2-Jan-00")))
 
 /* y(input) = -450*input + 450 */
-    // console.log('y(0) --> ', y(0))
-    // console.log('y(.5) --> ', y(.5))
-    // console.log('y(1) --> ', y(1))
+// console.log('y(0) --> ', y(0))
+// console.log('y(.5) --> ', y(.5))
+// console.log('y(1) --> ', y(1))
 
 // append the svg object to the body of the page
 // appends a 'group' element to 'svg'
@@ -57,13 +57,32 @@ d3.csv("./charts/bubble-scatter-chart-data.csv", function (error, data) {
     const node = svg.selectAll("dot")
         .data(data)
         .enter().append("g")
-        
+        .attr("transform", (d) => "translate(" + x(d.date) + "," + y(d.views) + ")")
+
     node.append("circle")
         .attr("r", function (d) { return r(d.popularity); })
-        .attr("cx", function (d) { return x(d.date); })
-        .attr("cy", function (d) { return y(d.views); })
+    // .attr("cx", function (d) { return x(d.date); })
+    // .attr("cy", function (d) { return y(d.views); })
 
     node.append("foreignObject")
+        .attr('width', (d) => r(d.popularity) * 2)
+        .attr('height', (d) => r(d.popularity) * 2)
+        .attr('x', (d) => -r(d.popularity))
+        .attr('y', (d) => -r(d.popularity))
+        .style('pointer-events', 'none')
+        .append('xhtml:video')
+        .property('volume', '0.0')
+        .attr('src', (d) => d.url)
+        .attr('autoplay', '')
+        .attr('loop', '')
+        .attr('width', (d) => r(d.popularity) * 2)
+        .attr('height', (d) => r(d.popularity) * 2)
+        .attr('id', (d, i) => i)
+        .style('position', 'fixed')
+        .style('border-radius', '50%')
+        .style('object-fit', 'cover')
+        .style('width', '100%')
+        .style('height', '100%');
 
     // Add the X Axis
     svg.append("g")
