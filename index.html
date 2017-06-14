@@ -74,7 +74,7 @@
 
         const g = node.append('g')
                   .attr("class", "node")
-                  .attr("transform", (d) => "translate(" + d.x + "," + d.y + ")")
+                  .attr("transform", (d) => "translate(" + d.x + "," + d.y + ")");
 
         const foreignObject = g.append('foreignObject')
                   .attr('width', (d) => d.r * 2)
