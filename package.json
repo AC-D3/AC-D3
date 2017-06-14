@@ -4,8 +4,7 @@
   "description": "d3 bubble demo",
   "main": "index.html",
   "scripts": {
-    "start": "browser-sync start -s -f index.html src --no-ui --no-notify",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "browser-sync start -s -f index.html src --no-ui --no-notify"
   },
   "author": "",
   "license": "ISC",
@@ -14,5 +13,5 @@
   },
   "devDependencies": {
     "browser-sync": "^2.18.8"
-  }//test
+  }
 }
