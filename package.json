@@ -2,10 +2,9 @@
   "name": "d3-visual",
   "version": "1.0.0",
   "description": "d3 bubble demo",
-  "main": "bubble-chart.html",
+  "main": "index.html",
   "scripts": {
-    "start": "browser-sync start -s -f bubble-chart.html src --no-ui --no-notify",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "browser-sync start -s -f index.html src --no-ui --no-notify"
   },
   "author": "",
   "license": "ISC",
