@@ -48,8 +48,16 @@ d3.csv("./charts/bubble-scatter-chart-data.csv", function (error, data) {
         d.popularity = +d.popularity;
     });
 
+    /* playing around with dates in d3 */
+    // const minDate1 = d3.min(data, function (d) { return d.date; })
+    // console.log('minDate --> ', minDate1)
+    // const offsetDate = d3.timeDay.offset(minDate1,-1)
+    // console.log('offsetDate --> ', offsetDate)
+
     // Scale the range of the data
-    x.domain(d3.extent(data, function (d) { return d.date; }));
+    const minDate = d3.min(data, function (d) { return d.date; })
+    const maxDate = d3.max(data, function (d) { return d.date; })
+    x.domain([ d3.timeDay.offset(minDate,-1) , d3.timeDay.offset(maxDate,+1) ]);    //padding added so that nodes don't go over axis
     y.domain([0, d3.max(data, function (d) { return d.views; })]);
     r.domain(d3.extent(data, function (d) { return d.popularity; }));
 
@@ -61,8 +69,6 @@ d3.csv("./charts/bubble-scatter-chart-data.csv", function (error, data) {
 
     node.append("circle")
         .attr("r", function (d) { return r(d.popularity); })
-    // .attr("cx", function (d) { return x(d.date); })
-    // .attr("cy", function (d) { return y(d.views); })
 
     node.append("foreignObject")
         .attr('width', (d) => r(d.popularity) * 2)
