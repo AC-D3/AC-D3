@@ -80,8 +80,8 @@
                   .attr('width', (d) => d.r * 2)
                   .attr('height', (d) => d.r * 2)
                   .attr('x', (d) => -d.r)
-                  .attr('y', (d) => -d.r);
-
+                  .attr('y', (d) => -d.r)
+                  .style('pointer-events', 'none');
 
         const video = foreignObject.append('xhtml:video')
                   .attr('src', (d) => d.data.src)
@@ -90,6 +90,7 @@
                   .attr('loop', '')
                   .attr('width', (d) => d.r * 2)
                   .attr('height', (d) => d.r * 2)
+                  .attr('id', (d, i) => i)
                   .style('position', 'fixed')
                   .style('border-radius', '50%')
                   .style('object-fit', 'cover')
@@ -98,7 +99,38 @@
 
         //position circle below video bubble to handle mouse events
         const circle = g.append("circle")
-                  .attr("r", (d) => d.r);
+                  .attr("r", (d) => d.r)
+                  .on('mouseenter', handleMouseEnter)
+                  .on('mouseleave', handleMouseLeave);
+
+
+
+
+
+
+    function handleMouseEnter(d, i) {
+    console.log('enter')
+    let video = document.getElementById(i);
+    video.volume = 1
+   
+    //youtube API method
+    // youtubePlayer.unMute()
+
+    //vimeo API method
+    // vimeoPlayer.setVolume(1)
+    }
+
+    function handleMouseLeave(d, i) {
+    console.log('leave')
+    let video = document.getElementById(i);
+    video.volume = 0
+    //youtube API method
+    // youtubePlayer.mute()
+
+    //vimeo API method
+    // vimeoPlayer.setVolume(0)
+    
+    }
       </script>
 
   </body>
