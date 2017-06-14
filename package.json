@@ -14,5 +14,5 @@
   },
   "devDependencies": {
     "browser-sync": "^2.18.8"
-  }//test
+  }
 }
