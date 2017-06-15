@@ -46,7 +46,7 @@ d3.csv("./datasets/dataset-1a_movies.csv", function (error, data) {
     const maxBudget = d3.max(data, function (d) { return d.productionBudget; })
     const minGross = d3.min(data, function (d) { return d.worldwideGross; })
     const maxGross = d3.max(data, function (d) { return d.worldwideGross; })
-    const xPadding = 200;
+    const xPadding = 300;
     const yPadding = 30000000;
     x.domain([d3.timeDay.offset(minDate, -xPadding), d3.timeDay.offset(maxDate, +xPadding)]);
     y.domain([minBudget - yPadding, maxBudget + yPadding]);
@@ -84,8 +84,8 @@ d3.csv("./datasets/dataset-1a_movies.csv", function (error, data) {
         .style('height', '100%');
 
     node.append('text')
-        .attr("x", 50)
-        .attr("y", 50)
+        .attr("x", (d) => r(d.worldwideGross))
+        .attr("y", (d) => r(d.worldwideGross))
         .text((d) => d.movieName )
 
     // Add the X Axis
