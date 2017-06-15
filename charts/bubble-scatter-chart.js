@@ -32,7 +32,7 @@ d3.csv("./datasets/dataset-1a_movies.csv", function (error, data) {
         d.worldwideGross = +d.worldwideGross.replace(/[$, ]/g,'');
         d.releaseDate = parseTime(d.releaseDate);
     });
-    
+
     /* playing around with dates in d3 */
     // const minDate1 = d3.min(data, function (d) { return d.date; })
     // console.log('minDate --> ', minDate1)
@@ -61,13 +61,15 @@ d3.csv("./datasets/dataset-1a_movies.csv", function (error, data) {
     node.append("circle")
         .attr("r", function (d) { return r(d.worldwideGross); })
 
-    node.append("foreignObject")
+
+    const foreignObject = node.append("foreignObject")
         .attr('width', (d) => r(d.worldwideGross) * 2)
         .attr('height', (d) => r(d.worldwideGross) * 2)
         .attr('x', (d) => -r(d.worldwideGross))
         .attr('y', (d) => -r(d.worldwideGross))
         .style('pointer-events', 'none')
-        .append('xhtml:video')
+
+    foreignObject.append('xhtml:video')
         .property('volume', '0.0')
         .attr('src', (d) => d.URL)
         .attr('autoplay', '')
@@ -80,6 +82,11 @@ d3.csv("./datasets/dataset-1a_movies.csv", function (error, data) {
         .style('object-fit', 'cover')
         .style('width', '100%')
         .style('height', '100%');
+
+    node.append('text')
+        .attr("x", 50)
+        .attr("y", 50)
+        .text((d) => d.movieName )
 
     // Add the X Axis
     svg.append("g")
