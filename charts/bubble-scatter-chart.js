@@ -1,27 +1,17 @@
 // set the dimensions and margins of the graph
-var margin = { top: 60, right: 60, bottom: 30, left: 60 },
+var margin = { top: 60, right: 60, bottom: 30, left: 70 },
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
 // parse the date / time
 var parseTime = d3.timeParse("%d-%b-%y");
+var parseTime2 = d3.timeParse("%b/%d/%y");
 
 
 // set the ranges
 var x = d3.scaleTime().range([0, width]);
 var y = d3.scaleLinear().range([height, 0]);
 var r = d3.scaleLinear().range([20, 60]);
-
-/* x(input) = ((Jan, 2 2000)/(Jan, 1 2000))*input + 0 */
-// console.log(' parseTime("18-Apr-12") --> ', parseTime("1-Jan-00"))
-// console.log(' x(parseTime("18-Apr-12")) --> ', x(parseTime("1-Jan-00")))
-// console.log(' parseTime("18-Apr-12") --> ', parseTime("2-Jan-00"))
-// console.log(' x(parseTime("18-Apr-12")) --> ', x(parseTime("2-Jan-00")))
-
-/* y(input) = -450*input + 450 */
-// console.log('y(0) --> ', y(0))
-// console.log('y(.5) --> ', y(.5))
-// console.log('y(1) --> ', y(1))
 
 // append the svg object to the body of the page
 // appends a 'group' element to 'svg'
@@ -34,20 +24,15 @@ var svg = d3.select("body").append("svg")
     "translate(" + margin.left + "," + margin.top + ")");
 
 
-// Get the data
-d3.csv("./charts/bubble-scatter-chart-data.csv", function (error, data) {
+d3.csv("./datasets/dataset-1a_movies.csv", function (error, data) {
+    console.log('movie data --> ', data)
 
-    console.log('data --> ', data)
-
-    if (error) throw error;
-
-    // format the data
     data.forEach(function (d) {
-        d.date = parseTime(d.date);
-        d.views = +d.views;
-        d.popularity = +d.popularity;
+        d.productionBudget = +d.productionBudget.replace(/[$, ]/g,'');
+        d.worldwideGross = +d.worldwideGross.replace(/[$, ]/g,'');
+        d.releaseDate = parseTime(d.releaseDate);
     });
-
+    
     /* playing around with dates in d3 */
     // const minDate1 = d3.min(data, function (d) { return d.date; })
     // console.log('minDate --> ', minDate1)
@@ -55,34 +40,40 @@ d3.csv("./charts/bubble-scatter-chart-data.csv", function (error, data) {
     // console.log('offsetDate --> ', offsetDate)
 
     // Scale the range of the data
-    const minDate = d3.min(data, function (d) { return d.date; })
-    const maxDate = d3.max(data, function (d) { return d.date; })
-    x.domain([ d3.timeDay.offset(minDate,-1) , d3.timeDay.offset(maxDate,+1) ]);    //padding added so that nodes don't go over axis
-    y.domain([0, d3.max(data, function (d) { return d.views; })]);
-    r.domain(d3.extent(data, function (d) { return d.popularity; }));
+    const minDate = d3.min(data, function (d) { return d.releaseDate; })
+    const maxDate = d3.max(data, function (d) { return d.releaseDate; })
+    const minBudget = d3.min(data, function (d) { return d.productionBudget; })
+    const maxBudget = d3.max(data, function (d) { return d.productionBudget; })
+    const minGross = d3.min(data, function (d) { return d.worldwideGross; })
+    const maxGross = d3.max(data, function (d) { return d.worldwideGross; })
+    const xPadding = 200;
+    const yPadding = 30000000;
+    x.domain([d3.timeDay.offset(minDate, -xPadding), d3.timeDay.offset(maxDate, +xPadding)]);
+    y.domain([minBudget - yPadding, maxBudget + yPadding]);
+    r.domain([minGross, maxGross]);
 
     // Add the scatterplot
     const node = svg.selectAll("dot")
         .data(data)
         .enter().append("g")
-        .attr("transform", (d) => "translate(" + x(d.date) + "," + y(d.views) + ")")
+        .attr("transform", (d) => "translate(" + x(d.releaseDate) + "," + y(d.productionBudget) + ")")
 
     node.append("circle")
-        .attr("r", function (d) { return r(d.popularity); })
+        .attr("r", function (d) { return r(d.worldwideGross); })
 
     node.append("foreignObject")
-        .attr('width', (d) => r(d.popularity) * 2)
-        .attr('height', (d) => r(d.popularity) * 2)
-        .attr('x', (d) => -r(d.popularity))
-        .attr('y', (d) => -r(d.popularity))
+        .attr('width', (d) => r(d.worldwideGross) * 2)
+        .attr('height', (d) => r(d.worldwideGross) * 2)
+        .attr('x', (d) => -r(d.worldwideGross))
+        .attr('y', (d) => -r(d.worldwideGross))
         .style('pointer-events', 'none')
         .append('xhtml:video')
         .property('volume', '0.0')
-        .attr('src', (d) => d.url)
+        .attr('src', (d) => d.URL)
         .attr('autoplay', '')
         .attr('loop', '')
-        .attr('width', (d) => r(d.popularity) * 2)
-        .attr('height', (d) => r(d.popularity) * 2)
+        .attr('width', (d) => r(d.worldwideGross) * 2)
+        .attr('height', (d) => r(d.worldwideGross) * 2)
         .attr('id', (d, i) => i)
         .style('position', 'fixed')
         .style('border-radius', '50%')
