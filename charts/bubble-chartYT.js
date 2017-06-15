@@ -49,10 +49,14 @@ tag.src = "https://www.youtube.com/iframe_api";
 let firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-let curplayer;
+let playerName;
+let array = [];
 function onYouTubeIframeAPIReady() {
     for (var i = 0; i < data.children.length; i++) {
-        curplayer = createPlayer(data.children[i].playerID);
+        playerName = createPlayer(data.children[i].playerID);
+        array.push(playerName)
+    console.log('playa', playerName)
+        
     }
 }
 
@@ -111,6 +115,7 @@ const video = foreignObject
     .attr('height', (d) => d.r * 2)
     // .attr('id', (d, i) => i)
     // .attr('id', 'ytplayer')
+    // .attr('id', (d,i) => newFunc(i))
     .attr('id', (d) => d.data.playerID)
     .style('position', 'fixed')
     .style('border-radius', '50%')
@@ -133,9 +138,9 @@ function handleMouseEnter(d, i) {
     console.log('enter')
     // let video = document.getElementById(i);
     // video.volume = 1
-    console.log(curplayer)
+  console.log(array)
     //youtube API method
-    curplayer.unMute()
+   array[i].unMute()
 
     //vimeo API method
     // vimeoPlayer.setVolume(1)
@@ -146,7 +151,8 @@ function handleMouseLeave(d, i) {
     // let video = document.getElementById(i);
     // video.volume = 0
     //youtube API method
-    curplayer.mute()
+    
+    array[i].mute()
 
     //vimeo API method
     // vimeoPlayer.setVolume(0)
