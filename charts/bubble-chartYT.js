@@ -49,29 +49,14 @@ tag.src = "https://www.youtube.com/iframe_api";
 let firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-// function onYouTubeIframeAPIReady() {
-// console.log('helo')
-//            youtubePlayer = new YT.Player('ytplayer', {
-//                 events: {
-//                     'onReady': onPlayerReady
-//                 }
-//             });
-//             console.log(youtubePlayer)
-
-//         }
 let curplayer;
 function onYouTubeIframeAPIReady() {
-   
-console.log('fuck this')
     for (var i = 0; i < data.children.length; i++) {
-        var curplayer = createPlayer(data.children[i].playerID);
-        
-        
+        curplayer = createPlayer(data.children[i].playerID);
     }
-    console.log(curplayer)
 }
+
 function createPlayer(playerInfo) {
-    console.log(playerInfo)
     return new YT.Player(playerInfo, {
         events: {
             'onReady': onPlayerReady
@@ -80,14 +65,7 @@ function createPlayer(playerInfo) {
 }
 
 function onPlayerReady(event) {
-    console.log('event--->' ,event.target)
-    
    event.target.playVideo().mute();
-    // event.target.loadVideoById(videoID[currentVideoId])
-    // youtubePlayer.playVideo();
-    // Mute!
-    // youtubePlayer.mute();
-    // event.target.loadVideoById(video[ID]).mute();
 }
 
 const diameter = 600;
@@ -155,9 +133,9 @@ function handleMouseEnter(d, i) {
     console.log('enter')
     // let video = document.getElementById(i);
     // video.volume = 1
-
+    console.log(curplayer)
     //youtube API method
-    // youtubePlayer.unMute()
+    curplayer.unMute()
 
     //vimeo API method
     // vimeoPlayer.setVolume(1)
@@ -168,7 +146,7 @@ function handleMouseLeave(d, i) {
     // let video = document.getElementById(i);
     // video.volume = 0
     //youtube API method
-    // youtubePlayer.mute()
+    curplayer.mute()
 
     //vimeo API method
     // vimeoPlayer.setVolume(0)
