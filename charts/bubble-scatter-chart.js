@@ -79,7 +79,7 @@ d3.csv("./datasets/dataset-1a_movies.csv", function (error, data) {
         .attr('id', (d, i) => i)
         .style('position', 'fixed')
         .style('border-radius', '50%')
-        .style('object-fit', 'cover')
+
         .style('width', '100%')
         .style('height', '100%');
 
