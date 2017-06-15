@@ -2,17 +2,17 @@
 
 let data = {
     "children": [{
-        "src": 'https://www.youtube.com/embed/mnWY6TNLMq0?v=mnWY6TNLMq0?autoplay=1&enablejsapi=1',
+        "src": 'https://player.vimeo.com/video/221173263?v=mnWY6TNLMq0?autopause=0',
         "views": 2,
         "playerID": "player1"
     }
         , {
-        "src": "https://www.youtube.com/embed/jnjk_NGiihw?autoplay=1&enablejsapi=1",
+        "src": "https://player.vimeo.com/video/213293823?autopause=0",
         "views": 2,
         "playerID": "player2"
     }
         , {
-        "src": "https://www.youtube.com/embed/rP0uuI80wuY?autoplay=1&enablejsapi=1",
+        "src": "https://player.vimeo.com/video/220555992?autopause=0",
         "views": 20,
         "playerID": "player3"
     }
@@ -44,32 +44,37 @@ let data = {
     ]
 }
 
-let tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-let firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-let playerName;
-let array = [];
-function onYouTubeIframeAPIReady() {
-    for (var i = 0; i < data.children.length; i++) {
-        playerName = createPlayer(data.children[i].playerID);
-        array.push(playerName)
-    console.log('playa', playerName)
-        
-    }
-}
+// let tag = document.createElement('script');
+// tag.src = "https://www.youtube.com/iframe_api";
+// let firstScriptTag = document.getElementsByTagName('script')[0];
+// firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-function createPlayer(playerInfo) {
-    return new YT.Player(playerInfo, {
-        events: {
-            'onReady': onPlayerReady
-        }
-    })
-}
+// let playerName;
+// let array = [];
+// function onYouTubeIframeAPIReady() {
+//     for (var i = 0; i < data.children.length; i++) {
+//         playerName = createPlayer(data.children[i].playerID);
+//         array.push(playerName)
+//     console.log('playa', playerName)
 
-function onPlayerReady(event) {
-   event.target.playVideo().mute();
-}
+//     }
+// }
+
+// function createPlayer(playerInfo) {
+//     return new YT.Player(playerInfo, {
+//         events: {
+//             'onReady': onPlayerReady
+//         }
+//     })
+// }
+
+// function onPlayerReady(event) {
+//    event.target.playVideo().mute();
+// }
+//VIMEO API FOR PLAYER
+
+//Create a new Vimeo.Player object
+
 
 const diameter = 600;
 
@@ -129,7 +134,16 @@ const circle = g.append("circle")
     .on('mouseleave', handleMouseLeave);
 
 
-
+let videoArray = [];
+for(i=0;i<data.children.length;i++){
+   
+let vimeoPlayer = new Vimeo.Player(data.children[i].playerID);
+videoArray.push(vimeoPlayer);
+vimeoPlayer.ready().then(function () {
+    vimeoPlayer.play();
+    vimeoPlayer.setVolume(0);
+});
+}
 
 
 
@@ -137,24 +151,24 @@ function handleMouseEnter(d, i) {
     console.log('enter')
     // let video = document.getElementById(i);
     // video.volume = 1
-  console.log(array)
+    
     //youtube API method
-   array[i].unMute()
+    // array[i].unMute()
 
     //vimeo API method
-    // vimeoPlayer.setVolume(1)
+    videoArray[i].setVolume(1)
 }
 
 function handleMouseLeave(d, i) {
     console.log('leave')
     // let video = document.getElementById(i);
     // video.volume = 0
+
     //youtube API method
-    
-    array[i].mute()
+    // array[i].mute()
 
     //vimeo API method
-    // vimeoPlayer.setVolume(0)
+    videoArray[i].setVolume(0)
 
 }
 
