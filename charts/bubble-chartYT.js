@@ -1,47 +1,25 @@
-
-
 let data = {
     "children": [{
-        "src": 'https://www.youtube.com/embed/mnWY6TNLMq0?v=mnWY6TNLMq0?autoplay=1&enablejsapi=1',
-        "views": 2,
+        "src": 'https://www.youtube.com/embed/F-eMt3SrfFU?autoplay=1&enablejsapi=1',
+        "views": 21097531,
         "playerID": "player1"
-    }
-        , {
-        "src": "https://www.youtube.com/embed/jnjk_NGiihw?autoplay=1&enablejsapi=1",
-        "views": 2,
+    }, {
+        "src": "https://www.youtube.com/embed/XI4Na5JW1ns?autoplay=1&enablejsapi=1",
+        "views": 177639,
         "playerID": "player2"
-    }
-        , {
-        "src": "https://www.youtube.com/embed/rP0uuI80wuY?autoplay=1&enablejsapi=1",
-        "views": 20,
+    }, {
+        "src": "https://www.youtube.com/embed/nsrOCzUwcjE?autoplay=1&enablejsapi=1",
+        "views": 1073553,
         "playerID": "player3"
-    }
-        // , {
-        //     "src": "https://upload.wikimedia.org/wikipedia/commons/0/04/Play_fight_of_polar_bears_edit_1.ogv",
-        //     "views": 2
-        // }, {
-        //     "src": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Enallagma_cyathigerum_2.ogv",
-        //     "views": 3
-        // }, {
-        //     "src": "https://upload.wikimedia.org/wikipedia/commons/8/82/Sarychev_Peak_eruption_on_12_June_2009%2C_oblique_satellite_view.ogv",
-        //     "views": 1
-        // }, {
-        //     "src": "https://upload.wikimedia.org/wikipedia/commons/8/82/Sarychev_Peak_eruption_on_12_June_2009%2C_oblique_satellite_view.ogv",
-        //     "views": 1
-        // }, {
-        //     "src": "https://upload.wikimedia.org/wikipedia/commons/8/82/Sarychev_Peak_eruption_on_12_June_2009%2C_oblique_satellite_view.ogv",
-        //     "views": 1
-        // }, {
-        //     "src": "https://upload.wikimedia.org/wikipedia/commons/8/82/Sarychev_Peak_eruption_on_12_June_2009%2C_oblique_satellite_view.ogv",
-        //     "views": 1
-        // }, {
-        //     "src": "https://upload.wikimedia.org/wikipedia/commons/8/82/Sarychev_Peak_eruption_on_12_June_2009%2C_oblique_satellite_view.ogv",
-        //     "views": 1
-        // }, {
-        //     "src": "https://upload.wikimedia.org/wikipedia/commons/8/82/Sarychev_Peak_eruption_on_12_June_2009%2C_oblique_satellite_view.ogv",
-        //     "views": 1
-        // }
-    ]
+    }, {
+            "src": "https://www.youtube.com/embed/AjCebKn4iic?autoplay=1&enablejsapi=1",
+            "views": 1507944,
+            "playerID": "player4"
+    }, {
+        "src": "https://www.youtube.com/embed/DiTECkLZ8HM?autoplay=1&enablejsapi=1",
+        "views": 26112988,
+        "playerID": "player5"
+    }]
 }
 
 let tag = document.createElement('script');
@@ -49,13 +27,11 @@ tag.src = "https://www.youtube.com/iframe_api";
 let firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 let playerName;
-let array = [];
+let playerArr = [];
 function onYouTubeIframeAPIReady() {
     for (var i = 0; i < data.children.length; i++) {
         playerName = createPlayer(data.children[i].playerID);
-        array.push(playerName)
-    console.log('playa', playerName)
-        
+        playerArr.push(playerName)
     }
 }
 
@@ -93,68 +69,43 @@ const node = svg.selectAll(".node")
     //only keeps objects that don't have children property
     .filter((d) => !d.children)
 
-const g = node.append('g')
-    .attr("class", "node")
-    .attr("transform", (d) => "translate(" + d.x + "," + d.y + ")")
+    const g = node.append('g')
 
-const foreignObject = g.append('foreignObject')
-    .attr('width', (d) => d.r * 2)
-    .attr('height', (d) => d.r * 2)
-    .attr('x', (d) => -d.r)
-    .attr('y', (d) => -d.r)
-    .style('pointer-events', 'none');
+    const foreignObject = g.append('foreignObject')
+        .attr('x', (d) => d.x - d.r)
+        .attr('y', (d) => d.y - d.r)
+        .style('pointer-events', 'none');
 
-const video = foreignObject
-    .append('xhtml:iframe')
-    .attr('src', (d) => d.data.src)
-    .property('volume', '0.0')
-    .attr('autoplay', '')
-    .attr('loop', '')
-    .attr('width', (d) => d.r * 2)
-    .attr('height', (d) => d.r * 2)
-    // .attr('id', (d, i) => i)
-    // .attr('id', 'ytplayer')
-    // .attr('id', (d,i) => newFunc(i))
-    .attr('id', (d) => d.data.playerID)
-    .style('position', 'fixed')
-    .style('border-radius', '50%')
-    .style('object-fit', 'cover')
-    .style('width', '100%')
-    .style('height', '100%');
+    const div = foreignObject
+        .append('xhtml:div')
+        .style('width', (d) => (d.r * 2) + 'px')
+        .style('height', (d) => (d.r * 2) + 'px')
+        .style('border-radius', (d) => d.r + 'px')
+        .style('-webkit-mask-image', '-webkit-radial-gradient(circle, white 100%, black 100%)')
+        .style('position', 'relative')
 
-//position circle below video bubble to handle mouse events
-const circle = g.append("circle")
+    const video = div
+        .append('xhtml:iframe')
+        .attr("xmlns", "http://www.w3.org/1999/xhtml")
+        .attr('src', (d) => d.data.src)
+        .style('width', (d) => (d.r * 2) + 'px')
+        .style('height', (d) => (d.r * 2) + 'px')
+        .attr('id', (d) => d.data.playerID)
+        .attr('frameborder', 0)
+        .style('position', 'absolute');
+
+// position circle below video bubble to handle mouse events
+const circle = node.append("circle")
+    .attr("cx", (d) => d.x)
+    .attr("cy", (d) => d.y)
     .attr("r", (d) => d.r)
     .on('mouseenter', handleMouseEnter)
     .on('mouseleave', handleMouseLeave);
 
-
-
-
-
-
 function handleMouseEnter(d, i) {
-    console.log('enter')
-    // let video = document.getElementById(i);
-    // video.volume = 1
-  console.log(array)
-    //youtube API method
-   array[i].unMute()
-
-    //vimeo API method
-    // vimeoPlayer.setVolume(1)
+   playerArr[i].unMute()
 }
 
 function handleMouseLeave(d, i) {
-    console.log('leave')
-    // let video = document.getElementById(i);
-    // video.volume = 0
-    //youtube API method
-    
-    array[i].mute()
-
-    //vimeo API method
-    // vimeoPlayer.setVolume(0)
-
+   playerArr[i].mute()
 }
-
