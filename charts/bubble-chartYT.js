@@ -48,6 +48,11 @@ function onPlayerReady(event) {
 }
 
 const diameter = 600;
+let g;
+let foreignObject;
+let div;
+let video;
+let circle;
 
 const bubble = d3.pack(data)
     .size([diameter, diameter])
@@ -71,40 +76,46 @@ const node = svg.selectAll(".node")
 
 //support for firefox
 if (typeof InstallTrigger !== 'undefined') {
-  const g = node.append('g')
+  g = node.append('g')
       .attr("class", "node")
       .attr("transform", (d) => "translate(" + d.x + "," + d.y + ")")
 
-  const foreignObject = g.append('foreignObject')
+  foreignObject = g.append('foreignObject')
       .attr('width', (d) => d.r * 2)
       .attr('height', (d) => d.r * 2)
       .attr('x', (d) => -d.r)
       .attr('y', (d) => -d.r)
       .style('pointer-events', 'none');
 
-  const video = foreignObject.append('xhtml:iframe')
+  video = foreignObject.append('xhtml:iframe')
       .attr('src', (d) => d.data.src)
       .attr('width', (d) => d.r * 2)
       .attr('height', (d) => d.r * 2)
       .attr('id', (d) => d.data.playerID)
       .attr('frameborder', 0)
-      // .style('position', 'fixed')
       .style('border-radius', '50%')
       .style('object-fit', 'cover')
       .style('width', '100%')
       .style('height', '100%');
+
+  //position circle below video bubble to handle mouse events
+  circle = g.append("circle")
+      .attr("r", (d) => d.r)
+      .on('mouseenter', handleMouseEnter)
+      .on('mouseleave', handleMouseLeave);
 }
 
 //support for chrome
 else {
-  const g = node.append('g')
+  console.log('other')
+  g = node.append('g')
 
-  const foreignObject = g.append('foreignObject')
+  foreignObject = g.append('foreignObject')
       .attr('x', (d) => d.x - d.r)
       .attr('y', (d) => d.y - d.r)
       .style('pointer-events', 'none');
 
-  const div = foreignObject
+  div = foreignObject
       .append('xhtml:div')
       .style('width', (d) => (d.r * 2) + 'px')
       .style('height', (d) => (d.r * 2) + 'px')
@@ -112,7 +123,7 @@ else {
       .style('-webkit-mask-image', '-webkit-radial-gradient(circle, white 100%, black 100%)')
       .style('position', 'relative')
 
-  const video = div
+  video = div
       .append('xhtml:iframe')
       .attr("xmlns", "http://www.w3.org/1999/xhtml")
       .attr('src', (d) => d.data.src)
@@ -121,20 +132,22 @@ else {
       .style('width', (d) => (d.r * 2) + 'px')
       .style('height', (d) => (d.r * 2) + 'px')
       .style('position', 'absolute');
+
+  //position circle below video bubble to handle mouse events
+  circle = g.append("circle")
+      .attr("cx", (d) => d.x)
+      .attr("cy", (d) => d.y)
+      .attr("r", (d) => d.r)
+      .on('mouseenter', handleMouseEnter)
+      .on('mouseleave', handleMouseLeave);
 }
 
-// position circle below video bubble to handle mouse events
-const circle = g.append("circle")
-    .attr("cx", (d) => d.x)
-    .attr("cy", (d) => d.y)
-    .attr("r", (d) => d.r)
-    .on('mouseenter', handleMouseEnter)
-    .on('mouseleave', handleMouseLeave);
-
 function handleMouseEnter(d, i) {
+  console.log('enter')
    playerArr[i].unMute()
 }
 
 function handleMouseLeave(d, i) {
+  console.log('leave')
    playerArr[i].mute()
 }
