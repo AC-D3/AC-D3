@@ -1,32 +1,36 @@
 let data = {
     "children": [{
-        "embeddedURL": 'https://www.youtube.com/embed/F-eMt3SrfFU?autoplay=1&enablejsapi=1',
+        "src": 'https://www.youtube.com/embed/F-eMt3SrfFU?autoplay=1&enablejsapi=1',
         "viewcount": 21097531,
-        "v_id": "22"
+        "v_id": "22",
+        "type": "iframe"
     }, {
-        "embeddedURL": "https://www.youtube.com/embed/XI4Na5JW1ns?autoplay=1&enablejsapi=1",
+        "src": "https://www.youtube.com/embed/XI4Na5JW1ns?autoplay=1&enablejsapi=1",
         "viewcount": 177639,
-        "v_id": "2"
+        "v_id": "2",
+        "type": "iframe"
     }, {
-        "embeddedURL": "https://www.youtube.com/embed/nsrOCzUwcjE?autoplay=1&enablejsapi=1",
+        "src": "https://www.youtube.com/embed/nsrOCzUwcjE?autoplay=1&enablejsapi=1",
         "viewcount": 1073553,
-        "v_id": "3"
+        "v_id": "3",
+        "type": "iframe"
     }, {
-        "embeddedURL": "https://www.youtube.com/embed/AjCebKn4iic?autoplay=1&enablejsapi=1",
+        "src": "https://www.youtube.com/embed/AjCebKn4iic?autoplay=1&enablejsapi=1",
         "viewcount": 1507944,
-        "v_id": "4"
+        "v_id": "4",
+        "type": "iframe"
     }, {
-        "embeddedURL": "https://www.youtube.com/embed/DiTECkLZ8HM?autoplay=1&enablejsapi=1",
+        "src": "https://www.youtube.com/embed/DiTECkLZ8HM?autoplay=1&enablejsapi=1",
         "viewcount": 26112988,
-        "v_id": "5"
+        "v_id": "5",
+        "type": "iframe"
+    }, {
+        "src": "http://upload.wikimedia.org/wikipedia/commons/7/79/Big_Buck_Bunny_small.ogv",
+        "viewcount": 1507944,
+        "v_id": "6",
+        "type": "video"
     }]
 }
-
-let idArray = [];
-for(let i=0;i<data.children.length;i++){
-    idArray.push(data.children[i].v_id)
-}
-
 
 
 const diameter = 600;
@@ -36,9 +40,8 @@ let div;
 let video;
 let circle;
 
-d3.csv("./datasets/bubble-data.csv", function (error, data1) {
-    console.log('movie data --> ', data1)
-
+// d3.csv("./datasets/bubble-data.csv", function (error, data1) {
+//     console.log('movie data --> ', data1)
 
     const bubble = d3.pack(data)
         .size([diameter, diameter])
@@ -73,12 +76,25 @@ d3.csv("./datasets/bubble-data.csv", function (error, data1) {
             .attr('y', (d) => -d.r)
             .style('pointer-events', 'none');
 
-        video = foreignObject.append('xhtml:iframe')
-            .attr('src', (d) => d.data.embeddedURL)
-            .attr('width', (d) => d.r * 2)
-            .attr('height', (d) => d.r * 2)
+        video = foreignObject.append((d) => {
+            //check src to determine whether element should be html5 video or iframe
+
+            return d.data.type === 'video'
+                ? document.createElement('video')
+                : document.createElement('iframe');
+        })
+
+            //html5 video attributes
+            .property('volume', (d) => d.data.type === 'video' ? '0.0' : null)
+            .attr('autoplay', (d) => d.data.type === 'video' ? '' : null)
+            .attr('loop', (d) => d.data.type === 'video' ? '' : null)
+
+            //iframe attributes
+            .attr('frameborder', (d) => d.data.type === 'iframe' ? 0 : null)
+
+            //shared attributes
             .attr('id', (d) => d.data.v_id)
-            .attr('frameborder', 0)
+            .attr('src', (d) => d.data.src)
             .style('border-radius', '50%')
             .style('object-fit', 'cover')
             .style('width', '100%')
@@ -91,7 +107,6 @@ d3.csv("./datasets/bubble-data.csv", function (error, data1) {
             .on('mouseleave', handleMouseLeave);
     }
 
-
     //support for chrome
     else {
         g = node.append('g')
@@ -101,22 +116,35 @@ d3.csv("./datasets/bubble-data.csv", function (error, data1) {
             .attr('y', (d) => d.y - d.r)
             .style('pointer-events', 'none');
 
-        div = foreignObject
-            .append('xhtml:div')
+        div = foreignObject.append('xhtml:div')
             .style('width', (d) => (d.r * 2) + 'px')
             .style('height', (d) => (d.r * 2) + 'px')
             .style('border-radius', (d) => d.r + 'px')
             .style('-webkit-mask-image', '-webkit-radial-gradient(circle, white 100%, black 100%)')
             .style('position', 'relative')
 
-        video = div
-            .append('xhtml:iframe')
-            .attr("xmlns", "http://www.w3.org/1999/xhtml")
-            .attr('src', (d) => d.data.embeddedURL)
+        video = div.append((d) => {
+            //check src to determine whether element should be html5 video or iframe
+            return d.data.type === 'video'
+                ? document.createElement('video')
+                : document.createElement('iframe');
+        })
+
+            //html5 video attributes
+            .property('volume', (d) => d.data.type === 'video' ? '0.0' : null)
+            .attr('autoplay', (d) => d.data.type === 'video' ? '' : null)
+            .attr('loop', (d) => d.data.type === 'video' ? '' : null)
+            .style('object-fit', (d) => d.data.type === 'video' ? 'cover' : null)
+
+            //iframe attributes
+            .attr('frameborder', (d) => d.data.type === 'iframe' ? 0 : null)
+
+            //shared attributes
             .attr('id', (d) => d.data.v_id)
-            .attr('frameborder', 0)
-            .style('width', (d) => (d.r * 2) + 'px')
-            .style('height', (d) => (d.r * 2) + 'px')
+            .attr("xmlns", "http://www.w3.org/1999/xhtml")
+            .attr('src', (d) => d.data.src)
+            .style('width', '100%')
+            .style('height', '100%')
             .style('position', 'absolute');
 
         //position circle below video bubble to handle mouse events
@@ -128,56 +156,66 @@ d3.csv("./datasets/bubble-data.csv", function (error, data1) {
             .on('mouseleave', handleMouseLeave);
     }
 
-})
+    // youtube player
+    let tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    let firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    let playerName;
+    let playerArr = [];
+    let count = 0
+    let videoElement;
 
-
-let tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-let firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-let playerName;
-let playerArr = [];
-let count = 0
-let videoElement;
-
-function onYouTubeIframeAPIReady() {
-    for (var i = 0; i < data.children.length; i++) {
-        playerName = createPlayer(data.children[i].v_id);
-        playerArr.push(playerName)
+    let idArray = [];
+    for (let i = 0; i < data.children.length; i++) {
+        idArray.push(data.children[i].v_id)
     }
-}
 
-function createPlayer(playerInfo) {
-    return new YT.Player(playerInfo, {
-        events: {
-            'onReady': onPlayerReady
+    function onYouTubeIframeAPIReady() {
+        for (var i = 0; i < data.children.length; i++) {
+            if (data.children[i].type === 'iframe') {
+            playerName = createPlayer(data.children[i].v_id);
+            playerArr.push(playerName)
+            }
         }
-    })
-}
-
-function onPlayerReady(event) {
-    //if statement here checking data pertinent to size of circle. If it's smaller(circle is smaller),
-    //then less playback quality
-    videoElement = document.getElementById(idArray[count])
-
-    if (videoElement.height <= 100) {
-        event.target.setPlaybackQuality('small').playVideo().mute();
-    } else if (videoElement.height > 100 && videoElement.height <= 200) {
-        event.target.setPlaybackQuality('medium').playVideo().mute();
-    } else {
-        event.target.setPlaybackQuality('large').playVideo().mute();
     }
-    count++;
-}
+
+    function createPlayer(playerInfo) {
+        return new YT.Player(playerInfo, {
+            events: {
+                'onReady': onPlayerReady
+            }
+        })
+    }
+
+    function onPlayerReady(event) {
+        //if statement here checking data pertinent to size of circle. If it's smaller(circle is smaller),
+        //then less playback quality
+        videoElement = document.getElementById(idArray[count])
+
+        if (videoElement.height <= 100) {
+            event.target.setPlaybackQuality('small').playVideo().mute();
+        } else if (videoElement.height > 100 && videoElement.height <= 200) {
+            event.target.setPlaybackQuality('medium').playVideo().mute();
+        } else {
+            event.target.setPlaybackQuality('large').playVideo().mute();
+        }
+        count++;
+    }
 
 
-function handleMouseEnter(d, i) {
-    // console.log('enter')
-    playerArr[i].unMute()
 
-}
+    //event handlers
+    function handleMouseEnter(d, i) {
+        console.log('enter')
+        if (d.data.type === 'video') document.getElementById(idArray[i]).volume = 1;
+        else if (d.data.type === 'iframe') playerArr[i].unMute();
+    }
 
-function handleMouseLeave(d, i) {
-    // console.log('leave')
-    playerArr[i].mute()
-}
+    function handleMouseLeave(d, i) {
+        console.log('leave')
+        if (d.data.type === 'video') document.getElementById(idArray[i]).volume = 0;
+        else if (d.data.type === 'iframe') playerArr[i].mute()
+    }
+
+// })
