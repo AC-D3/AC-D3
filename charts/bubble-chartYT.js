@@ -22,30 +22,8 @@ let data = {
     }]
 }
 
-let tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-let firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-let playerName;
-let playerArr = [];
-function onYouTubeIframeAPIReady() {
-    for (var i = 0; i < data.children.length; i++) {
-        playerName = createPlayer(data.children[i].playerID);
-        playerArr.push(playerName)
-    }
-}
 
-function createPlayer(playerInfo) {
-    return new YT.Player(playerInfo, {
-        events: {
-            'onReady': onPlayerReady
-        }
-    })
-}
 
-function onPlayerReady(event) {
-   event.target.playVideo().mute();
-}
 
 const diameter = 600;
 let g;
@@ -105,6 +83,7 @@ if (typeof InstallTrigger !== 'undefined') {
       .on('mouseleave', handleMouseLeave);
 }
 
+
 //support for chrome
 else {
   console.log('other')
@@ -142,9 +121,52 @@ else {
       .on('mouseleave', handleMouseLeave);
 }
 
+let tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+let firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+let playerName;
+let playerArr = [];
+let count=1
+let videoElement;
+
+function onYouTubeIframeAPIReady() {
+    for (var i = 0; i < data.children.length; i++) {
+        playerName = createPlayer(data.children[i].playerID);
+        playerArr.push(playerName)
+    }
+}
+
+function createPlayer(playerInfo) {
+    return new YT.Player(playerInfo, {
+        events: {
+            'onReady': onPlayerReady
+        }
+    })
+}
+
+function onPlayerReady(event) {
+   //if statement here checking data pertinent to size of circle. If it's smaller(circle is smaller),
+   //then less playback quality
+  videoElement = document.getElementById('player'+count)
+  console.log(videoElement.height)
+
+   if(videoElement.height<=100){
+       console.log(event.target)
+       event.target.setPlaybackQuality('small').playVideo().mute();
+   }else if(videoElement.height>100&&videoElement.height<=200){
+       event.target.setPlaybackQuality('medium').playVideo().mute();
+       }else{
+   event.target.setPlaybackQuality('large').playVideo().mute();
+   }
+   count++;
+}
+
+
 function handleMouseEnter(d, i) {
   console.log('enter')
    playerArr[i].unMute()
+
 }
 
 function handleMouseLeave(d, i) {
