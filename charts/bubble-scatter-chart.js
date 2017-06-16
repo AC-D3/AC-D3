@@ -34,7 +34,7 @@ var svg = d3.select("body").append("svg")
     "translate(" + margin.left + "," + margin.top + ")");
 
 
-d3.csv("./datasets/dataset-1a_movies.csv", function (error, data) {
+d3.csv("./datasets/bubble-scatter-data.csv", function (error, data) {
     console.log('movie data --> ', data)
 
     data.forEach(function (d) {
