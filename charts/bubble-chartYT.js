@@ -3,23 +3,25 @@
 let data = {
     "children": [{
         "src": 'https://www.youtube.com/embed/mnWY6TNLMq0?enablejsapi=1',
-        "views": 2,
+        "views": 1,
         "playerID": "player1"
     }
         , {
         "src": "https://www.youtube.com/embed/jnjk_NGiihw?enablejsapi=1",
-        "views": 8,
+        "views": 25,
         "playerID": "player2"
     }
-    //     , {
-    //     "src": "https://www.youtube.com/embed/rP0uuI80wuY?enablejsapi=1",
-    //     "views": 20,
-    //     "playerID": "player3"
-    // }
+        , {
+        "src": "https://www.youtube.com/embed/rP0uuI80wuY?enablejsapi=1",
+        "views": 200,
+        "playerID": "player3"
+    }
+        , {
+             "src": "https://www.youtube.com/embed/d0BNwyrEDiA?enablejsapi=1",
+        "views": 40,
+        "playerID": "player4"
+        }
         // , {
-        //     "src": "https://upload.wikimedia.org/wikipedia/commons/0/04/Play_fight_of_polar_bears_edit_1.ogv",
-        //     "views": 2
-        // }, {
         //     "src": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Enallagma_cyathigerum_2.ogv",
         //     "views": 3
         // }, {
@@ -44,40 +46,7 @@ let data = {
     ]
 }
 
-let tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-let firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-let playerName;
-let array = [];
-let count=0
-function onYouTubeIframeAPIReady() {
-    for (var i = 0; i < data.children.length; i++) {
-        playerName = createPlayer(data.children[i].playerID);
-        array.push(playerName)
-    }
-}
 
-function createPlayer(playerInfo) {
-    return new YT.Player(playerInfo, {
-        events: {
-            'onReady': onPlayerReady
-        }
-    })
-}
-
-function onPlayerReady(event) {
-   //if statement here checking data pertinent to size of circle. If it's smaller(circle is smaller),
-   //then less playback quality
-   
-   if(data.children[count].views<=3){
-       console.log(event.target)
-       event.target.setPlaybackQuality('small').playVideo().mute();
-   }else{
-   event.target.setPlaybackQuality('hd1080').playVideo().mute();
-   }
-   count++
-}
 
 const diameter = 600;
 
@@ -137,7 +106,45 @@ const circle = g.append("circle")
     .on('mouseleave', handleMouseLeave);
 
 
+let tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+let firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+let playerName;
+let array = [];
+let count=1
+let videoElement;
+function onYouTubeIframeAPIReady() {
+    for (var i = 0; i < data.children.length; i++) {
+        playerName = createPlayer(data.children[i].playerID);
+        array.push(playerName)
+    }
+}
 
+function createPlayer(playerInfo) {
+    return new YT.Player(playerInfo, {
+        events: {
+            'onReady': onPlayerReady
+        }
+    })
+}
+
+function onPlayerReady(event) {
+   //if statement here checking data pertinent to size of circle. If it's smaller(circle is smaller),
+   //then less playback quality
+  videoElement = document.getElementById('player'+count)
+  console.log(videoElement.height)
+
+   if(videoElement.height<=100){
+       console.log(event.target)
+       event.target.setPlaybackQuality('small').playVideo().mute();
+   }else if(videoElement.height>100&&videoElement.height<=200){
+       event.target.setPlaybackQuality('medium').playVideo().mute();
+       }else{
+   event.target.setPlaybackQuality('large').playVideo().mute();
+   }
+   count++;
+}
 
 
 
