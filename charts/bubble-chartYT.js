@@ -69,33 +69,62 @@ const node = svg.selectAll(".node")
     //only keeps objects that don't have children property
     .filter((d) => !d.children)
 
-    const g = node.append('g')
+//support for firefox
+if (typeof InstallTrigger !== 'undefined') {
+  const g = node.append('g')
+      .attr("class", "node")
+      .attr("transform", (d) => "translate(" + d.x + "," + d.y + ")")
 
-    const foreignObject = g.append('foreignObject')
-        .attr('x', (d) => d.x - d.r)
-        .attr('y', (d) => d.y - d.r)
-        .style('pointer-events', 'none');
+  const foreignObject = g.append('foreignObject')
+      .attr('width', (d) => d.r * 2)
+      .attr('height', (d) => d.r * 2)
+      .attr('x', (d) => -d.r)
+      .attr('y', (d) => -d.r)
+      .style('pointer-events', 'none');
 
-    const div = foreignObject
-        .append('xhtml:div')
-        .style('width', (d) => (d.r * 2) + 'px')
-        .style('height', (d) => (d.r * 2) + 'px')
-        .style('border-radius', (d) => d.r + 'px')
-        .style('-webkit-mask-image', '-webkit-radial-gradient(circle, white 100%, black 100%)')
-        .style('position', 'relative')
+  const video = foreignObject.append('xhtml:iframe')
+      .attr('src', (d) => d.data.src)
+      .attr('width', (d) => d.r * 2)
+      .attr('height', (d) => d.r * 2)
+      .attr('id', (d) => d.data.playerID)
+      .attr('frameborder', 0)
+      // .style('position', 'fixed')
+      .style('border-radius', '50%')
+      .style('object-fit', 'cover')
+      .style('width', '100%')
+      .style('height', '100%');
+}
 
-    const video = div
-        .append('xhtml:iframe')
-        .attr("xmlns", "http://www.w3.org/1999/xhtml")
-        .attr('src', (d) => d.data.src)
-        .style('width', (d) => (d.r * 2) + 'px')
-        .style('height', (d) => (d.r * 2) + 'px')
-        .attr('id', (d) => d.data.playerID)
-        .attr('frameborder', 0)
-        .style('position', 'absolute');
+//support for chrome
+else {
+  const g = node.append('g')
+
+  const foreignObject = g.append('foreignObject')
+      .attr('x', (d) => d.x - d.r)
+      .attr('y', (d) => d.y - d.r)
+      .style('pointer-events', 'none');
+
+  const div = foreignObject
+      .append('xhtml:div')
+      .style('width', (d) => (d.r * 2) + 'px')
+      .style('height', (d) => (d.r * 2) + 'px')
+      .style('border-radius', (d) => d.r + 'px')
+      .style('-webkit-mask-image', '-webkit-radial-gradient(circle, white 100%, black 100%)')
+      .style('position', 'relative')
+
+  const video = div
+      .append('xhtml:iframe')
+      .attr("xmlns", "http://www.w3.org/1999/xhtml")
+      .attr('src', (d) => d.data.src)
+      .attr('id', (d) => d.data.playerID)
+      .attr('frameborder', 0)
+      .style('width', (d) => (d.r * 2) + 'px')
+      .style('height', (d) => (d.r * 2) + 'px')
+      .style('position', 'absolute');
+}
 
 // position circle below video bubble to handle mouse events
-const circle = node.append("circle")
+const circle = g.append("circle")
     .attr("cx", (d) => d.x)
     .attr("cy", (d) => d.y)
     .attr("r", (d) => d.r)
