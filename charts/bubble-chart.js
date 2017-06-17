@@ -136,7 +136,7 @@ else {
 
         //iframe attributes
         .attr('frameborder', (d) => d.data.type === 'iframe' ? 0 : null)
-  
+
          //shared attributes
         .attr('id', (d) => d.data.v_id)
         .attr("xmlns", "http://www.w3.org/1999/xhtml")
@@ -155,96 +155,71 @@ else {
         .on('mouseenter', handleMouseEnter)
         .on('mouseleave', handleMouseLeave);
 }
-let tryinSomeShit = {};
+let playerStore = {};
 // youtube player
+
+//create script tag for youtube API
 let tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
+
+//append that script to DOM
 let firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-let playerName;
-let playerArr = [];
-let count = 0
-let videoElement;
-
-let idArray = [];
-for (let i = 0; i < data.children.length; i++) {
-    let videoID = data.children[i].v_id
-    if(data.children[i].type === 'video'){
-        tryinSomeShit[videoID] = document.getElementById(videoID)
-    }
-    idArray.push(videoID)
-  
-}
 
 function onYouTubeIframeAPIReady() {
     for (var i = 0; i < data.children.length; i++) {
         let videoID = data.children[i].v_id;
         if (data.children[i].type === 'youtube') {
-            playerName = createPlayer(data.children[i].v_id);
-            // playerArr.push(playerName);
-            tryinSomeShit[videoID] = playerName;
+          playerStore[videoID] = createPlayer(data.children[i].v_id);
         }
-
     }
 }
 
-function createPlayer(playerInfo) {
-    return new YT.Player(playerInfo, {
-        events: {
-            'onReady': onPlayerReady
-        }
-    })
+function createPlayer(id) {
+    return new YT.Player(id, { events: { 'onReady': onPlayerReady }})
 }
 
+//when youtube player is ready, set playback quality based on size, play video, mute video
 function onPlayerReady(event) {
-    //if statement here checking data pertinent to size of circle. If it's smaller(circle is smaller),
-    //then less playback quality
-    videoElement = document.getElementById(idArray[count])
-
-    if (videoElement.height <= 100) {
+    let youtubeIframe = document.getElementById(event.target.a.id);
+    if (youtubeIframe.height <= 100) {
         event.target.setPlaybackQuality('small').playVideo().mute();
-    } else if (videoElement.height > 100 && videoElement.height <= 200) {
+    } else if (youtubeIframe.height > 100 && youtubeIframe.height <= 200) {
         event.target.setPlaybackQuality('medium').playVideo().mute();
     } else {
         event.target.setPlaybackQuality('large').playVideo().mute();
     }
-    count++;
 }
 
+for (let i = 0; i < data.children.length; i += 1) {
+  let videoID = data.children[i].v_id;
+  if (data.children[i].type === 'video') {
+    playerStore[videoID] = document.getElementById(videoID)
+  }
+  else if (data.children[i].type === 'vimeo') {
+    let vimeoPlayer = new Vimeo.Player(videoID);
+    playerStore[videoID] = vimeoPlayer;
 
-
-for (let i = 0; i < data.children.length; i++) {
-    let videoID = data.children[i].v_id;
-    if (data.children[i].type === 'vimeo') {
-        
-       let vimeoPlayer = new Vimeo.Player(videoID);
-      
-        tryinSomeShit[videoID] = vimeoPlayer
-    
-        vimeoPlayer.ready().then(function () {
-        
+    vimeoPlayer.ready().then(function () {
             vimeoPlayer.play();
             vimeoPlayer.setVolume(0);
         });
     }
 }
 
-
-
 //event handlers
 function handleMouseEnter(d, i) {
     console.log('enter')
     let videoID = data.children[i].v_id;
-    if (d.data.type === 'vimeo') tryinSomeShit[videoID].setVolume(1);
-    else if (d.data.type === 'youtube') tryinSomeShit[videoID].unMute();
-    else tryinSomeShit[videoID].volume = 1;
+    if (d.data.type === 'vimeo') playerStore[videoID].setVolume(1);
+    else if (d.data.type === 'youtube') playerStore[videoID].unMute();
+    else playerStore[videoID].volume = 1;
 }
 
 function handleMouseLeave(d, i) {
     console.log('leave')
     let videoID = data.children[i].v_id;
-    if (d.data.type === 'vimeo') tryinSomeShit[videoID].setVolume(0);
-    else if (d.data.type === 'youtube') tryinSomeShit[videoID].mute();
-    else tryinSomeShit[videoID].volume = 0;
+    if (d.data.type === 'vimeo') playerStore[videoID].setVolume(0);
+    else if (d.data.type === 'youtube') playerStore[videoID].mute();
+    else playerStore[videoID].volume = 0;
 }
-console.log(tryinSomeShit)
