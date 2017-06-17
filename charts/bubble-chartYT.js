@@ -34,7 +34,7 @@ let data = {
 
 
 const diameter = 600;
-let zoom = 2.5;
+let zoom = 2;
 let g;
 let foreignObject;
 let div;
@@ -141,10 +141,10 @@ else {
         .attr('id', (d) => d.data.v_id)
         .attr("xmlns", "http://www.w3.org/1999/xhtml")
         .attr('src', (d) => d.data.src)
-        .style('width', (d) => d.data.type === 'iframe' ? `${zoom * 100}%` : '100%')
-        .style('height', (d) => d.data.type === 'iframe' ? `${zoom * 100}%` : '100%')
-        .style('top', (d) => d.data.type === 'iframe' ? -((zoom - 1) * d.r) + 'px' : null)
-        .style('left', (d) => d.data.type === 'iframe' ? -((zoom - 1) * d.r) + 'px' : null)
+        .style('width', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? `${zoom * 100}%` : '100%')
+        .style('height', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? `${zoom * 100}%` : '100%')
+        .style('top', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? -((zoom - 1) * d.r) + 'px' : null)
+        .style('left', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? -((zoom - 1) * d.r) + 'px' : null)
         .style('position', 'absolute');
 
     //position circle below video bubble to handle mouse events
