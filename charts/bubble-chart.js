@@ -136,7 +136,7 @@ else {
 
         //iframe attributes
         .attr('frameborder', (d) => d.data.type === 'iframe' ? 0 : null)
-  
+
          //shared attributes
         .attr('id', (d) => d.data.v_id)
         .attr("xmlns", "http://www.w3.org/1999/xhtml")
@@ -173,7 +173,7 @@ for (let i = 0; i < data.children.length; i++) {
         tryinSomeShit[videoID] = document.getElementById(videoID)
     }
     idArray.push(videoID)
-  
+
 }
 
 function onYouTubeIframeAPIReady() {
@@ -216,13 +216,13 @@ function onPlayerReady(event) {
 for (let i = 0; i < data.children.length; i++) {
     let videoID = data.children[i].v_id;
     if (data.children[i].type === 'vimeo') {
-        
+
        let vimeoPlayer = new Vimeo.Player(videoID);
-      
+
         tryinSomeShit[videoID] = vimeoPlayer
-    
+
         vimeoPlayer.ready().then(function () {
-        
+
             vimeoPlayer.play();
             vimeoPlayer.setVolume(0);
         });
