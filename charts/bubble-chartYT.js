@@ -34,14 +34,12 @@ let data = {
 
 
 const diameter = 600;
+let zoom = 2.5;
 let g;
 let foreignObject;
 let div;
 let video;
 let circle;
-
-// d3.csv("./datasets/bubble-data.csv", function (error, data1) {
-//     console.log('movie data --> ', data1)
 
 const bubble = d3.pack(data)
     .size([diameter, diameter])
@@ -138,13 +136,15 @@ else {
 
         //iframe attributes
         .attr('frameborder', (d) => d.data.type === 'iframe' ? 0 : null)
-
-        //shared attributes
+  
+         //shared attributes
         .attr('id', (d) => d.data.v_id)
         .attr("xmlns", "http://www.w3.org/1999/xhtml")
         .attr('src', (d) => d.data.src)
-        .style('width', '100%')
-        .style('height', '100%')
+        .style('width', (d) => d.data.type === 'iframe' ? `${zoom * 100}%` : '100%')
+        .style('height', (d) => d.data.type === 'iframe' ? `${zoom * 100}%` : '100%')
+        .style('top', (d) => d.data.type === 'iframe' ? -((zoom - 1) * d.r) + 'px' : null)
+        .style('left', (d) => d.data.type === 'iframe' ? -((zoom - 1) * d.r) + 'px' : null)
         .style('position', 'absolute');
 
     //position circle below video bubble to handle mouse events
@@ -230,6 +230,7 @@ for (let i = 0; i < data.children.length; i++) {
 }
 
 
+
 //event handlers
 function handleMouseEnter(d, i) {
     console.log('enter')
@@ -247,4 +248,3 @@ function handleMouseLeave(d, i) {
     else tryinSomeShit[videoID].volume = 0;
 }
 console.log(tryinSomeShit)
-// })
