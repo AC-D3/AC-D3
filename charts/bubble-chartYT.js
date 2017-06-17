@@ -33,15 +33,13 @@ let data = {
 }
 
 
-const diameter = 600;
-let g;
-let foreignObject;
-let div;
-let video;
-let circle;
-
-// d3.csv("./datasets/bubble-data.csv", function (error, data1) {
-//     console.log('movie data --> ', data1)
+    const diameter = 600;
+    let zoom = 2.5;
+    let g;
+    let foreignObject;
+    let div;
+    let video;
+    let circle;
 
     const bubble = d3.pack(data)
         .size([diameter, diameter])
@@ -143,8 +141,10 @@ let circle;
             .attr('id', (d) => d.data.v_id)
             .attr("xmlns", "http://www.w3.org/1999/xhtml")
             .attr('src', (d) => d.data.src)
-            .style('width', '100%')
-            .style('height', '100%')
+            .style('width', (d) => d.data.type === 'iframe' ? `${zoom * 100}%` : '100%')
+            .style('height', (d) => d.data.type === 'iframe' ? `${zoom * 100}%` : '100%')
+            .style('top', (d) => d.data.type === 'iframe' ? -((zoom - 1) * d.r) + 'px' : null)
+            .style('left', (d) => d.data.type === 'iframe' ? -((zoom - 1) * d.r) + 'px' : null)
             .style('position', 'absolute');
 
         //position circle below video bubble to handle mouse events
