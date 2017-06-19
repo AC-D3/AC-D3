@@ -1,27 +1,31 @@
 
 //multiple video types:
 let data = {
-    "children": [{
-        "src": 'https://www.youtube.com/embed/F-eMt3SrfFU?autoplay=1&enablejsapi=1',
-        "scalingParameter": 21097531,
-        "v_id": "22",
-        "type": "youtube"
-    }, {
+    "children": [
+    //   {
+    //     "src": 'https://www.youtube.com/embed/F-eMt3SrfFU?autoplay=1&enablejsapi=1',
+    //     "scalingParameter": 21097531,
+    //     "v_id": "22",
+    //     "type": "youtube"
+    // },
+    {
         "src": "https://player.vimeo.com/video/12868296?autopause=0",
         "scalingParameter": 1507944,
         "v_id": "4",
         "type": "vimeo"
-    }, {
-        "src": "https://www.youtube.com/embed/XI4Na5JW1ns?autoplay=1&enablejsapi=1",
-        "scalingParameter": 177639,
-        "v_id": "2",
-        "type": "youtube"
-    }, {
-        "src": "https://www.youtube.com/embed/nsrOCzUwcjE?autoplay=1&enablejsapi=1",
-        "scalingParameter": 1073553,
-        "v_id": "3",
-        "type": "youtube"
-    }, {
+    },
+    // {
+    //     "src": "https://www.youtube.com/embed/XI4Na5JW1ns?autoplay=1&enablejsapi=1",
+    //     "scalingParameter": 177639,
+    //     "v_id": "2",
+    //     "type": "youtube"
+    // }, {
+    //     "src": "https://www.youtube.com/embed/nsrOCzUwcjE?autoplay=1&enablejsapi=1",
+    //     "scalingParameter": 1073553,
+    //     "v_id": "3",
+    //     "type": "youtube"
+    // },
+    {
         "src": "https://player.vimeo.com/video/12788201?autopause=0",
         "scalingParameter": 26112988,
         "v_id": "5",
