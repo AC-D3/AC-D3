@@ -7,6 +7,11 @@ h1, h2 {
   text-align: center;
 }
 
+.container {
+  width: 100%;
+  position: relative;
+}
+
 #vis {
   background-color: #017F3E;
   margin: 0 auto;
