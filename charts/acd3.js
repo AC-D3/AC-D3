@@ -1,4 +1,4 @@
-const playerStore = {};
+// const d3 = require('d3');
 
 const acd3 = {
 
@@ -145,23 +145,10 @@ const acd3 = {
         else playerStore[videoID].volume = 0;
     }
 
-    //still needs to be refactored:
-    for (let i = 0; i < data.children.length; i += 1) {
-      let videoID = data.children[i].v_id;
-      if (data.children[i].type === 'video') {
-        playerStore[videoID] = document.getElementById(videoID);
-      }
-      else if (data.children[i].type === 'vimeo') {
-        let vimeoPlayer = new Vimeo.Player(videoID);
-        playerStore[videoID] = vimeoPlayer;
-
-        vimeoPlayer.ready().then(function () {
-            vimeoPlayer.play();
-            vimeoPlayer.setVolume(0);
-          });
-        }
-    }
+    populatePlayerStore();
 
   }
 
 }
+
+// module.exports = acd3;
