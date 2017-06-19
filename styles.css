@@ -1,0 +1,16 @@
+body {
+  background-color: #4EFFA3;
+  font-family: Helvetica;
+}
+
+h1, h2 {
+  text-align: center;
+}
+
+#vis {
+  background-color: #017F3E;
+  margin: 0 auto;
+  width: 600px;
+  border-radius: 50%;
+  border: 1px solid black;
+}
