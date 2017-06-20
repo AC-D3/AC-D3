@@ -95,7 +95,6 @@ const acd3 = {
     //support for firefox
     if (typeof InstallTrigger !== 'undefined') {
         g = node.append('g')
-            .attr("class", "node")
             .attr("transform", (d) => "translate(" + d.x + "," + d.y + ")")
 
         foreignObject = g.append('foreignObject')

@@ -3,7 +3,7 @@
 // let data = {
 //     "children": [
 //       {
-//         "src": 'https://www.youtube.com/embed/F-eMt3SrfFU?autoplay=1&enablejsapi=1',
+//         "src": 'https://www.youtube.com/embed/F-eMt3SrfFU?enablejsapi=1',
 //         "scalingParameter": 21097531,
 //         "v_id": "22",
 //         "type": "youtube"
@@ -15,12 +15,12 @@
 //         "type": "vimeo"
 //     },
 //     {
-//         "src": "https://www.youtube.com/embed/XI4Na5JW1ns?autoplay=1&enablejsapi=1",
+//         "src": "https://www.youtube.com/embed/XI4Na5JW1ns?enablejsapi=1",
 //         "scalingParameter": 177639,
 //         "v_id": "2",
 //         "type": "youtube"
 //     }, {
-//         "src": "https://www.youtube.com/embed/nsrOCzUwcjE?autoplay=1&enablejsapi=1",
+//         "src": "https://www.youtube.com/embed/nsrOCzUwcjE?enablejsapi=1",
 //         "scalingParameter": 1073553,
 //         "v_id": "3",
 //         "type": "youtube"
@@ -41,56 +41,56 @@
 //demo trailer data:
 let data = {
     "children": [{
-        "src": 'https://www.youtube.com/embed/F-eMt3SrfFU?autoplay=1&enablejsapi=1',
+        "src": 'https://www.youtube.com/embed/F-eMt3SrfFU?enablejsapi=1',
         "scalingParameter": 21097531,
         "v_id": "22",
         "type": "youtube"
-    }, {
-        "src": "https://www.youtube.com/embed/XI4Na5JW1ns?autoplay=1&enablejsapi=1",
-        "scalingParameter": 177639,
-        "v_id": "2",
-        "type": "youtube"
-    }, {
-        "src": "https://www.youtube.com/embed/nsrOCzUwcjE?autoplay=1&enablejsapi=1",
-        "scalingParameter": 1073553,
-        "v_id": "3",
-        "type": "youtube"
-    }, {
-        "src": "https://www.youtube.com/embed/GjwfqXTebIY?autoplay=1&enablejsapi=1",
-        "scalingParameter": 13652523,
-        "v_id": "4",
-        "type": "youtube"
-    }, {
-        "src": "https://www.youtube.com/embed/JDcAlo8i2y8?autoplay=1&enablejsapi=1",
-        "scalingParameter": 4289574,
-        "v_id": "5",
-        "type": "youtube"
-    }, {
-        "src": "https://www.youtube.com/embed/6Vtf0MszgP8?autoplay=1&enablejsapi=1",
-        "scalingParameter": 7972246,
-        "v_id": "6",
-        "type": "youtube"
+    // }, {
+    //     "src": "https://www.youtube.com/embed/XI4Na5JW1ns?enablejsapi=1",
+    //     "scalingParameter": 177639,
+    //     "v_id": "2",
+    //     "type": "youtube"
+    // }, {
+    //     "src": "https://www.youtube.com/embed/nsrOCzUwcjE?enablejsapi=1",
+    //     "scalingParameter": 1073553,
+    //     "v_id": "3",
+    //     "type": "youtube"
+    // }, {
+    //     "src": "https://www.youtube.com/embed/GjwfqXTebIY?enablejsapi=1",
+    //     "scalingParameter": 13652523,
+    //     "v_id": "4",
+    //     "type": "youtube"
+    // }, {
+    //     "src": "https://www.youtube.com/embed/JDcAlo8i2y8?enablejsapi=1",
+    //     "scalingParameter": 4289574,
+    //     "v_id": "5",
+    //     "type": "youtube"
+    // }, {
+    //     "src": "https://www.youtube.com/embed/6Vtf0MszgP8?enablejsapi=1",
+    //     "scalingParameter": 7972246,
+    //     "v_id": "6",
+    //     "type": "youtube"
+    // },
+    // {
+    //     "src": "https://www.youtube.com/embed/39udgGPyYMg?enablejsapi=1",
+    //     "scalingParameter": 7424591,
+    //     "v_id": "7",
+    //     "type": "youtube"
+    // },
+    // {
+    //     "src": "https://www.youtube.com/embed/cPeqNTqZNN0?enablejsapi=1",
+    //     "scalingParameter": 3495856,
+    //     "v_id": "8",
+    //     "type": "youtube"
     },
     {
-        "src": "https://www.youtube.com/embed/39udgGPyYMg?autoplay=1&enablejsapi=1",
-        "scalingParameter": 7424591,
-        "v_id": "7",
-        "type": "youtube"
-    },
-    {
-        "src": "https://www.youtube.com/embed/cPeqNTqZNN0?autoplay=1&enablejsapi=1",
-        "scalingParameter": 3495856,
-        "v_id": "8",
-        "type": "youtube"
-    },
-    {
-        "src": "https://www.youtube.com/embed/1xv_FeBGzfk?autoplay=1&enablejsapi=1",
+        "src": "https://www.youtube.com/embed/1xv_FeBGzfk?enablejsapi=1",
         "scalingParameter": 6522727,
         "v_id": "9",
         "type": "youtube"
     },
     {
-        "src": "https://www.youtube.com/embed/euz-KBBfAAo?autoplay=1&enablejsapi=1",
+        "src": "https://www.youtube.com/embed/euz-KBBfAAo?enablejsapi=1",
         "scalingParameter": 19562920,
         "v_id": "10",
         "type": "youtube"
