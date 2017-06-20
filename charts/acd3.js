@@ -1,24 +1,19 @@
 const acd3 = {
 
-  playerStore: {},
   diameter: 600,
   zoom: 1,
+  playerStore: {},
+  data: {},
 
   populatePlayerStore: function() {
 
-    //appends vimeo api script
-    let tag1 = document.createElement('script');
-    tag1.src = "https://player.vimeo.com/api/player.js";
-    let firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag1, firstScriptTag);
-
-    //appends youtube api script
+    // //appends youtube api script
     let tag2 = document.createElement('script');
     tag2.src = "https://www.youtube.com/iframe_api";
     firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag2, firstScriptTag);
 
-    window.onYouTubeIframeAPIReady = function() {
+    window.onYouTubeIframeAPIReady = () => {
 
       function createPlayer(id) {
         return new YT.Player(id, { events: { 'onReady': onPlayerReady }})
@@ -36,28 +31,26 @@ const acd3 = {
         }
       }
 
-      for (var i = 0; i < data.children.length; i++) {
-        let videoID = data.children[i].v_id;
-        if (data.children[i].type === 'youtube') {
-          acd3.playerStore[videoID] = createPlayer(data.children[i].v_id);
+      for (var i = 0; i < this.data.children.length; i++) {
+        let videoID = this.data.children[i].v_id;
+        if (this.data.children[i].type === 'youtube') {
+          this.playerStore[videoID] = createPlayer(this.data.children[i].v_id);
         }
       }
     }
 
-    for (let i = 0; i < data.children.length; i += 1) {
-      let videoID = data.children[i].v_id;
-      if (data.children[i].type === 'video') {
-        acd3.playerStore[videoID] = document.getElementById(videoID);
+    for (let i = 0; i < this.data.children.length; i += 1) {
+      let videoID = this.data.children[i].v_id;
+      if (this.data.children[i].type === 'video') {
+        this.playerStore[videoID] = document.getElementById(videoID);
       }
-      else if (data.children[i].type === 'vimeo') {
-        setTimeout(function() {
+      else if (this.data.children[i].type === 'vimeo') {
           let vimeoPlayer = new Vimeo.Player(videoID);
-          acd3.playerStore[videoID] = vimeoPlayer;
+          this.playerStore[videoID] = vimeoPlayer;
           vimeoPlayer.ready().then(function () {
               vimeoPlayer.play();
               vimeoPlayer.setVolume(0);
             });
-        }, 2000);
       }
     }
   },
@@ -142,7 +135,7 @@ const acd3 = {
 
   handleMouseEnter: function(d, i) {
       console.log('enter')
-      let videoID = data.children[i].v_id;
+      let videoID = acd3.data.children[i].v_id;
       if (d.data.type === 'vimeo') acd3.playerStore[videoID].setVolume(1);
       else if (d.data.type === 'youtube') acd3.playerStore[videoID].unMute();
       else acd3.playerStore[videoID].volume = 1;
@@ -150,18 +143,18 @@ const acd3 = {
 
   handleMouseLeave: function(d, i) {
       console.log('leave')
-      let videoID = data.children[i].v_id;
+      let videoID = acd3.data.children[i].v_id;
       if (d.data.type === 'vimeo') acd3.playerStore[videoID].setVolume(0);
       else if (d.data.type === 'youtube') acd3.playerStore[videoID].mute();
       else acd3.playerStore[videoID].volume = 0;
   },
 
-  drawBubble: function(data, config) {
-
+  drawBubbleChart: function(data, config) {
     this.diameter = config.diameter;
     this.zoom = config.zoom;
+    this.data = data;
 
-    const bubble = d3.pack(data)
+    const bubble = d3.pack(this.data)
         .size([this.diameter, this.diameter])
         .padding(1.5);
 
@@ -171,7 +164,7 @@ const acd3 = {
         .attr("height", this.diameter);
 
     //calculates radius, x and y positions for all child nodes
-    const root = d3.hierarchy(data)
+    const root = d3.hierarchy(this.data)
         .sum(function (d) { return d.scalingParameter; });
 
     const node = svg.selectAll("g")
