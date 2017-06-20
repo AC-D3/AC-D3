@@ -86,63 +86,49 @@ const acd3 = {
     const root = d3.hierarchy(data)
         .sum(function (d) { return d.scalingParameter; });
 
-    const node = svg.selectAll(".node")
+    const node = svg.selectAll("g")
         .data(bubble(root).descendants())
         .enter()
         //only keeps objects that don't have children property
         .filter((d) => !d.children)
 
-    //support for firefox
-    if (typeof InstallTrigger !== 'undefined') {
-        g = node.append('g')
-            .attr("transform", (d) => "translate(" + d.x + "," + d.y + ")")
+    g = node.append('g');
 
-        foreignObject = g.append('foreignObject')
-            .attr('width', (d) => d.r * 2)
+    //position circle below video bubble to handle mouse events
+    circle = g.append("circle")
+        .attr("r", (d) => d.r)
+        .on('mouseenter', handleMouseEnter)
+        .on('mouseleave', handleMouseLeave);
+
+    foreignObject = g.append('foreignObject')
+            .style('pointer-events', 'none');
+
+    //firefox specific attributes:
+    if (typeof InstallTrigger !== 'undefined') {
+        g.attr("transform", (d) => "translate(" + d.x + "," + d.y + ")")
+
+        foreignObject.attr('width', (d) => d.r * 2)
             .attr('height', (d) => d.r * 2)
             .attr('x', (d) => -d.r)
             .attr('y', (d) => -d.r)
-            .style('pointer-events', 'none');
 
         video = foreignObject.append((d) => {
-            //check src to determine whether element should be html5 video or iframe
-
             return d.data.type === 'video'
                 ? document.createElement('video')
                 : document.createElement('iframe');
         })
 
-            //html5 video attributes
-            .property('volume', (d) => d.data.type === 'video' ? '0.0' : null)
-            .attr('autoplay', (d) => d.data.type === 'video' ? '' : null)
-            .attr('loop', (d) => d.data.type === 'video' ? '' : null)
-
-            //iframe attributes
-            .attr('frameborder', (d) => d.data.type === 'iframe' ? 0 : null)
-
-            //shared attributes
-            .attr('id', (d) => d.data.v_id)
-            .attr('src', (d) => d.data.src)
-            .style('border-radius', '50%')
+        video.style('border-radius', '50%')
             .style('object-fit', 'cover')
             .style('width', '100%')
             .style('height', '100%');
-
-        //position circle below video bubble to handle mouse events
-        circle = g.append("circle")
-            .attr("r", (d) => d.r)
-            .on('mouseenter', handleMouseEnter)
-            .on('mouseleave', handleMouseLeave);
     }
 
-    //support for chrome
+    //chrome specific attributes:
     else {
-        g = node.append('g')
 
-        foreignObject = g.append('foreignObject')
-            .attr('x', (d) => d.x - d.r)
+        foreignObject.attr('x', (d) => d.x - d.r)
             .attr('y', (d) => d.y - d.r)
-            .style('pointer-events', 'none');
 
         div = foreignObject.append('xhtml:div')
             .style('width', (d) => (d.r * 2) + 'px')
@@ -152,39 +138,29 @@ const acd3 = {
             .style('position', 'relative')
 
         video = div.append((d) => {
-            //check src to determine whether element should be html5 video or iframe
             return d.data.type === 'video'
                 ? document.createElement('video')
                 : document.createElement('iframe');
         })
 
-            //html5 video attributes
-            .property('volume', (d) => d.data.type === 'video' ? '0.0' : null)
-            .attr('autoplay', (d) => d.data.type === 'video' ? '' : null)
-            .attr('loop', (d) => d.data.type === 'video' ? '' : null)
-            .style('object-fit', (d) => d.data.type === 'video' ? 'cover' : null)
-
-            //iframe attributes
-            .attr('frameborder', (d) => d.data.type === 'iframe' ? 0 : null)
-
-             //shared attributes
-            .attr('id', (d) => d.data.v_id)
+       video.style('object-fit', (d) => d.data.type === 'video' ? 'cover' : null)
             .attr("xmlns", "http://www.w3.org/1999/xhtml")
-            .attr('src', (d) => d.data.src)
             .style('width', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? `${zoom * 100}%` : '100%')
             .style('height', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? `${zoom * 100}%` : '100%')
             .style('top', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? -((zoom - 1) * d.r) + 'px' : null)
             .style('left', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? -((zoom - 1) * d.r) + 'px' : null)
             .style('position', 'absolute');
 
-        //position circle below video bubble to handle mouse events
-        circle = g.append("circle")
-            .attr("cx", (d) => d.x)
+      circle.attr("cx", (d) => d.x)
             .attr("cy", (d) => d.y)
-            .attr("r", (d) => d.r)
-            .on('mouseenter', handleMouseEnter)
-            .on('mouseleave', handleMouseLeave);
     }
+
+       video.property('volume', (d) => d.data.type === 'video' ? '0.0' : null)
+            .attr('autoplay', (d) => d.data.type === 'video' ? '' : null)
+            .attr('loop', (d) => d.data.type === 'video' ? '' : null)
+            .attr('frameborder', (d) => d.data.type === 'iframe' ? 0 : null)
+            .attr('id', (d) => d.data.v_id)
+            .attr('src', (d) => d.data.src)
 
     //event handlers
     function handleMouseEnter(d, i) {
