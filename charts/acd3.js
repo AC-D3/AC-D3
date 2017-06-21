@@ -1,6 +1,5 @@
 class acd3 {
 
-
   constructor(data, config) {
     this.playerStore = {};
     this.data = data;
@@ -11,17 +10,16 @@ class acd3 {
     window.onYouTubeIframeAPIReady = () => {
 
       const createPlayer = (id) => {
-        return new YT.Player(id, { events: { 'onReady': onPlayerReady }});
+        return new YT.Player(id, {
+          events: { 'onReady': onPlayerReady }
+        });
       }
 
-      //when youtube player is ready, set playback quality based on size, play video, mute video
       const onPlayerReady = (event) => {
-
         event.target.playVideo()
                     .mute()
                     .setLoop(true);
         let youtubeIframe = document.getElementById(event.target.a.id);
-        // console.log('this.config', this.config.resol)
         if (youtubeIframe.height <= this.config.resolutionThresholds[0]) {
           event.target.setPlaybackQuality('small')
         } else if (youtubeIframe.height > this.config.resolutionThresholds[0]
@@ -138,7 +136,9 @@ class acd3 {
             .attr('id', (d) => d.data.v_id)
             .attr('src', (d) => {
               if (d.data.type === 'youtube') {
-                return d.data.src + '?' + 'enablejsapi=1' + '&' + 'loop=1';
+                let videoID = d.data.src.split('/').pop();
+                let params = `?enablejsapi=1&autoplay=1&controls=0&autohide=1&loop=1&disablekb=1&fs=0&modestbranding=0&showinfo=0&rel=0&version=3&playlist=${videoID}`;
+                return d.data.src + params;
               } else if (d.data.type === 'vimeo') {
                 return d.data.src + '?' + 'autopause=0';
               } else {
