@@ -46,13 +46,13 @@ const acd3 = require('ac-d3');
 const data = {
     "children": [
       {
-        "src": 'https://www.youtube.com/embed/F-eMt3SrfFU?enablejsapi=1',
+        "src": 'https://www.youtube.com/embed/F-eMt3SrfFU',
         "scalingParameter": 36,
         "v_id": "vid1",
         "type": "youtube"
     },
     {
-        "src": "https://player.vimeo.com/video/12868296?autopause=0",
+        "src": "https://player.vimeo.com/video/12868296",
         "scalingParameter": 12,
         "v_id": "vid4",
         "type": "vimeo"
