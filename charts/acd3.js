@@ -1,5 +1,6 @@
 class acd3 {
 
+
   constructor(data, config) {
     this.playerStore = {};
     this.data = data;
@@ -15,19 +16,19 @@ class acd3 {
 
       //when youtube player is ready, set playback quality based on size, play video, mute video
       const onPlayerReady = (event) => {
+
+        event.target.playVideo()
+                    .mute()
+                    .setLoop(true);
         let youtubeIframe = document.getElementById(event.target.a.id);
-        if (youtubeIframe.height <= 100) {
+        // console.log('this.config', this.config.resol)
+        if (youtubeIframe.height <= this.config.resolutionThresholds[0]) {
           event.target.setPlaybackQuality('small')
-                      .playVideo()
-                      .mute();
-        } else if (youtubeIframe.height > 100 && youtubeIframe.height <= 200) {
+        } else if (youtubeIframe.height > this.config.resolutionThresholds[0]
+                  && youtubeIframe.height <= this.config.resolutionThresholds[1]) {
           event.target.setPlaybackQuality('medium')
-                      .playVideo()
-                      .mute();
         } else {
           event.target.setPlaybackQuality('large')
-                      .playVideo()
-                      .mute();
         }
       }
 
@@ -51,6 +52,7 @@ class acd3 {
         vimeoPlayer.ready().then(() => {
           vimeoPlayer.play();
           vimeoPlayer.setVolume(0);
+          vimeoPlayer.setLoop(true);
         });
       }
     });
@@ -134,7 +136,15 @@ class acd3 {
             .attr('loop', (d) => d.data.type === 'video' ? '' : null)
             .attr('frameborder', (d) => d.data.type === 'iframe' ? 0 : null)
             .attr('id', (d) => d.data.v_id)
-            .attr('src', (d) => d.data.src)
+            .attr('src', (d) => {
+              if (d.data.type === 'youtube') {
+                return d.data.src + '?' + 'enablejsapi=1' + '&' + 'loop=1';
+              } else if (d.data.type === 'vimeo') {
+                return d.data.src + '?' + 'autopause=0';
+              } else {
+                return d.data.src;
+              }
+            });
   }
 
   unmuteOnMouseEnter(data) {
