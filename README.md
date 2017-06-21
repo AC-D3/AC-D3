@@ -48,19 +48,19 @@ const data = {
       {
         "src": 'https://www.youtube.com/embed/F-eMt3SrfFU?enablejsapi=1',
         "scalingParameter": 36,
-        "v_id": "1",
+        "v_id": "vid1",
         "type": "youtube"
     },
     {
         "src": "https://player.vimeo.com/video/12868296?autopause=0",
         "scalingParameter": 12,
-        "v_id": "4",
+        "v_id": "vid4",
         "type": "vimeo"
     },
     {
         "src": "http://upload.wikimedia.org/wikipedia/commons/7/79/Big_Buck_Bunny_small.ogv",
         "scalingParameter": 24,
-        "v_id": "6",
+        "v_id": "vid6",
         "type": "video"
     }]
 }
