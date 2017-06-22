@@ -5,7 +5,6 @@ AC-D3 is a Javascript Library for building Audiovisual Charts in D3.
   - Build predefined visualizations
   - Use AC-D3 methods to add audiovisual elements to your D3 visualization
  
-
 ### Installation
 ***
 ```sh
@@ -40,7 +39,7 @@ const acd3 = require('ac-d3');
 | :-- | :-- | :-- |
 | src | string | Accepts paths to HTML5 <video> supported file types and vimeo and youtube embedded url links. |
 | scalingParameter | number | Used to determine the relative size of each bubble. |
-| v_id | string | Must be unique for each video. Can't be a string of a number ('21'). | 
+| v_id | string | Must be unique for each video. | 
 | type | string | Either 'video' (for direct URL path), 'vimeo', or 'youtube'. |
 ```javascript
 const data = {
@@ -89,5 +88,4 @@ randomChart.createBubbleChart();
 ```
 
 #### For existing visualizations
-
 Coming soon...
