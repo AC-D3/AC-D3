@@ -39,45 +39,24 @@ class acd3 {
                     }
                 });
             })
-            
-            visStore.forEach((vis) => {
-                console.log('vis --> ', vis)
-                vis.data.children.forEach((item) => {
-                    let videoID = item.v_id;
-                    if (item.type === 'video') {
-                        vis.playerStore[videoID] = document.getElementById(videoID);
-                    }
-                    else if (item.type === 'vimeo') {
-                        let vimeoPlayer = new Vimeo.Player(videoID);
-                        vis.playerStore[videoID] = vimeoPlayer;
-                        vimeoPlayer.ready().then(() => {
-                            vimeoPlayer.play();
-                            vimeoPlayer.setVolume(0);
-                            vimeoPlayer.setLoop(true);
-                        });
-                    }
-                });
-            })
-            console.log('visStore2 --> ', visStore)
+
         }
 
-
-
-        // this.data.children.forEach((item) => {
-        //     let videoID = item.v_id;
-        //     if (item.type === 'video') {
-        //         this.playerStore[videoID] = document.getElementById(videoID);
-        //     }
-        //     else if (item.type === 'vimeo') {
-        //         let vimeoPlayer = new Vimeo.Player(videoID);
-        //         this.playerStore[videoID] = vimeoPlayer;
-        //         vimeoPlayer.ready().then(() => {
-        //             vimeoPlayer.play();
-        //             vimeoPlayer.setVolume(0);
-        //             vimeoPlayer.setLoop(true);
-        //         });
-        //     }
-        // });
+        visStore[visStore.length-1].data.children.forEach((item) => {
+            let videoID = item.v_id;
+            if (item.type === 'video') {
+                visStore[visStore.length-1].playerStore[videoID] = document.getElementById(videoID);
+            }
+            else if (item.type === 'vimeo') {
+                let vimeoPlayer = new Vimeo.Player(videoID);
+                visStore[visStore.length-1].playerStore[videoID] = vimeoPlayer;
+                vimeoPlayer.ready().then(() => {
+                    vimeoPlayer.play();
+                    vimeoPlayer.setVolume(0);
+                    vimeoPlayer.setLoop(true);
+                });
+            }
+        });
 
     }
 
