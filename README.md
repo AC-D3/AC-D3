@@ -51,7 +51,7 @@ const data = {
         "type": "youtube"
     },
     {
-        "src": "https://player.vimeo.com/video/12868296?",
+        "src": "https://player.vimeo.com/video/12868296",
         "scalingParameter": 12,
         "v_id": "vid4",
         "type": "vimeo"

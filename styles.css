@@ -12,7 +12,7 @@ h1, h2 {
   position: relative;
 }
 
-#vis {
+#vis1, #vis2 {
   background-color: #017F3E;
   margin: 0 auto;
   width: 600px;
