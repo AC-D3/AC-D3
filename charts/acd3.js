@@ -1,6 +1,5 @@
 class acd3 {
 
-
     constructor(data, config) {
         this.playerStore = {};
         this.data = data;
@@ -37,7 +36,6 @@ class acd3 {
                     this.playerStore[videoID] = createPlayer(item.v_id);
                 }
             });
-
         }
 
         this.data.children.forEach((item) => {
@@ -150,7 +148,6 @@ class acd3 {
                     return d.data.src;
                 }
             });
-
     }
 
     unmuteOnMouseEnter(data) {
@@ -173,12 +170,10 @@ class acd3 {
 
     handleClick(data) {
         let videoID = data.v_id;
-       //does not work as yet
+        //does not work right now
         d3.select('div').attr('height', this.diameter)
         d3.select('div').attr('width', this.diameter)
         d3.select('#' + videoID).attr('height', this.diameter)
-
-
     }
 
     createBubbleChart() {
@@ -186,11 +181,9 @@ class acd3 {
         this.data.forEach((d) => d.v_id = 'id_' + d.v_id)
         this.data = { 'children': this.data }
 
-
         const bubble = d3.pack(this.data)
             .size([this.config.diameter, this.config.diameter])
             .padding(1.5);
-
 
         const svg = d3.select("#" + this.config.htmlAnchorID)
             .append("svg")
@@ -202,19 +195,16 @@ class acd3 {
         const root = d3.hierarchy(this.data)
             .sum(function (d) { return d.scalingParameter; });
 
-
-
         const node = svg.selectAll("g")
             .data(bubble(root).descendants())
             .enter()
             //only keeps objects that don't have children property
             .filter((d) => !d.children);
 
-
         this.addBubble(node);
         this.populatePlayerStore();
     }
-
 }
 
+// For use in NPM module
 // module.exports = acd3;
