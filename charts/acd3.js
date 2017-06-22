@@ -7,6 +7,7 @@ class acd3 {
     }
 
     populatePlayerStore() {
+
         window.onYouTubeIframeAPIReady = () => {
 
             const createPlayer = (id) => {
@@ -30,29 +31,54 @@ class acd3 {
                 }
             }
 
-            this.data.children.forEach((item) => {
-                let videoID = item.v_id;
-                if (item.type === 'youtube') {
-                    this.playerStore[videoID] = createPlayer(item.v_id);
-                }
-            });
+            visStore.forEach((vis) => {
+                vis.data.children.forEach((item) => {
+                    let videoID = item.v_id;
+                    if (item.type === 'youtube') {
+                        vis.playerStore[videoID] = createPlayer(item.v_id);
+                    }
+                });
+            })
+            
+            visStore.forEach((vis) => {
+                console.log('vis --> ', vis)
+                vis.data.children.forEach((item) => {
+                    let videoID = item.v_id;
+                    if (item.type === 'video') {
+                        vis.playerStore[videoID] = document.getElementById(videoID);
+                    }
+                    else if (item.type === 'vimeo') {
+                        let vimeoPlayer = new Vimeo.Player(videoID);
+                        vis.playerStore[videoID] = vimeoPlayer;
+                        vimeoPlayer.ready().then(() => {
+                            vimeoPlayer.play();
+                            vimeoPlayer.setVolume(0);
+                            vimeoPlayer.setLoop(true);
+                        });
+                    }
+                });
+            })
+            console.log('visStore2 --> ', visStore)
         }
 
-        this.data.children.forEach((item) => {
-            let videoID = item.v_id;
-            if (item.type === 'video') {
-                this.playerStore[videoID] = document.getElementById(videoID);
-            }
-            else if (item.type === 'vimeo') {
-                let vimeoPlayer = new Vimeo.Player(videoID);
-                this.playerStore[videoID] = vimeoPlayer;
-                vimeoPlayer.ready().then(() => {
-                    vimeoPlayer.play();
-                    vimeoPlayer.setVolume(0);
-                    vimeoPlayer.setLoop(true);
-                });
-            }
-        });
+
+
+        // this.data.children.forEach((item) => {
+        //     let videoID = item.v_id;
+        //     if (item.type === 'video') {
+        //         this.playerStore[videoID] = document.getElementById(videoID);
+        //     }
+        //     else if (item.type === 'vimeo') {
+        //         let vimeoPlayer = new Vimeo.Player(videoID);
+        //         this.playerStore[videoID] = vimeoPlayer;
+        //         vimeoPlayer.ready().then(() => {
+        //             vimeoPlayer.play();
+        //             vimeoPlayer.setVolume(0);
+        //             vimeoPlayer.setLoop(true);
+        //         });
+        //     }
+        // });
+
     }
 
     addBubble(node) {
@@ -177,6 +203,10 @@ class acd3 {
     }
 
     createBubbleChart() {
+
+        if (!window.visStore) window.visStore = [this];
+        else window.visStore.push(this);
+        // console.log('visStore --> ', visStore)
 
         this.data.forEach((d) => d.v_id = 'id_' + d.v_id)
         this.data = { 'children': this.data }
