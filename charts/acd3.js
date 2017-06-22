@@ -173,10 +173,19 @@ class acd3 {
 
     handleClick(data) {
         let videoID = data.v_id;
-       //does not work as yet
-        d3.select('div').attr('height', this.diameter)
-        d3.select('div').attr('width', this.diameter)
-        d3.select('#' + videoID).attr('height', this.diameter)
+        // d.value = d.value *100
+        //     let video = d3.selectAll('g')
+        //     .data(d)
+        //     .enter().append('circle')
+        //     .attr("r", 1000)  
+
+        //         d3.select(this).on("click", function() {
+        //   d3.select(this).attr("r", 300);
+        let div = d3.select('div');
+        console.log(div)
+        d3.select('div').attr('height', this.config.diameter)
+        d3.select('div').attr('width', this.config.diameter)
+        d3.select('#' + videoID).attr('height', this.config.diameter)
 
 
     }
