@@ -1,6 +1,6 @@
 //multiple video types:
-let data1 = {
-    "children": [{
+let data1 = [
+        {
         "src": 'https://www.youtube.com/embed/nsrOCzUwcjE',
         "scalingParameter": 21097531,
         "v_id": "1",
@@ -30,12 +30,11 @@ let data1 = {
         "scalingParameter": 1507944,
         "v_id": "6",
         "type": "video"
-    }]
-}
+    }
+]
 
 //demo trailer data:
-let data2 = {
-    "children": [{
+let data2 = [{
         "src": 'https://www.youtube.com/embed/F-eMt3SrfFU',
         "scalingParameter": 21097531,
         "v_id": "22",
@@ -75,6 +74,7 @@ let data2 = {
     //     "scalingParameter": 3495856,
     //     "v_id": "8",
     //     "type": "youtube"
+
     // }, {
     //     "src": "https://www.youtube.com/embed/1xv_FeBGzfk",
     //     "scalingParameter": 6522727,
@@ -86,7 +86,6 @@ let data2 = {
         "v_id": "10",
         "type": "youtube"
     }]
-}
 
 const config1 = {
   htmlAnchorID: 'vis1',
@@ -103,7 +102,7 @@ const config2 = {
   resolutionThresholds: [250, 500]
 }
 
-const randomChart = new acd3(data1, config2);
+const randomChart = new acd3(data2, config2);
 randomChart.createBubbleChart();
 
 // const trailerChart = new acd3(data2, config2);
