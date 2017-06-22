@@ -1,6 +1,5 @@
 class acd3 {
 
-
     constructor(data, config) {
         this.playerStore = {};
         this.data = data;
@@ -8,6 +7,7 @@ class acd3 {
     }
 
     populatePlayerStore() {
+
         window.onYouTubeIframeAPIReady = () => {
 
             const createPlayer = (id) => {
@@ -31,23 +31,25 @@ class acd3 {
                 }
             }
 
-            this.data.children.forEach((item) => {
-                let videoID = item.v_id;
-                if (item.type === 'youtube') {
-                    this.playerStore[videoID] = createPlayer(item.v_id);
-                }
-            });
+            visStore.forEach((vis) => {
+                vis.data.children.forEach((item) => {
+                    let videoID = item.v_id;
+                    if (item.type === 'youtube') {
+                        vis.playerStore[videoID] = createPlayer(item.v_id);
+                    }
+                });
+            })
 
         }
 
-        this.data.children.forEach((item) => {
+        visStore[visStore.length-1].data.children.forEach((item) => {
             let videoID = item.v_id;
             if (item.type === 'video') {
-                this.playerStore[videoID] = document.getElementById(videoID);
+                visStore[visStore.length-1].playerStore[videoID] = document.getElementById(videoID);
             }
             else if (item.type === 'vimeo') {
                 let vimeoPlayer = new Vimeo.Player(videoID);
-                this.playerStore[videoID] = vimeoPlayer;
+                visStore[visStore.length-1].playerStore[videoID] = vimeoPlayer;
                 vimeoPlayer.ready().then(() => {
                     vimeoPlayer.play();
                     vimeoPlayer.setVolume(0);
@@ -55,6 +57,7 @@ class acd3 {
                 });
             }
         });
+
     }
 
     addBubble(node) {
@@ -150,7 +153,6 @@ class acd3 {
                     return d.data.src;
                 }
             });
-
     }
 
     unmuteOnMouseEnter(data) {
@@ -173,33 +175,24 @@ class acd3 {
 
     handleClick(data) {
         let videoID = data.v_id;
-        // d.value = d.value *100
-        //     let video = d3.selectAll('g')
-        //     .data(d)
-        //     .enter().append('circle')
-        //     .attr("r", 1000)  
-
-        //         d3.select(this).on("click", function() {
-        //   d3.select(this).attr("r", 300);
-        let div = d3.select('div');
-        console.log(div)
-        d3.select('div').attr('height', this.config.diameter)
-        d3.select('div').attr('width', this.config.diameter)
-        d3.select('#' + videoID).attr('height', this.config.diameter)
-
-
+        //does not work right now
+        d3.select('div').attr('height', this.diameter)
+        d3.select('div').attr('width', this.diameter)
+        d3.select('#' + videoID).attr('height', this.diameter)
     }
 
     createBubbleChart() {
 
+        if (!window.visStore) window.visStore = [this];
+        else window.visStore.push(this);
+        // console.log('visStore --> ', visStore)
+
         this.data.forEach((d) => d.v_id = 'id_' + d.v_id)
         this.data = { 'children': this.data }
-
 
         const bubble = d3.pack(this.data)
             .size([this.config.diameter, this.config.diameter])
             .padding(1.5);
-
 
         const svg = d3.select("#" + this.config.htmlAnchorID)
             .append("svg")
@@ -211,19 +204,16 @@ class acd3 {
         const root = d3.hierarchy(this.data)
             .sum(function (d) { return d.scalingParameter; });
 
-
-
         const node = svg.selectAll("g")
             .data(bubble(root).descendants())
             .enter()
             //only keeps objects that don't have children property
             .filter((d) => !d.children);
 
-
         this.addBubble(node);
         this.populatePlayerStore();
     }
-
 }
 
+// For use in NPM module
 // module.exports = acd3;
