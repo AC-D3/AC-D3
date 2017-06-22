@@ -8,38 +8,55 @@ class acd3 {
 
     populatePlayerStore() {
 
-        window.onYouTubeIframeAPIReady = () => {
+      if (!document.getElementById('youtubeScript')) {
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        tag.id = "youtubeScript";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      }
 
-            const createPlayer = (id) => {
-                return new YT.Player(id, {
-                    events: { 'onReady': onPlayerReady }
-                });
-            }
+      const createPlayer = (id) => {
+        return new YT.Player(id, {
+          events: { 'onReady': onPlayerReady }
+        });
+      }
 
-            const onPlayerReady = (event) => {
-                event.target.playVideo()
+      const onPlayerReady = (event) => {
+        event.target.playVideo()
                     .mute()
                     .setLoop(true);
-                let youtubeIframe = document.getElementById(event.target.a.id);
-                if (youtubeIframe.height <= this.config.resolutionThresholds[0]) {
-                    event.target.setPlaybackQuality('small')
-                } else if (youtubeIframe.height > this.config.resolutionThresholds[0]
-                    && youtubeIframe.height <= this.config.resolutionThresholds[1]) {
-                    event.target.setPlaybackQuality('medium')
-                } else {
-                    event.target.setPlaybackQuality('large')
-                }
-            }
+        let youtubeIframe = document.getElementById(event.target.a.id);
+        if (youtubeIframe.height <= this.config.resolutionThresholds[0]) {
+          event.target.setPlaybackQuality('small')
+        } else if (youtubeIframe.height > this.config.resolutionThresholds[0]
+          && youtubeIframe.height <= this.config.resolutionThresholds[1]) {
+            event.target.setPlaybackQuality('medium')
+          } else {
+            event.target.setPlaybackQuality('large')
+          }
+        }
 
+        if (window.onYouTubeIframeAPIReady) {
+          const lastVis = visStore[visStore.length-1];
+          lastVis.data.children.forEach((item) => {
+              let videoID = item.v_id;
+              if (item.type === 'youtube') {
+                lastVis.playerStore[videoID] = createPlayer(item.v_id);
+              }
+          });
+        }
+        else {
+          window.onYouTubeIframeAPIReady = () => {
             visStore.forEach((vis) => {
-                vis.data.children.forEach((item) => {
-                    let videoID = item.v_id;
-                    if (item.type === 'youtube') {
-                        vis.playerStore[videoID] = createPlayer(item.v_id);
-                    }
-                });
+              vis.data.children.forEach((item) => {
+                let videoID = item.v_id;
+                if (item.type === 'youtube') {
+                  vis.playerStore[videoID] = createPlayer(item.v_id);
+                }
+              });
             })
-
+          }
         }
 
         visStore[visStore.length-1].data.children.forEach((item) => {
@@ -145,7 +162,7 @@ class acd3 {
             .attr('src', (d) => {
                 if (d.data.type === 'youtube') {
                     let videoID = d.data.src.split('/').pop();
-                    let params = `?enablejsapi=1&autoplay=1&controls=0&autohide=1&loop=1&disablekb=1&fs=0&modestbranding=0&showinfo=0&rel=0&version=3&playlist=${videoID}`;
+                    let params = `?enablejsapi=1&controls=0&autohide=1&loop=1&disablekb=1&fs=0&modestbranding=0&showinfo=0&rel=0&version=3&playlist=${videoID}`;
                     return d.data.src + params;
                 } else if (d.data.type === 'vimeo') {
                     return d.data.src + '?' + 'autopause=0';
@@ -185,7 +202,6 @@ class acd3 {
 
         if (!window.visStore) window.visStore = [this];
         else window.visStore.push(this);
-        // console.log('visStore --> ', visStore)
 
         this.data.forEach((d) => d.v_id = 'id_' + d.v_id)
         this.data = { 'children': this.data }
