@@ -4,8 +4,24 @@ class acd3 {
         this.playerStore = {};
         this.data = data;
         this.config = config;
+        this.playerCreated = false;
     }
 
+    playAll() {
+      console.log('playAll')
+      for (let key in this.playerStore) {
+        //if youtube
+        this.playerStore[key].playVideo().mute();
+      }
+    }
+
+    pauseAll() {
+      for (let key in this.playerStore) {
+        //if youtube
+        this.playerStore[key].pauseVideo();
+      }
+    }
+  
     populatePlayerStore() {
 
         const l = console.log
@@ -48,6 +64,7 @@ class acd3 {
             // })
         }
     }
+
 
     createVimeoPlayer(item) {
         let videoID = item.v_id;
@@ -157,19 +174,19 @@ class acd3 {
                 .style('position', 'absolute');
 
             circle.attr("cx", (d) => d.x)
-                .attr("cy", (d) => d.y)
+                  .attr("cy", (d) => d.y)
         }
-
+        if (this.config.autoplay) video.attr('autoplay', (d) => d.data.type === 'video' ? '' : null);
+        if (this.config.loop) video.attr('loop', (d) => d.data.type === 'video' ? '' : null);
         video.property('volume', (d) => d.data.type === 'video' ? '0.0' : null)
-            .attr('autoplay', (d) => d.data.type === 'video' ? '' : null)
-            .attr('loop', (d) => d.data.type === 'video' ? '' : null)
             .attr('frameborder', (d) => d.data.type === 'iframe' ? 0 : null)
 
             .attr('id', (d) => d.data.v_id)
             .attr('src', (d) => {
                 if (d.data.type === 'youtube') {
                     let videoID = d.data.src.split('/').pop();
-                    let params = `?enablejsapi=1&controls=0&autohide=1&loop=1&disablekb=1&fs=0&modestbranding=0&showinfo=0&rel=0&version=3&playlist=${videoID}`;
+                    let params = `?enablejsapi=1&controls=0&autohide=1&disablekb=1&fs=0&modestbranding=0&showinfo=0&rel=0&version=3&playlist=${videoID}`;
+                    if (this.config.looop) params += '&loop=1';
                     return d.data.src + params;
                 } else if (d.data.type === 'vimeo') {
                     return d.data.src + '?' + 'autopause=0';
