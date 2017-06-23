@@ -8,19 +8,36 @@ class acd3 {
     }
 
     playAll() {
-        console.log('playAll')
         for (let key in this.playerStore) {
-            //if youtube
-            this.playerStore[key].playVideo().mute();
+            let currentPlayer = this.playerStore[key];
+            //vimeo:
+            if (currentPlayer.origin === "https://player.vimeo.com") {
+                currentPlayer.play();
+                currentPlayer.setVolume(0);
+            }
+            //html5 video
+            else if (currentPlayer.tagName === 'VIDEO') {
+                currentPlayer.play();
+                currentPlayer.volume = 0.0;
+            }
+            //youtube
+            else if (currentPlayer.playVideo) {
+                currentPlayer.playVideo().mute();
+            }
         }
     }
 
     pauseAll() {
-        console.log('pauseAll')
         for (let key in this.playerStore) {
-            console.log(this.playerStore[key]);
-            //if youtube
-            this.playerStore[key].pauseVideo();
+            let currentPlayer = this.playerStore[key];
+            //vimeo and html5 video:
+            if (currentPlayer.origin === "https://player.vimeo.com" || currentPlayer.tagName === 'VIDEO') {
+                currentPlayer.pause();
+            }
+            //youtube
+            else if (currentPlayer.pauseVideo) {
+                currentPlayer.pauseVideo();
+            }
         }
     }
 
@@ -50,14 +67,13 @@ class acd3 {
         if (window.youTubeIframeAPIReady) {
             // visStore.forEach((vis) => {
             while (visStore.length) {
-                // console.log('visStore -->', visStore)
                 let vis = visStore.shift()
                 vis.data.children.forEach((item) => {
                     let videoID = item.v_id;
                     if (item.type === 'youtube') {
                         vis.playerStore[videoID] = this.createYouTubePlayer(videoID);
                     } else if (item.type === 'video') {
-                        console.log('handle videos...')
+                        vis.playerStore[videoID] = document.getElementById(videoID);
                     } else if (item.type === 'vimeo') {
                         vis.playerStore[videoID] = this.createVimeoPlayer(videoID);
                     } else console.log('invalid type')
@@ -196,11 +212,8 @@ class acd3 {
     }
 
     unmuteOnMouseEnter(data) {
-        // console.log('this in unmute func --> ', this)
         console.log('enter')
         let videoID = data.v_id;
-        console.log('data --> ', data)
-        console.log('this.playerStore --> ', this.playerStore)
         let videoType = data.type;
         if (videoType === 'vimeo') this.playerStore[videoID].setVolume(1);
         else if (videoType === 'youtube') this.playerStore[videoID].unMute();
