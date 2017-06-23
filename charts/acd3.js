@@ -4,6 +4,7 @@ class acd3 {
         this.playerStore = {};
         this.data = data;
         this.config = config;
+        this.playerCreated = false;
     }
 
     playAll() {
@@ -53,7 +54,6 @@ class acd3 {
         }
 
         if (window.onYouTubeIframeAPIReady) {
-          console.log('2nd onYouTubeIframeAPIReady')
           const lastVis = visStore[visStore.length-1];
           lastVis.data.children.forEach((item) => {
               let videoID = item.v_id;
@@ -63,8 +63,8 @@ class acd3 {
           });
         }
         else {
-          console.log('1st onYouTubeIframeAPIReady')
           window.onYouTubeIframeAPIReady = () => {
+            console.log('onYouTubeIframeAPIReady')
             visStore.forEach((vis) => {
               vis.data.children.forEach((item) => {
                 let videoID = item.v_id;
