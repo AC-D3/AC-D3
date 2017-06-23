@@ -175,8 +175,8 @@ const config1 = {
   diameter: 700,
   zoom: 2.5,
   resolutionThresholds: [250, 500],
-  autoplay: false,
-  loop: false
+  autoplay: true,
+  loop: true
 }
 
 const config2 = {
@@ -184,11 +184,11 @@ const config2 = {
   diameter: 700,
   zoom: 2.5,
   resolutionThresholds: [250, 500],
-  autoplay: false,
-  loop: false
+  autoplay: true,
+  loop: true
 }
 
-const vis1 = new acd3(data2, config1);
+const vis1 = new acd3(data1, config1);
 const vis2 = new acd3(youtubeTrailers, config2);
 // vis1.createBubbleChart();
 // vis2.createBubbleChart();
@@ -207,11 +207,11 @@ $('#vis2-placeholder').on('click', () => {
 $('.play').on('click', () => {
   console.log('works')
   // if($('#vis2-placeholder')) $('#vis2-placeholder').remove();
-  vis2.playAll();
+  // vis2.playAll();
 });
 
 $('.pause').on('click', () => {
   console.log('works')
   // if($('#vis2-placeholder')) $('#vis2-placeholder').remove();
-  vis2.pauseAll();
+  // vis2.pauseAll();
 });
