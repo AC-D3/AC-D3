@@ -189,29 +189,29 @@ const config2 = {
 }
 
 const vis1 = new acd3(data1, config1);
-const vis2 = new acd3(youtubeTrailers, config2);
-// vis1.createBubbleChart();
+// const vis2 = new acd3(vimeoBestOf2016, config2);
+vis1.createBubbleChart();
 // vis2.createBubbleChart();
 
-$('#vis1-placeholder').on('click', () => {
-  $('#vis1-placeholder').remove();
-  vis1.createBubbleChart();
-});
+// $('#vis1-placeholder').on('click', () => {
+//   $('#vis1-placeholder').remove();
+//   vis1.createBubbleChart();
+// });
 
-$('#vis2-placeholder').on('click', () => {
-  $('#vis2-placeholder').remove();
-  vis2.createBubbleChart();
-});
+// $('#vis2-placeholder').on('click', () => {
+//   $('#vis2-placeholder').remove();
+//   vis2.createBubbleChart();
+// });
 
 
 $('.play').on('click', () => {
   console.log('works')
   // if($('#vis2-placeholder')) $('#vis2-placeholder').remove();
-  // vis2.playAll();
+  vis1.playAll();
 });
 
 $('.pause').on('click', () => {
   console.log('works')
   // if($('#vis2-placeholder')) $('#vis2-placeholder').remove();
-  // vis2.pauseAll();
+  vis1.pauseAll();
 });
