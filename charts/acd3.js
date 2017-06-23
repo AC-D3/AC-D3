@@ -8,74 +8,81 @@ class acd3 {
 
     populatePlayerStore() {
 
-      if (!document.getElementById('youtubeScript')) {
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        tag.id = "youtubeScript";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-      }
+        const l = console.log
 
-      const createPlayer = (id) => {
-        return new YT.Player(id, {
-          events: { 'onReady': onPlayerReady }
-        });
-      }
+        l('in populatePlayerStore')
+        l('window.youTubeIframeAPIReady --> ', window.youTubeIframeAPIReady)
+        l('window.visStore --> ', window.visStore)
 
-      const onPlayerReady = (event) => {
-        event.target.playVideo()
-                    .mute()
-                    .setLoop(true);
-        let youtubeIframe = document.getElementById(event.target.a.id);
-        if (youtubeIframe.height <= this.config.resolutionThresholds[0]) {
-          event.target.setPlaybackQuality('small')
-        } else if (youtubeIframe.height > this.config.resolutionThresholds[0]
-          && youtubeIframe.height <= this.config.resolutionThresholds[1]) {
-            event.target.setPlaybackQuality('medium')
-          } else {
-            event.target.setPlaybackQuality('large')
-          }
+        if (!document.getElementById('youtubeScript')) {
+            var tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            tag.id = "youtubeScript";
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         }
 
-        if (window.onYouTubeIframeAPIReady) {
-          const lastVis = visStore[visStore.length-1];
-          lastVis.data.children.forEach((item) => {
-              let videoID = item.v_id;
-              if (item.type === 'youtube') {
-                lastVis.playerStore[videoID] = createPlayer(item.v_id);
-              }
-          });
-        }
-        else {
-          window.onYouTubeIframeAPIReady = () => {
-            visStore.forEach((vis) => {
-              vis.data.children.forEach((item) => {
-                let videoID = item.v_id;
-                if (item.type === 'youtube') {
-                  vis.playerStore[videoID] = createPlayer(item.v_id);
-                }
-              });
-            })
-          }
-        }
-
-        visStore[visStore.length-1].data.children.forEach((item) => {
-            let videoID = item.v_id;
-            if (item.type === 'video') {
-                visStore[visStore.length-1].playerStore[videoID] = document.getElementById(videoID);
+        if (!window.onYouTubeIframeAPIReady) {
+            window.onYouTubeIframeAPIReady = () => {
+                window.youTubeIframeAPIReady = true;
+                this.populatePlayerStore();
             }
-            else if (item.type === 'vimeo') {
-                let vimeoPlayer = new Vimeo.Player(videoID);
-                visStore[visStore.length-1].playerStore[videoID] = vimeoPlayer;
-                vimeoPlayer.ready().then(() => {
-                    vimeoPlayer.play();
-                    vimeoPlayer.setVolume(0);
-                    vimeoPlayer.setLoop(true);
+        }
+
+        if (window.youTubeIframeAPIReady) {
+            // visStore.forEach((vis) => {
+            while (visStore.length){
+                console.log('visStore -->', visStore)
+                let vis = visStore.shift()
+                vis.data.children.forEach((item) => {
+                    let videoID = item.v_id;
+                    if (item.type === 'youtube') {
+                        vis.playerStore[videoID] = this.createYouTubePlayer(item);
+                    } else if (item.type === 'video') {
+                        console.log('handle videos...')
+                    } else if (item.type === 'vimeo') {
+                        vis.playerStore[videoID] = this.createVimeoPlayer(item);
+                    } else console.log('invalid type')
                 });
             }
-        });
-
+            // })
+        }
     }
+
+    createVimeoPlayer(item) {
+        let videoID = item.v_id;
+        let vimeoPlayer = new Vimeo.Player(videoID);
+        window.visStore[window.visStore.length - 1].playerStore[videoID] = vimeoPlayer;
+        vimeoPlayer.ready().then(() => {
+            vimeoPlayer.play();
+            vimeoPlayer.setVolume(0);
+            vimeoPlayer.setLoop(true);
+        });
+    }
+
+    createYouTubePlayer(item) {
+        let videoID = item.v_id;
+        return new YT.Player(videoID, {
+            events: { 'onReady': this.onYouTubePlayerReady }
+        });
+    }
+
+    onYouTubePlayerReady(event) {
+        event.target.playVideo()
+            .mute()
+            .setLoop(true);
+        let youtubeIframe = document.getElementById(event.target.a.id);
+        // console.log('this in onYouTubePlayerReady --> ', this)
+        // if (youtubeIframe.height <= this.config.resolutionThresholds[0]) {
+        //     event.target.setPlaybackQuality('small')
+        // } else if (youtubeIframe.height > this.config.resolutionThresholds[0]
+        //     && youtubeIframe.height <= this.config.resolutionThresholds[1]) {
+        //     event.target.setPlaybackQuality('medium')
+        // } else {
+        //     event.target.setPlaybackQuality('large')
+        // }
+    }
+
 
     addBubble(node) {
         let g;
@@ -230,6 +237,3 @@ class acd3 {
         this.populatePlayerStore();
     }
 }
-
-// For use in NPM module
-// module.exports = acd3;
