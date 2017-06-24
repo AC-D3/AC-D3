@@ -38,8 +38,8 @@ class acd3 {
 
         this.setUpEnvironment();
 
-        this.data.forEach((d) => d.v_id = 'id_' + d.v_id)
-        this.data = { 'children': this.data }
+        this.data.forEach((d) => d.v_id = 'id_' + d.v_id);
+        this.data = { 'children': this.data };
 
         const bubble = d3.pack(this.data)
             .size([this.config.diameter, this.config.diameter])
@@ -65,9 +65,101 @@ class acd3 {
         if (window.youTubeIframeAPIReady) this.populatePlayerStore();
     }
 
-    createScatterBubbleChart() {
+    createBubbleScatterChart() {
       this.setUpEnvironment();
 
+      const svg = d3.select("#" + this.config.htmlAnchorID)
+          .append("svg")
+          .classed("scatter-chart", true)
+          .attr("width", this.config.width)
+          .attr("height", this.config.height);
+
+      const parseTime = d3.timeParse(this.config.dateFormat);
+
+      const xIsDate = this.config.xIsDate;
+      const yIsDate = this.config.yIsDate;
+      const rIsDate = this.config.rIsDate;
+
+
+      const width = this.config.width;  //number
+      const height = this.config.height;  //number
+      const margin = this.config.plottableAreaMargin; //object
+      const padding = this.config.plottableAreaPadding; //object
+
+      const plottableAreaWidth = width - margin.left - margin.right;
+      const plottableAreaHeight = height - margin.top - margin.bottom;
+
+      const rLowerLimit = this.config.rLimits.lower;
+      const rUpperLimit = this.config.rLimits.upper;
+
+      const timeOffset = d3.timeDay.offset;
+
+      this.data.forEach((d) => {
+        d.v_id = 'id_' + d.v_id;
+        xIsDate ? d.x = parseTime(d.x) : d.x = +d.x;
+        yIsDate ? d.y = parseTime(d.y) : d.y = +d.y;
+        rIsDate ? d.r = parseTime(d.r) : d.r = +d.r;
+      });
+
+      const minX = d3.min(this.data, (d) => d.x);
+      const maxX = d3.max(this.data, (d) => d.x);
+
+      const minY = d3.min(this.data, (d) => d.y);
+      const maxY = d3.max(this.data, (d) => d.y);
+
+      const minR = d3.min(this.data, (d) => d.r);
+      const maxR = d3.max(this.data, (d) => d.r);
+
+      // set the ranges
+      const xScaleFunc = xIsDate
+        ? d3.scaleTime()
+          .range([0, plottableAreaWidth])
+          .domain([timeOffset(minX, -padding.left), timeOffset(maxX, padding.right)])
+        : d3.scaleLinear()
+          .range([0, plottableAreaWidth])
+          .domain([minX - padding.left, maxX + padding.right]);
+
+      const yScaleFunc = yIsDate
+        ? d3.scaleTime()
+          .range([plottableAreaHeight, 0])
+          .domain([timeOffset(minY, -padding.bottom), timeOffset(maxY, padding.top)])
+        : d3.scaleLinear()
+          .range([plottableAreaHeight, 0])
+          .domain([minY - padding.bottom, maxY + padding.top]);
+
+      const rScaleFunc = rIsDate
+        ? d3.scaleTime()
+          .range([rLowerLimit, rUpperLimit])
+          .domain([minR, maxR])
+        : d3.scaleLinear()
+          .range([rLowerLimit, rUpperLimit])
+          .domain([minR, maxR]);
+
+      this.data.forEach((d) => d.data = Object.assign({}, d));
+
+      this.data.forEach((d) => {
+        d.x = xScaleFunc(d.data.x);
+        d.y = yScaleFunc(d.data.y);
+        d.r = rScaleFunc(d.data.r);
+      });
+
+
+      const node = svg.selectAll("g")
+          .data(this.data)
+          .enter()
+          .append("g")
+
+      this.addBubble(node);
+      this.populatePlayerStore();
+
+      // Add the X Axis
+      svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(xScaleFunc));
+
+      // Add the Y Axis
+      svg.append("g")
+      .call(d3.axisLeft(yScaleFunc));
     }
 
     addBubble(node) {
@@ -162,8 +254,13 @@ class acd3 {
     populatePlayerStore() {
         if (window.youTubeIframeAPIReady) {
             while (visStore.length) {
+
                 let vis = visStore.shift()
-                vis.data.children.forEach((item) => {
+                let data;
+                if (vis.config.chartType === 'bubble') data = vis.data.children;
+                if (vis.config.chartType === 'bubbleScatter') data = vis.data;
+
+                data.forEach((item) => {
                     let videoID = item.v_id;
                     if (item.type === 'youtube') {
                         vis.playerStore[videoID] = this.createYouTubePlayer(videoID);
