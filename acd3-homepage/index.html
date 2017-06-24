@@ -11,17 +11,6 @@
 
     <title>AC-D3</title>
 
-    <!-- Bootstrap Core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-
-    <!-- Theme CSS -->
-    <link href="css/styles.css" rel="stylesheet">
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -92,8 +81,8 @@
             <h3>Vimeo presents: The Top Videos of 2016</h3>
             <div id="vis1" class="col-lg-8 col-lg-offset-2"></div>
         </div>
-        <button class="play btn btn-default">Play</button>
-        <button class="pause btn btn-default">Pause</button>
+        <button id="play-vis1" class="play btn btn-default">Play</button>
+        <button id="pause-vis1" class="pause btn btn-default">Pause</button>
         <p>Hover over videos to play sound.</p>
     </section>
 
@@ -115,8 +104,8 @@
             <h3>Summer Movie Trailers by Number of Views</h3>
             <div id="vis2" class="col-lg-8 col-lg-offset-2"></div>
         </div>
-        <button class="play btn btn-default">Play</button>
-        <button class="pause btn btn-default">Pause</button>
+        <button id="play-vis2" class="play btn btn-default">Play</button>
+        <button id="pause-vis2" class="pause btn btn-default">Pause</button>
         <p>Hover over videos to play sound.</p>
     </section>
 
@@ -150,6 +139,16 @@
         </div>
     </footer>
 
+    <!-- Bootstrap Core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+
+    <!-- Theme CSS -->
+    <link href="css/styles.css" rel="stylesheet">
     <script type="text/javascript" src="https://player.vimeo.com/api/player.js"></script>
     <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
     <script type="text/javascript" src="./../charts/acd3.js"></script>
