@@ -6,90 +6,69 @@ class acd3 {
         this.config = config;
     }
 
-    playAll() {
-        for (let key in this.playerStore) {
-            let currentPlayer = this.playerStore[key];
-            //vimeo:
-            if (currentPlayer.origin === "https://player.vimeo.com") {
-                currentPlayer.play();
-                currentPlayer.setVolume(0);
-            }
-            //html5 video
-            else if (currentPlayer.tagName === 'VIDEO') {
-                currentPlayer.play();
-                currentPlayer.volume = 0.0;
-            }
-            //youtube
-            else if (currentPlayer.playVideo) {
-                currentPlayer.playVideo().mute();
-            }
-        }
+    setUpEnvironment() {
+      if (!window.visStore) window.visStore = [this];
+      else window.visStore.push(this);
+
+      if (!document.getElementById('vimeoScript')) {
+          var tag = document.createElement('script');
+          tag.src = "https://player.vimeo.com/api/player.js";
+          tag.id = "vimeoScript";
+          var firstScriptTag = document.getElementsByTagName('script')[0];
+          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      }
+
+      if (!document.getElementById('youtubeScript')) {
+          var tag = document.createElement('script');
+          tag.src = "https://www.youtube.com/iframe_api";
+          tag.id = "youtubeScript";
+          var firstScriptTag = document.getElementsByTagName('script')[0];
+          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      }
+
+      if (!window.onYouTubeIframeAPIReady) {
+          window.onYouTubeIframeAPIReady = () => {
+              window.youTubeIframeAPIReady = true;
+              this.populatePlayerStore();
+          }
+      }
     }
 
-    pauseAll() {
-        for (let key in this.playerStore) {
-            let currentPlayer = this.playerStore[key];
-            //vimeo and html5 video:
-            if (currentPlayer.origin === "https://player.vimeo.com" || currentPlayer.tagName === 'VIDEO') {
-                currentPlayer.pause();
-            }
-            //youtube
-            else if (currentPlayer.pauseVideo) {
-                currentPlayer.pauseVideo();
-            }
-        }
+    createBubbleChart() {
+
+        this.setUpEnvironment();
+
+        this.data.forEach((d) => d.v_id = 'id_' + d.v_id)
+        this.data = { 'children': this.data }
+
+        const bubble = d3.pack(this.data)
+            .size([this.config.diameter, this.config.diameter])
+            .padding(1.5);
+
+        const svg = d3.select("#" + this.config.htmlAnchorID)
+            .append("svg")
+            .classed("bubble-chart", true)
+            .attr("width", this.config.diameter)
+            .attr("height", this.config.diameter);
+
+        //calculates radius, x and y positions for all child nodes
+        const root = d3.hierarchy(this.data)
+            .sum(function (d) { return d.scalingParameter; });
+
+        const node = svg.selectAll("g")
+            .data(bubble(root).descendants())
+            .enter()
+            //only keeps objects that don't have children property
+            .filter((d) => !d.children);
+
+        this.addBubble(node);
+        if (window.youTubeIframeAPIReady) this.populatePlayerStore();
     }
 
-    populatePlayerStore() {
-        if (window.youTubeIframeAPIReady) {
-            while (visStore.length) {
-                let vis = visStore.shift()
-                vis.data.children.forEach((item) => {
-                    let videoID = item.v_id;
-                    if (item.type === 'youtube') {
-                        vis.playerStore[videoID] = this.createYouTubePlayer(videoID);
-                    } else if (item.type === 'video') {
-                        vis.playerStore[videoID] = document.getElementById(videoID);
-                    } else if (item.type === 'vimeo') {
-                        vis.playerStore[videoID] = this.createVimeoPlayer(videoID);
-                    } else console.log('invalid type')
-                });
-            }
-        }
+    createScatterBubbleChart() {
+      this.setUpEnvironment();
+
     }
-
-
-    createVimeoPlayer(id) {
-        let vimeoPlayer = new Vimeo.Player(id);
-        vimeoPlayer.ready().then(() => {
-            if (this.config.autoplay) {
-                vimeoPlayer.play();
-                vimeoPlayer.setVolume(0);
-            }
-            if (this.config.loop) vimeoPlayer.setLoop(true);
-        });
-        return vimeoPlayer;
-    }
-
-    createYouTubePlayer(id) {
-        const onYouTubePlayerReady = (event) => {
-            if (this.config.autoplay) event.target.playVideo().mute();
-            let youtubeIframe = document.getElementById(event.target.a.id);
-            if (youtubeIframe.height <= this.config.resolutionThresholds[0]) {
-                event.target.setPlaybackQuality('small')
-            } else if (youtubeIframe.height > this.config.resolutionThresholds[0]
-                && youtubeIframe.height <= this.config.resolutionThresholds[1]) {
-                event.target.setPlaybackQuality('medium')
-            } else {
-                event.target.setPlaybackQuality('large')
-            }
-        }
-        return new YT.Player(id, {
-            events: { 'onReady': onYouTubePlayerReady }
-        });
-    }
-
-
 
     addBubble(node) {
         let g;
@@ -102,15 +81,9 @@ class acd3 {
         //position circle below video bubble to handle mouse events
         circle = g.append("circle")
             .attr("r", (d) => d.r)
-            .on('mouseenter', (d) => {
-                this.unmuteOnMouseEnter(d.data);
-            })
-            .on('mouseleave', (d) => {
-                this.muteOnMouseLeave(d.data);
-            })
-            .on('click', (d) => {
-                this.handleClick(d.data)
-            });
+            .on('mouseenter', (d) => this.unmuteOnMouseEnter(d.data))
+            .on('mouseleave', (d) => this.muteOnMouseLeave(d.data))
+            .on('click', (d) => this.handleClick(d.data));
 
         foreignObject = g.append('foreignObject')
             .style('pointer-events', 'none');
@@ -186,6 +159,89 @@ class acd3 {
             });
     }
 
+    populatePlayerStore() {
+        if (window.youTubeIframeAPIReady) {
+            while (visStore.length) {
+                let vis = visStore.shift()
+                vis.data.children.forEach((item) => {
+                    let videoID = item.v_id;
+                    if (item.type === 'youtube') {
+                        vis.playerStore[videoID] = this.createYouTubePlayer(videoID);
+                    } else if (item.type === 'video') {
+                        vis.playerStore[videoID] = document.getElementById(videoID);
+                    } else if (item.type === 'vimeo') {
+                        vis.playerStore[videoID] = this.createVimeoPlayer(videoID);
+                    } else console.log('invalid type')
+                });
+            }
+        }
+    }
+
+
+    createVimeoPlayer(id) {
+        let vimeoPlayer = new Vimeo.Player(id);
+        vimeoPlayer.ready().then(() => {
+            if (this.config.autoplay) {
+                vimeoPlayer.play();
+                vimeoPlayer.setVolume(0);
+            }
+            if (this.config.loop) vimeoPlayer.setLoop(true);
+        });
+        return vimeoPlayer;
+    }
+
+    createYouTubePlayer(id) {
+        const onYouTubePlayerReady = (event) => {
+            if (this.config.autoplay) event.target.playVideo().mute();
+            let youtubeIframe = document.getElementById(event.target.a.id);
+            if (youtubeIframe.height <= this.config.resolutionThresholds[0]) {
+                event.target.setPlaybackQuality('small')
+            } else if (youtubeIframe.height > this.config.resolutionThresholds[0]
+                && youtubeIframe.height <= this.config.resolutionThresholds[1]) {
+                event.target.setPlaybackQuality('medium')
+            } else {
+                event.target.setPlaybackQuality('large')
+            }
+        }
+        return new YT.Player(id, {
+            events: { 'onReady': onYouTubePlayerReady }
+        });
+    }
+
+    playAll() {
+        for (let key in this.playerStore) {
+            let currentPlayer = this.playerStore[key];
+            //vimeo:
+            if (currentPlayer.origin === "https://player.vimeo.com") {
+                currentPlayer.play();
+                currentPlayer.setVolume(0);
+            }
+            //html5 video
+            else if (currentPlayer.tagName === 'VIDEO') {
+                currentPlayer.play();
+                currentPlayer.volume = 0.0;
+            }
+            //youtube
+            else if (currentPlayer.playVideo) {
+                currentPlayer.playVideo().mute();
+            }
+        }
+    }
+
+    pauseAll() {
+        for (let key in this.playerStore) {
+            let currentPlayer = this.playerStore[key];
+            //vimeo and html5 video:
+            if (currentPlayer.origin === "https://player.vimeo.com" || currentPlayer.tagName === 'VIDEO') {
+                currentPlayer.pause();
+            }
+            //youtube
+            else if (currentPlayer.pauseVideo) {
+                currentPlayer.pauseVideo();
+            }
+        }
+    }
+
     unmuteOnMouseEnter(data) {
         console.log('enter')
         let videoID = data.v_id;
@@ -210,70 +266,5 @@ class acd3 {
         d3.select('div').attr('height', this.diameter)
         d3.select('div').attr('width', this.diameter)
         d3.select('#' + videoID).attr('height', this.diameter)
-    }
-
-    setUpEnvironment() {
-      if (!window.visStore) window.visStore = [this];
-      else window.visStore.push(this);
-
-      if (!document.getElementById('vimeoScript')) {
-          var tag = document.createElement('script');
-          tag.src = "https://player.vimeo.com/api/player.js";
-          tag.id = "vimeoScript";
-          var firstScriptTag = document.getElementsByTagName('script')[0];
-          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-      }
-
-      if (!document.getElementById('youtubeScript')) {
-          var tag = document.createElement('script');
-          tag.src = "https://www.youtube.com/iframe_api";
-          tag.id = "youtubeScript";
-          var firstScriptTag = document.getElementsByTagName('script')[0];
-          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-      }
-
-      if (!window.onYouTubeIframeAPIReady) {
-          window.onYouTubeIframeAPIReady = () => {
-              window.youTubeIframeAPIReady = true;
-              this.populatePlayerStore();
-          }
-      }
-    }
-
-    createBubbleChart() {
-
-        this.setUpEnvironment();
-
-        this.data.forEach((d) => d.v_id = 'id_' + d.v_id)
-        this.data = { 'children': this.data }
-
-        const bubble = d3.pack(this.data)
-            .size([this.config.diameter, this.config.diameter])
-            .padding(1.5);
-
-        const svg = d3.select("#" + this.config.htmlAnchorID)
-            .append("svg")
-            .classed("bubble-chart", true)
-            .attr("width", this.config.diameter)
-            .attr("height", this.config.diameter);
-
-        //calculates radius, x and y positions for all child nodes
-        const root = d3.hierarchy(this.data)
-            .sum(function (d) { return d.scalingParameter; });
-
-        const node = svg.selectAll("g")
-            .data(bubble(root).descendants())
-            .enter()
-            //only keeps objects that don't have children property
-            .filter((d) => !d.children);
-
-        console.log('node ==>', node);
-        this.addBubble(node);
-        this.populatePlayerStore();
-    }
-
-    createScatterBubbleChart() {
-      this.setUpEnvironment();
-
     }
 }
