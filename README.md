@@ -16,11 +16,11 @@ $ npm install ac-d3 --save
 #### Pre-built visualizations
 
 ##### HTML
-1. Create div with specific ID (Used in config object later)
+1) Create div with specific ID (Used in config object later)
 ```html
 <div id='vis'></div>
 ```
-2. Add script tags
+2) Add script tags
 ```html
 <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>
 <script type="text/javascript" src="https://player.vimeo.com/api/player.js"></script>
@@ -29,11 +29,11 @@ $ npm install ac-d3 --save
 
 
 ##### Javascript
-1. Require in library
+1) Require in library
 ```javascript
 const acd3 = require('ac-d3');
 ```
-2. Create data object
+2) Create data object
 
 | Key | Value datatype | Note |
 | :-- | :-- | :-- |
@@ -64,7 +64,7 @@ const data = {
     }]
 }
 ```
-3. Create config object
+3) Create config object
 
 | Key | Value datatype | Note |
 | :-- | :-- | :-- |
@@ -81,7 +81,7 @@ const config = {
   resolutionThresholds: [250, 500],
 }
 ```
-4. Create a new chart instance and invode the createBubbleChart method
+4) Create a new chart instance and invode the createBubbleChart method
 ```javascript
 const randomChart = new acd3(data, config);
 randomChart.createBubbleChart();
