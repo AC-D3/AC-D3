@@ -41,22 +41,6 @@ class acd3 {
     }
 
     populatePlayerStore() {
-
-        if (!document.getElementById('youtubeScript')) {
-            var tag = document.createElement('script');
-            tag.src = "https://www.youtube.com/iframe_api";
-            tag.id = "youtubeScript";
-            var firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        }
-
-        if (!window.onYouTubeIframeAPIReady) {
-            window.onYouTubeIframeAPIReady = () => {
-                window.youTubeIframeAPIReady = true;
-                this.populatePlayerStore();
-            }
-        }
-
         if (window.youTubeIframeAPIReady) {
             while (visStore.length) {
                 let vis = visStore.shift()
@@ -228,10 +212,37 @@ class acd3 {
         d3.select('#' + videoID).attr('height', this.diameter)
     }
 
+    setUpEnvironment() {
+      if (!window.visStore) window.visStore = [this];
+      else window.visStore.push(this);
+
+      if (!document.getElementById('vimeoScript')) {
+          var tag = document.createElement('script');
+          tag.src = "https://player.vimeo.com/api/player.js";
+          tag.id = "vimeoScript";
+          var firstScriptTag = document.getElementsByTagName('script')[0];
+          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      }
+
+      if (!document.getElementById('youtubeScript')) {
+          var tag = document.createElement('script');
+          tag.src = "https://www.youtube.com/iframe_api";
+          tag.id = "youtubeScript";
+          var firstScriptTag = document.getElementsByTagName('script')[0];
+          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      }
+
+      if (!window.onYouTubeIframeAPIReady) {
+          window.onYouTubeIframeAPIReady = () => {
+              window.youTubeIframeAPIReady = true;
+              this.populatePlayerStore();
+          }
+      }
+    }
+
     createBubbleChart() {
 
-        if (!window.visStore) window.visStore = [this];
-        else window.visStore.push(this);
+        this.setUpEnvironment();
 
         this.data.forEach((d) => d.v_id = 'id_' + d.v_id)
         this.data = { 'children': this.data }
@@ -256,7 +267,13 @@ class acd3 {
             //only keeps objects that don't have children property
             .filter((d) => !d.children);
 
+        console.log('node ==>', node);
         this.addBubble(node);
         this.populatePlayerStore();
+    }
+
+    createScatterBubbleChart() {
+      this.setUpEnvironment();
+
     }
 }
