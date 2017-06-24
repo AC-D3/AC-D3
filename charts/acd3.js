@@ -4,7 +4,6 @@ class acd3 {
         this.playerStore = {};
         this.data = data;
         this.config = config;
-        this.playerCreated = false;
     }
 
     playAll() {
@@ -43,12 +42,6 @@ class acd3 {
 
     populatePlayerStore() {
 
-        const l = console.log
-
-        // l('in populatePlayerStore')
-        // l('window.youTubeIframeAPIReady --> ', window.youTubeIframeAPIReady)
-        // l('window.visStore --> ', window.visStore)
-
         if (!document.getElementById('youtubeScript')) {
             var tag = document.createElement('script');
             tag.src = "https://www.youtube.com/iframe_api";
@@ -65,7 +58,6 @@ class acd3 {
         }
 
         if (window.youTubeIframeAPIReady) {
-            // visStore.forEach((vis) => {
             while (visStore.length) {
                 let vis = visStore.shift()
                 vis.data.children.forEach((item) => {
@@ -79,7 +71,6 @@ class acd3 {
                     } else console.log('invalid type')
                 });
             }
-            // })
         }
     }
 
