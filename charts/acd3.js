@@ -6,106 +6,161 @@ class acd3 {
         this.config = config;
     }
 
-    playAll() {
-        for (let key in this.playerStore) {
-            let currentPlayer = this.playerStore[key];
-            //vimeo:
-            if (currentPlayer.origin === "https://player.vimeo.com") {
-                currentPlayer.play();
-                currentPlayer.setVolume(0);
-            }
-            //html5 video
-            else if (currentPlayer.tagName === 'VIDEO') {
-                currentPlayer.play();
-                currentPlayer.volume = 0.0;
-            }
-            //youtube
-            else if (currentPlayer.playVideo) {
-                currentPlayer.playVideo().mute();
-            }
-        }
+    setUpEnvironment() {
+      if (!window.visStore) window.visStore = [this];
+      else window.visStore.push(this);
+
+      if (!document.getElementById('vimeoScript')) {
+          var tag = document.createElement('script');
+          tag.src = "https://player.vimeo.com/api/player.js";
+          tag.id = "vimeoScript";
+          var firstScriptTag = document.getElementsByTagName('script')[0];
+          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      }
+
+      if (!document.getElementById('youtubeScript')) {
+          var tag = document.createElement('script');
+          tag.src = "https://www.youtube.com/iframe_api";
+          tag.id = "youtubeScript";
+          var firstScriptTag = document.getElementsByTagName('script')[0];
+          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      }
+
+      if (!window.onYouTubeIframeAPIReady) {
+          window.onYouTubeIframeAPIReady = () => {
+              window.youTubeIframeAPIReady = true;
+              this.populatePlayerStore();
+          }
+      }
     }
 
-    pauseAll() {
-        for (let key in this.playerStore) {
-            let currentPlayer = this.playerStore[key];
-            //vimeo and html5 video:
-            if (currentPlayer.origin === "https://player.vimeo.com" || currentPlayer.tagName === 'VIDEO') {
-                currentPlayer.pause();
-            }
-            //youtube
-            else if (currentPlayer.pauseVideo) {
-                currentPlayer.pauseVideo();
-            }
-        }
+    createBubbleChart() {
+
+        this.setUpEnvironment();
+
+        this.data.forEach((d) => d.v_id = 'id_' + d.v_id);
+        this.data = { 'children': this.data };
+
+        const bubble = d3.pack(this.data)
+            .size([this.config.diameter, this.config.diameter])
+            .padding(1.5);
+
+        const svg = d3.select("#" + this.config.htmlAnchorID)
+            .append("svg")
+            .classed("bubble-chart", true)
+            .attr("width", this.config.diameter)
+            .attr("height", this.config.diameter);
+
+        //calculates radius, x and y positions for all child nodes
+        const root = d3.hierarchy(this.data)
+            .sum(function (d) { return d.scalingParameter; });
+
+        const node = svg.selectAll("g")
+            .data(bubble(root).descendants())
+            .enter()
+            //only keeps objects that don't have children property
+            .filter((d) => !d.children);
+
+        this.addBubble(node);
+        if (window.youTubeIframeAPIReady) this.populatePlayerStore();
     }
 
-    populatePlayerStore() {
+    createBubbleScatterChart() {
+      this.setUpEnvironment();
 
-        if (!document.getElementById('youtubeScript')) {
-            var tag = document.createElement('script');
-            tag.src = "https://www.youtube.com/iframe_api";
-            tag.id = "youtubeScript";
-            var firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        }
+      const svg = d3.select("#" + this.config.htmlAnchorID)
+          .append("svg")
+          .classed("scatter-chart", true)
+          .attr("width", this.config.width)
+          .attr("height", this.config.height);
 
-        if (!window.onYouTubeIframeAPIReady) {
-            window.onYouTubeIframeAPIReady = () => {
-                window.youTubeIframeAPIReady = true;
-                this.populatePlayerStore();
-            }
-        }
+      const parseTime = d3.timeParse(this.config.dateFormat);
 
-        if (window.youTubeIframeAPIReady) {
-            while (visStore.length) {
-                let vis = visStore.shift()
-                vis.data.children.forEach((item) => {
-                    let videoID = item.v_id;
-                    if (item.type === 'youtube') {
-                        vis.playerStore[videoID] = this.createYouTubePlayer(videoID);
-                    } else if (item.type === 'video') {
-                        vis.playerStore[videoID] = document.getElementById(videoID);
-                    } else if (item.type === 'vimeo') {
-                        vis.playerStore[videoID] = this.createVimeoPlayer(videoID);
-                    } else console.log('invalid type')
-                });
-            }
-        }
+      const xIsDate = this.config.xIsDate;
+      const yIsDate = this.config.yIsDate;
+      const rIsDate = this.config.rIsDate;
+
+
+      const width = this.config.width;  //number
+      const height = this.config.height;  //number
+      const margin = this.config.plottableAreaMargin; //object
+      const padding = this.config.plottableAreaPadding; //object
+
+      const plottableAreaWidth = width - margin.left - margin.right;
+      const plottableAreaHeight = height - margin.top - margin.bottom;
+
+      const rLowerLimit = this.config.rLimits.lower;
+      const rUpperLimit = this.config.rLimits.upper;
+
+      const timeOffset = d3.timeDay.offset;
+
+      this.data.forEach((d) => {
+        d.v_id = 'id_' + d.v_id;
+        xIsDate ? d.x = parseTime(d.x) : d.x = +d.x;
+        yIsDate ? d.y = parseTime(d.y) : d.y = +d.y;
+        rIsDate ? d.r = parseTime(d.r) : d.r = +d.r;
+      });
+
+      const minX = d3.min(this.data, (d) => d.x);
+      const maxX = d3.max(this.data, (d) => d.x);
+
+      const minY = d3.min(this.data, (d) => d.y);
+      const maxY = d3.max(this.data, (d) => d.y);
+
+      const minR = d3.min(this.data, (d) => d.r);
+      const maxR = d3.max(this.data, (d) => d.r);
+
+      // set the ranges
+      const xScaleFunc = xIsDate
+        ? d3.scaleTime()
+          .range([0, plottableAreaWidth])
+          .domain([timeOffset(minX, -padding.left), timeOffset(maxX, padding.right)])
+        : d3.scaleLinear()
+          .range([0, plottableAreaWidth])
+          .domain([minX - padding.left, maxX + padding.right]);
+
+      const yScaleFunc = yIsDate
+        ? d3.scaleTime()
+          .range([plottableAreaHeight, 0])
+          .domain([timeOffset(minY, -padding.bottom), timeOffset(maxY, padding.top)])
+        : d3.scaleLinear()
+          .range([plottableAreaHeight, 0])
+          .domain([minY - padding.bottom, maxY + padding.top]);
+
+      const rScaleFunc = rIsDate
+        ? d3.scaleTime()
+          .range([rLowerLimit, rUpperLimit])
+          .domain([minR, maxR])
+        : d3.scaleLinear()
+          .range([rLowerLimit, rUpperLimit])
+          .domain([minR, maxR]);
+
+      this.data.forEach((d) => d.data = Object.assign({}, d));
+
+      this.data.forEach((d) => {
+        d.x = xScaleFunc(d.data.x);
+        d.y = yScaleFunc(d.data.y);
+        d.r = rScaleFunc(d.data.r);
+      });
+
+
+      const node = svg.selectAll("g")
+          .data(this.data)
+          .enter()
+          .append("g")
+
+      this.addBubble(node);
+      this.populatePlayerStore();
+
+      // Add the X Axis
+      svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(xScaleFunc));
+
+      // Add the Y Axis
+      svg.append("g")
+      .call(d3.axisLeft(yScaleFunc));
     }
-
-
-    createVimeoPlayer(id) {
-        let vimeoPlayer = new Vimeo.Player(id);
-        vimeoPlayer.ready().then(() => {
-            if (this.config.autoplay) {
-                vimeoPlayer.play();
-                vimeoPlayer.setVolume(0);
-            }
-            if (this.config.loop) vimeoPlayer.setLoop(true);
-        });
-        return vimeoPlayer;
-    }
-
-    createYouTubePlayer(id) {
-        const onYouTubePlayerReady = (event) => {
-            if (this.config.autoplay) event.target.playVideo().mute();
-            let youtubeIframe = document.getElementById(event.target.a.id);
-            if (youtubeIframe.height <= this.config.resolutionThresholds[0]) {
-                event.target.setPlaybackQuality('small')
-            } else if (youtubeIframe.height > this.config.resolutionThresholds[0]
-                && youtubeIframe.height <= this.config.resolutionThresholds[1]) {
-                event.target.setPlaybackQuality('medium')
-            } else {
-                event.target.setPlaybackQuality('large')
-            }
-        }
-        return new YT.Player(id, {
-            events: { 'onReady': onYouTubePlayerReady }
-        });
-    }
-
-
 
     addBubble(node) {
         let g;
@@ -118,15 +173,9 @@ class acd3 {
         //position circle below video bubble to handle mouse events
         circle = g.append("circle")
             .attr("r", (d) => d.r)
-            .on('mouseenter', (d) => {
-                this.unmuteOnMouseEnter(d.data);
-            })
-            .on('mouseleave', (d) => {
-                this.muteOnMouseLeave(d.data);
-            })
-            .on('click', (d) => {
-                this.handleClick(d.data)
-            });
+            .on('mouseenter', (d) => this.unmuteOnMouseEnter(d.data))
+            .on('mouseleave', (d) => this.muteOnMouseLeave(d.data))
+            .on('click', (d) => this.handleClick(d.data));
 
         foreignObject = g.append('foreignObject')
             .style('pointer-events', 'none');
@@ -202,6 +251,94 @@ class acd3 {
             });
     }
 
+    populatePlayerStore() {
+        if (window.youTubeIframeAPIReady) {
+            while (visStore.length) {
+
+                let vis = visStore.shift()
+                let data;
+                if (vis.config.chartType === 'bubble') data = vis.data.children;
+                if (vis.config.chartType === 'bubbleScatter') data = vis.data;
+
+                data.forEach((item) => {
+                    let videoID = item.v_id;
+                    if (item.type === 'youtube') {
+                        vis.playerStore[videoID] = this.createYouTubePlayer(videoID);
+                    } else if (item.type === 'video') {
+                        vis.playerStore[videoID] = document.getElementById(videoID);
+                    } else if (item.type === 'vimeo') {
+                        vis.playerStore[videoID] = this.createVimeoPlayer(videoID);
+                    } else console.log('invalid type')
+                });
+            }
+        }
+    }
+
+
+    createVimeoPlayer(id) {
+        let vimeoPlayer = new Vimeo.Player(id);
+        vimeoPlayer.ready().then(() => {
+            if (this.config.autoplay) {
+                vimeoPlayer.play();
+                vimeoPlayer.setVolume(0);
+            }
+            if (this.config.loop) vimeoPlayer.setLoop(true);
+        });
+        return vimeoPlayer;
+    }
+
+    createYouTubePlayer(id) {
+        const onYouTubePlayerReady = (event) => {
+            if (this.config.autoplay) event.target.playVideo().mute();
+            let youtubeIframe = document.getElementById(event.target.a.id);
+            if (youtubeIframe.height <= this.config.resolutionThresholds[0]) {
+                event.target.setPlaybackQuality('small')
+            } else if (youtubeIframe.height > this.config.resolutionThresholds[0]
+                && youtubeIframe.height <= this.config.resolutionThresholds[1]) {
+                event.target.setPlaybackQuality('medium')
+            } else {
+                event.target.setPlaybackQuality('large')
+            }
+        }
+        return new YT.Player(id, {
+            events: { 'onReady': onYouTubePlayerReady }
+        });
+    }
+
+    playAll() {
+        for (let key in this.playerStore) {
+            let currentPlayer = this.playerStore[key];
+            //vimeo:
+            if (currentPlayer.origin === "https://player.vimeo.com") {
+                currentPlayer.play();
+                currentPlayer.setVolume(0);
+            }
+            //html5 video
+            else if (currentPlayer.tagName === 'VIDEO') {
+                currentPlayer.play();
+                currentPlayer.volume = 0.0;
+            }
+            //youtube
+            else if (currentPlayer.playVideo) {
+                currentPlayer.playVideo().mute();
+            }
+        }
+    }
+
+    pauseAll() {
+        for (let key in this.playerStore) {
+            let currentPlayer = this.playerStore[key];
+            //vimeo and html5 video:
+            if (currentPlayer.origin === "https://player.vimeo.com" || currentPlayer.tagName === 'VIDEO') {
+                currentPlayer.pause();
+            }
+            //youtube
+            else if (currentPlayer.pauseVideo) {
+                currentPlayer.pauseVideo();
+            }
+        }
+    }
+
     unmuteOnMouseEnter(data) {
         console.log('enter')
         let videoID = data.v_id;
@@ -226,37 +363,5 @@ class acd3 {
         d3.select('div').attr('height', this.diameter)
         d3.select('div').attr('width', this.diameter)
         d3.select('#' + videoID).attr('height', this.diameter)
-    }
-
-    createBubbleChart() {
-
-        if (!window.visStore) window.visStore = [this];
-        else window.visStore.push(this);
-
-        this.data.forEach((d) => d.v_id = 'id_' + d.v_id)
-        this.data = { 'children': this.data }
-
-        const bubble = d3.pack(this.data)
-            .size([this.config.diameter, this.config.diameter])
-            .padding(1.5);
-
-        const svg = d3.select("#" + this.config.htmlAnchorID)
-            .append("svg")
-            .classed("bubble-chart", true)
-            .attr("width", this.config.diameter)
-            .attr("height", this.config.diameter);
-
-        //calculates radius, x and y positions for all child nodes
-        const root = d3.hierarchy(this.data)
-            .sum(function (d) { return d.scalingParameter; });
-
-        const node = svg.selectAll("g")
-            .data(bubble(root).descendants())
-            .enter()
-            //only keeps objects that don't have children property
-            .filter((d) => !d.children);
-
-        this.addBubble(node);
-        this.populatePlayerStore();
     }
 }

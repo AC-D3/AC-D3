@@ -53,6 +53,11 @@ let data2 = [{
         "scalingParameter": 1507944,
         "v_id": 4,
         "type": "video"
+    }, {
+        "src": "https://www.youtube.com/embed/cPeqNTqZNN0",
+        "scalingParameter": 3495856,
+        "v_id": 9,
+        "type": "youtube"
     }]
 
 const youtubeTrailers = [{
@@ -170,7 +175,42 @@ const vimeoBestOf2016 = [{
         "type": "vimeo"
     }]
 
-const config1 = {
+let scatterData1 = [{
+        "src": "https://player.vimeo.com/video/12788201",
+        "v_id": 3,
+        "type": "vimeo",
+        'x': '18-Dec-09',
+        'y': 34983948,
+        "r": 26112988
+    }, {
+        "src": "http://upload.wikimedia.org/wikipedia/commons/7/79/Big_Buck_Bunny_small.ogv",
+        "v_id": 4,
+        "type": "video",
+        'x': '18-Dec-11',
+        'y': 53849833,
+        "r": 26112988
+    }, {
+        "src": "https://www.youtube.com/embed/cPeqNTqZNN0",
+        "v_id": 9,
+        "type": "youtube",
+        'x': '19-Dec-10',
+        'y': 93948576,
+        "r": 26112988
+    }]
+
+let scatterData2 = [{
+        x: '18-Dec-09',
+        y: 34983948,
+        r: 26112988,
+        data: {
+              "src": "https://player.vimeo.com/video/12788201",
+              "v_id": 3,
+              "type": "vimeo"
+              }
+        }]
+
+const bubbleConfig = {
+  chartType: 'bubble',
   htmlAnchorID: 'vis1',
   diameter: 700,
   zoom: 2.5,
@@ -179,32 +219,32 @@ const config1 = {
   loop: false
 }
 
-const config2 = {
+const scatterConfig = {
+  chartType: 'bubbleScatter',
   htmlAnchorID: 'vis2',
-  diameter: 700,
   zoom: 2.5,
   resolutionThresholds: [250, 500],
   autoplay: false,
-  loop: false
+  loop: false,
+  dateFormat: '%d-%b-%y',
+  xIsDate: true,
+  yIsDate: false,
+  rIsDate: false,
+  height: 500,
+  width: 1000,
+  plottableAreaMargin: { top: 60, right: 60, bottom: 30, left: 100 },
+  plottableAreaPadding: { top: 200, right: 0, bottom: 0, left: 0 },
+  rLimits: { lower: 20, upper: 120 }
 }
 
-const vis1 = new acd3(vimeoBestOf2016, config1);
-const vis2 = new acd3(youtubeTrailers, config2);
+const vis1 = new acd3(data1, bubbleConfig);
+const vis2 = new acd3(scatterData1, scatterConfig);
+
 vis1.createBubbleChart();
-vis2.createBubbleChart();
+vis2.createBubbleScatterChart();
 
-$('#play-vis1').on('click', () => {
-  vis1.playAll();
-});
-
-$('#pause-vis1').on('click', () => {
-  vis1.pauseAll();
-});
-
-$('#play-vis2').on('click', () => {
-  vis2.playAll();
-});
-
-$('#pause-vis2').on('click', () => {
-  vis2.pauseAll();
-});
+//play/pause buttons:
+$('#play-vis1').on('click', () => vis1.playAll());
+$('#pause-vis1').on('click', () => vis1.pauseAll());
+$('#play-vis2').on('click', () => vis2.playAll());
+$('#pause-vis2').on('click', () => vis2.pauseAll());
