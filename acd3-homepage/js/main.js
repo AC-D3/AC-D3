@@ -181,7 +181,7 @@ let scatterData1 = [{
     "type": "vimeo",
     'x': '18-Dec-09',
     'y': 34983948,
-    "r": 26112988
+    "r": 46112988
 }, {
     "src": "http://upload.wikimedia.org/wikipedia/commons/7/79/Big_Buck_Bunny_small.ogv",
     "v_id": 4,
@@ -195,8 +195,10 @@ let scatterData1 = [{
     "type": "youtube",
     'x': '19-Dec-10',
     'y': 93948576,
-    "r": 26112988
+    "r": 86112988
 }]
+
+
 
 let scatterData2 = [{
     x: '18-Dec-09',
@@ -209,9 +211,123 @@ let scatterData2 = [{
     }
 }]
 
+let scatterData3 =
+    [
+        {
+            "productionBudgetRank": 1,
+            "wordlwideGrossRank": 1,
+            "v_id": 19,
+            "type": "youtube",
+            "movieName": "Avatar",
+            "src": "https://www.youtube.com/embed/5PSNL1qE6VY",
+            "x": "18-Dec-09",
+            "y": 425000000,
+            "r": 2783918982
+        },
+        {
+            "productionBudgetRank": 2,
+            "wordlwideGrossRank": 2,
+            "v_id": 20,
+            "type": "youtube",
+            "movieName": "Star Wars: The Force Awakens Official Trailer ",
+            "src": "https://www.youtube.com/embed/gAUxw4umkdY",
+            "x": "18-Dec-15",
+            "y": 306000000,
+            "r": 2058662225
+        },
+        {
+            "productionBudgetRank": 3,
+            "wordlwideGrossRank": 5,
+            "v_id": 21,
+            "type": "youtube",
+            "movieName": "Pirates of the Caribbean: At World's End",
+            "src": "https://www.youtube.com/embed/HKSZtp_OGHY",
+            "x": "24-May-07",
+            "y": 300000000,
+            "r": 963420425
+        },
+        {
+            "productionBudgetRank": 4,
+            "wordlwideGrossRank": 7,
+            "v_id": 22,
+            "type": "youtube",
+            "movieName": "Spectre",
+            "src": "https://www.youtube.com/embed/7GqClqvlObY",
+            "x": "6-Nov-15",
+            "y": 300000000,
+            "r": 879620923
+        },
+        {
+            "productionBudgetRank": 5,
+            "wordlwideGrossRank": 4,
+            "v_id": 23,
+            "type": "youtube",
+            "movieName": "The Dark Knight Rises",
+            "src": "https://www.youtube.com/embed/GokKUqLcvD8",
+            "x": "20-Jul-12",
+            "y": 275000000,
+            "r": 1084439099
+        },
+        {
+            "productionBudgetRank": 7,
+            "wordlwideGrossRank": 9,
+            "v_id": 24,
+            "type": "youtube",
+            "movieName": "John Carter",
+            "src": "https://www.youtube.com/embed/nlvYKl1fjBI",
+            "x": "9-Mar-12",
+            "y": 275000000,
+            "r": 282778100
+        },
+        {
+            "productionBudgetRank": 6,
+            "wordlwideGrossRank": 10,
+            "v_id": 25,
+            "type": "youtube",
+            "movieName": "The Lone Ranger",
+            "src": "https://www.youtube.com/embed/JjFsNSoDZK8",
+            "x": "2-Jul-13",
+            "y": 275000000,
+            "r": 260002115
+        },
+        {
+            "productionBudgetRank": 8,
+            "wordlwideGrossRank": 8,
+            "v_id": 26,
+            "type": "youtube",
+            "movieName": "Tangled",
+            "src": "https://www.youtube.com/embed/2f516ZLyC6U",
+            "x": "24-Nov-10",
+            "y": 260000000,
+            "r": 586581936
+        },
+        {
+            "productionBudgetRank": 9,
+            "wordlwideGrossRank": 6,
+            "v_id": 27,
+            "type": "youtube",
+            "movieName": "Spider-Man 3",
+            "src": "https://www.youtube.com/embed/MTIP-Ih_GR0",
+            "x": "4-May-07",
+            "y": 258000000,
+            "r": 890875303
+        },
+        {
+            "productionBudgetRank": 10,
+            "wordlwideGrossRank": 3,
+            "v_id": 28,
+            "type": "youtube",
+            "movieName": "Avengers: Age of Ultron",
+            "src": "https://www.youtube.com/embed/tmeOjFno6Do",
+            "x": "5-Jan-15",
+            "y": 250000000,
+            "r": 1404705868
+        }
+    ]
+
 const bubbleConfig = {
     chartType: 'bubble',
-    htmlAnchorID: 'vis1',
+    htmlAnchorID: 'Vis1',
     diameter: 700,
     zoom: 2.5,
     resolutionThresholds: [250, 500],
@@ -221,7 +337,7 @@ const bubbleConfig = {
 
 const scatterConfig = {
     chartType: 'bubbleScatter',
-    htmlAnchorID: 'vis2',
+    htmlAnchorID: 'Vis2',
     zoom: 2.5,
     resolutionThresholds: [250, 500],
     autoplay: false,
@@ -230,15 +346,15 @@ const scatterConfig = {
     xIsDate: true,
     yIsDate: false,
     rIsDate: false,
-    height: 500,
-    width: 1000,
+    height: 600,
+    width: 900,
     plottableAreaMargin: { top: 0, right: 0, bottom: 30, left: 65 },
-    plottableAreaPadding: { top: 60, right: 60, bottom: 60, left: 60 },
+    plottableAreaPadding: { top: 120, right: 100, bottom: 80, left: 60 },
     rLimits: { lower: 20, upper: 120 }
 }
 
 const vis1 = new acd3(data1, bubbleConfig);
-const vis2 = new acd3(scatterData1, scatterConfig);
+const vis2 = new acd3(scatterData3, scatterConfig);
 
 vis1.createBubbleChart();
 vis2.createBubbleScatterChart();
