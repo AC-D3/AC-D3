@@ -207,7 +207,8 @@ class acd3 {
             .attr("r", (d) => d.r)
             .on('mouseenter', (d) => this.unmuteOnMouseEnter(d.data))
             .on('mouseleave', (d) => this.muteOnMouseLeave(d.data))
-            .on('click', (d) => this.handleClick(d.data));
+            .on('click', (d) => this.handleSingleClick(d.data));
+            // .on('click', (d) => this.handleClick(d.data));
 
         foreignObject = g.append('foreignObject')
             .style('pointer-events', 'none');
@@ -276,7 +277,7 @@ class acd3 {
                     if (this.config.looop) params += '&loop=1';
                     return d.data.src + params;
                 } else if (d.data.type === 'vimeo') {
-                    return d.data.src + '?' + 'autopause=0';
+                    return d.data.src + '?' + 'autopause=0'; //+ '&background=1'
                 } else {
                     return d.data.src;
                 }
@@ -387,6 +388,36 @@ class acd3 {
         if (videoType === 'vimeo') this.playerStore[videoID].setVolume(0);
         else if (videoType === 'youtube') this.playerStore[videoID].mute();
         else this.playerStore[videoID].volume = 0;
+    }
+
+    handleSingleClick(data) {
+      let clickedPlayer = this.playerStore[data.v_id];
+      //youtube:
+      if (data.type === 'youtube') {
+        const playerState = clickedPlayer.getPlayerState();
+        console.log(playerState)
+        if (playerState === -1 || playerState === 2 || playerState === 5) clickedPlayer.playVideo();
+        else {
+          console.log('pause!')
+          clickedPlayer.pauseVideo();
+        }
+      }
+
+      //vimeo:
+      else if (data.type === 'vimeo') {
+        clickedPlayer.getPaused().then((paused) => {
+          if (paused) clickedPlayer.play();
+          else clickedPlayer.pause();
+        });
+      }
+
+      //html5:
+      else if (data.type === 'video') {
+        const paused = clickedPlayer.paused;
+        if (paused) clickedPlayer.play();
+        else clickedPlayer.pause();
+      }
+
     }
 
     handleClick(data) {

@@ -44,21 +44,26 @@ let data1 = [{
 }]
 
 let data2 = [{
-    "src": "https://player.vimeo.com/video/12788201",
-    "scalingParameter": 26112988,
-    "v_id": "3",
-    "type": "vimeo"
-}, {
-    "src": "http://upload.wikimedia.org/wikipedia/commons/7/79/Big_Buck_Bunny_small.ogv",
-    "scalingParameter": 1507944,
-    "v_id": "4",
-    "type": "video"
-}, {
-    "src": "https://www.youtube.com/embed/cPeqNTqZNN0",
-    "scalingParameter": 3495856,
-    "v_id": "9",
-    "type": "youtube"
-}]
+        "src": "https://player.vimeo.com/video/12788201",
+        "scalingParameter": 26112988,
+        "v_id": 3,
+        "type": "vimeo"
+    }, {
+        "src": "http://upload.wikimedia.org/wikipedia/commons/7/79/Big_Buck_Bunny_small.ogv",
+        "scalingParameter": 1507944,
+        "v_id": 4,
+        "type": "video"
+    }, {
+        "src": "https://www.youtube.com/embed/1xv_FeBGzfk",
+        "scalingParameter": 3495856,
+        "v_id": 9,
+        "type": "youtube"
+    }, {
+        "src": "https://www.youtube.com/embed/cPeqNTqZNN0",
+        "scalingParameter": 3495856,
+        "v_id": 8,
+        "type": "youtube"
+    }]
 
 const youtubeTrailers = [{
     "src": 'https://www.youtube.com/embed/F-eMt3SrfFU',
@@ -114,66 +119,67 @@ const youtubeTrailers = [{
     "type": "youtube"
 }]
 
-const vimeoBestOf2016 = [{
-    "src": "https://player.vimeo.com/video/167054481",
-    "scalingParameter": 1,
-    "v_id": 11,
-    "type": "vimeo"
-},
-{
-    "src": "https://player.vimeo.com/video/173524321",
-    "scalingParameter": 2,
-    "v_id": 12,
-    "type": "vimeo"
-},
-{
-    "src": "https://player.vimeo.com/video/179936903",
-    "scalingParameter": 3,
-    "v_id": 13,
-    "type": "vimeo"
-},
-{
-    "src": "https://player.vimeo.com/video/185717440",
-    "scalingParameter": 4,
-    "v_id": 14,
-    "type": "vimeo"
-},
-{
-    "src": "https://player.vimeo.com/video/166807261",
-    "scalingParameter": 5,
-    "v_id": 15,
-    "type": "vimeo"
-},
-{
-    "src": "https://player.vimeo.com/video/169599296",
-    "scalingParameter": 6,
-    "v_id": 16,
-    "type": "vimeo"
-},
-{
-    "src": "https://player.vimeo.com/video/183252171",
-    "scalingParameter": 7,
-    "v_id": 17,
-    "type": "vimeo"
-},
-{
-    "src": "https://player.vimeo.com/video/175629655",
-    "scalingParameter": 8,
-    "v_id": 18,
-    "type": "vimeo"
-},
-{
-    "src": "https://player.vimeo.com/video/172431736",
-    "scalingParameter": 9,
-    "v_id": 19,
-    "type": "vimeo"
-},
-{
-    "src": "https://player.vimeo.com/video/193391700",
-    "scalingParameter": 10,
-    "v_id": 20,
-    "type": "vimeo"
-}]
+const vimeoBestOf2016 = [
+  {
+        "src": "https://player.vimeo.com/video/167054481",
+        "scalingParameter": 1,
+        "v_id": 11,
+        "type": "vimeo"
+    },
+    {
+        "src": "https://player.vimeo.com/video/173524321",
+        "scalingParameter": 2,
+        "v_id": 12,
+        "type": "vimeo"
+    },
+    {
+        "src": "https://player.vimeo.com/video/179936903",
+        "scalingParameter": 3,
+        "v_id": 13,
+        "type": "vimeo"
+    },
+    {
+        "src": "https://player.vimeo.com/video/185717440",
+        "scalingParameter": 4,
+        "v_id": 14,
+        "type": "vimeo"
+    },
+    {
+        "src": "https://player.vimeo.com/video/166807261",
+        "scalingParameter": 5,
+        "v_id": 15,
+        "type": "vimeo"
+    },
+    {
+        "src": "https://player.vimeo.com/video/169599296",
+        "scalingParameter": 6,
+        "v_id": 16,
+        "type": "vimeo"
+    },
+    {
+        "src": "https://player.vimeo.com/video/183252171",
+        "scalingParameter": 7,
+        "v_id": 17,
+        "type": "vimeo"
+    },
+    {
+        "src": "https://player.vimeo.com/video/175629655",
+        "scalingParameter": 8,
+        "v_id": 18,
+        "type": "vimeo"
+    },
+    {
+        "src": "https://player.vimeo.com/video/172431736",
+        "scalingParameter": 9,
+        "v_id": 19,
+        "type": "vimeo"
+    },
+    {
+        "src": "https://player.vimeo.com/video/193391700",
+        "scalingParameter": 10,
+        "v_id": 20,
+        "type": "vimeo"
+    }]
 
 let scatterData1 = [{
     "src": "https://player.vimeo.com/video/12788201",
@@ -210,13 +216,13 @@ let scatterData2 = [{
 }]
 
 const bubbleConfig = {
-    chartType: 'bubble',
-    htmlAnchorID: 'vis1',
-    diameter: 700,
-    zoom: 2.5,
-    resolutionThresholds: [250, 500],
-    autoplay: false,
-    loop: false
+  chartType: 'bubble',
+  htmlAnchorID: 'vis1',
+  diameter: 650,
+  zoom: 2.5,
+  resolutionThresholds: [250, 500],
+  autoplay: false,
+  loop: false
 }
 
 const scatterConfig = {
@@ -237,14 +243,55 @@ const scatterConfig = {
     rLimits: { lower: 20, upper: 120 }
 }
 
-const vis1 = new acd3(data1, bubbleConfig);
+//bubble chart:
+let vis1 = new acd3(data2, bubbleConfig);
+
+//scatter chart:
 const vis2 = new acd3(scatterData1, scatterConfig);
 
 vis1.createBubbleChart();
 vis2.createBubbleScatterChart();
 
-//play/pause buttons:
+//playAll/pauseAll buttons:
 $('#play-vis1').on('click', () => vis1.playAll());
 $('#pause-vis1').on('click', () => vis1.pauseAll());
 $('#play-vis2').on('click', () => vis2.playAll());
 $('#pause-vis2').on('click', () => vis2.pauseAll());
+
+//dataset buttons
+//vis1-data1:
+$('#vis1-data1').on('click', () => {
+  $('#vis1-title').text('Vimeo Presents: The Top Videos of 2016');
+  $('.bubble-chart').remove();
+  vis1 = new acd3(data2, bubbleConfig);
+  vis1.createBubbleChart();
+});
+
+//vis1-data1:
+$('#vis1-data2').on('click', () => {
+  $('#vis1-title').text('Most Anticipated YouTube Summer Movie Trailers');
+  $('.bubble-chart').remove();
+  vis1 = new acd3(youtubeTrailers, bubbleConfig);
+  vis1.createBubbleChart();
+});
+
+//vis1-data2:
+$('#vis1-data3').on('click', () => {
+  $('#vis1-title').text('Dummy Text Here');
+  $('.bubble-chart').remove();
+  vis1 = new acd3(data1, bubbleConfig);
+  vis1.createBubbleChart();
+});
+
+
+// $('#vis1-data2').on('click', () => );
+// $('#vis1-data3').on('click', () => );
+//
+// $('#vis2-data1').on('click', () => );
+// $('#vis2-data2').on('click', () => );
+// $('#vis2-data3').on('click', () => );
+
+$('.demo').on('click', () => {
+  $(this).addClass('toggled');
+  $('.demo').removeClass('toggled');
+});
