@@ -117,19 +117,19 @@ class acd3 {
         // set the ranges
         const xScaleFunc = xIsDate
             ? d3.scaleTime()
-                .range([0, plottableAreaWidth])
+                .range([0 + margin.left + padding.left, width - padding.right - margin.right])
                 .domain([minX, maxX])
             : d3.scaleLinear()
-                .range([0, plottableAreaWidth])
+                .range([0 + margin.left + padding.left, width - padding.right - margin.right])
                 .domain([minX, maxX]);
 
         const yScaleFunc = yIsDate
             ? d3.scaleTime()
-                .range([plottableAreaHeight, 0])
+                .range([height - padding.bottom - margin.bottom, 0 + margin.top])
                 .domain([timeOffset(minY, -padding.bottom), timeOffset(maxY, padding.top)])
             : d3.scaleLinear()
-                .range([plottableAreaHeight, 0])
-                .domain([minY - padding.bottom, maxY + padding.top]);
+                .range([height - padding.bottom - margin.bottom, 0 + padding.top])
+                .domain([minY , maxY]);
 
         const rScaleFunc = rIsDate
             ? d3.scaleTime()
@@ -159,7 +159,7 @@ class acd3 {
         // Add the X Axis
         const xAxis = axesGroup.append("g")
             .attr("class", "axis")
-            .attr("transform", `translate(${margin.left},${height-margin.bottom})`)
+            .attr("transform", `translate(0,${height-margin.bottom})`)
             .call(d3.axisBottom(xScaleFunc));
 
         // Add the Y Axis
@@ -168,30 +168,30 @@ class acd3 {
             .attr("transform", `translate(${margin.left},${margin.top})`)
             .call(d3.axisLeft(yScaleFunc));
 
-        const charArea = svg.append("rect")
-            .classed("rect",true)
-            .attr("height",height)
-            .attr("width",width)
-            .attr("fill-opacity", "0.3")
-            .style('fill', 'green');
+        // const chartArea = svg.append("rect")
+        //     .classed("rect",true)
+        //     .attr("height",height)
+        //     .attr("width",width)
+        //     .attr("fill-opacity", "0.3")
+        //     .style('fill', 'green');
 
-        const plotArea = svg.append("rect")
-            .classed("rect",true)
-            .attr("x",margin.left)
-            .attr("y",margin.top)
-            .attr("height",height-margin.top-margin.bottom)
-            .attr("width",width-margin.left-margin.right)
-            .attr("fill-opacity", "0.3")
-            .style('fill', 'blue');
+        // const plotArea = svg.append("rect")
+        //     .classed("rect",true)
+        //     .attr("x",margin.left)
+        //     .attr("y",margin.top)
+        //     .attr("height",height-margin.top-margin.bottom)
+        //     .attr("width",width-margin.left-margin.right)
+        //     .attr("fill-opacity", "0.3")
+        //     .style('fill', 'blue');
         
-        const dataArea = svg.append("rect")
-            .classed("rect",true)
-            .attr("x",margin.left+padding.left)
-            .attr("y",margin.top+padding.top)
-            .attr("height",height-margin.top-margin.bottom-padding.top-padding.bottom)
-            .attr("width",width-margin.left-margin.right-padding.left-padding.right)
-            .attr("fill-opacity", "0.3")
-            .style('fill', 'red');
+        // const dataArea = svg.append("rect")
+        //     .classed("rect",true)
+        //     .attr("x",margin.left+padding.left)
+        //     .attr("y",margin.top+padding.top)
+        //     .attr("height",height-margin.top-margin.bottom-padding.top-padding.bottom)
+        //     .attr("width",width-margin.left-margin.right-padding.left-padding.right)
+        //     .attr("fill-opacity", "0.3")
+        //     .style('fill', 'red');
     }
 
     addBubble(node) {
