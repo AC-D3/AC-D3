@@ -54,9 +54,14 @@ let data2 = [{
         "v_id": 4,
         "type": "video"
     }, {
-        "src": "https://www.youtube.com/embed/cPeqNTqZNN0",
+        "src": "https://www.youtube.com/embed/1xv_FeBGzfk",
         "scalingParameter": 3495856,
         "v_id": 9,
+        "type": "youtube"
+    }, {
+        "src": "https://www.youtube.com/embed/cPeqNTqZNN0",
+        "scalingParameter": 3495856,
+        "v_id": 8,
         "type": "youtube"
     }]
 
@@ -114,7 +119,8 @@ const youtubeTrailers = [{
         "type": "youtube"
     }]
 
-const vimeoBestOf2016 = [{
+const vimeoBestOf2016 = [
+  {
         "src": "https://player.vimeo.com/video/167054481",
         "scalingParameter": 1,
         "v_id": 11,
@@ -212,7 +218,7 @@ let scatterData2 = [{
 const bubbleConfig = {
   chartType: 'bubble',
   htmlAnchorID: 'vis1',
-  diameter: 700,
+  diameter: 650,
   zoom: 2.5,
   resolutionThresholds: [250, 500],
   autoplay: false,
@@ -237,14 +243,55 @@ const scatterConfig = {
   rLimits: { lower: 20, upper: 120 }
 }
 
-const vis1 = new acd3(data1, bubbleConfig);
+//bubble chart:
+let vis1 = new acd3(data2, bubbleConfig);
+
+//scatter chart:
 const vis2 = new acd3(scatterData1, scatterConfig);
 
 vis1.createBubbleChart();
 vis2.createBubbleScatterChart();
 
-//play/pause buttons:
+//playAll/pauseAll buttons:
 $('#play-vis1').on('click', () => vis1.playAll());
 $('#pause-vis1').on('click', () => vis1.pauseAll());
 $('#play-vis2').on('click', () => vis2.playAll());
 $('#pause-vis2').on('click', () => vis2.pauseAll());
+
+//dataset buttons
+//vis1-data1:
+$('#vis1-data1').on('click', () => {
+  $('#vis1-title').text('Vimeo Presents: The Top Videos of 2016');
+  $('.bubble-chart').remove();
+  vis1 = new acd3(data2, bubbleConfig);
+  vis1.createBubbleChart();
+});
+
+//vis1-data1:
+$('#vis1-data2').on('click', () => {
+  $('#vis1-title').text('Most Anticipated YouTube Summer Movie Trailers');
+  $('.bubble-chart').remove();
+  vis1 = new acd3(youtubeTrailers, bubbleConfig);
+  vis1.createBubbleChart();
+});
+
+//vis1-data2:
+$('#vis1-data3').on('click', () => {
+  $('#vis1-title').text('Dummy Text Here');
+  $('.bubble-chart').remove();
+  vis1 = new acd3(data1, bubbleConfig);
+  vis1.createBubbleChart();
+});
+
+
+// $('#vis1-data2').on('click', () => );
+// $('#vis1-data3').on('click', () => );
+//
+// $('#vis2-data1').on('click', () => );
+// $('#vis2-data2').on('click', () => );
+// $('#vis2-data3').on('click', () => );
+
+$('.demo').on('click', () => {
+  $(this).addClass('toggled');
+  $('.demo').removeClass('toggled');
+});
