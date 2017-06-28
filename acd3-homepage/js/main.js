@@ -360,11 +360,21 @@ const scatterConfig = {
     rLimits: { lower: 20, upper: 120 }
 }
 
-const vis1 = new acd3(data1, bubbleConfig);
-const vis2 = new acd3(scatterData3, scatterConfig);
+let vis1 = new acd3(data1, bubbleConfig);
+let vis2 = new acd3(scatterData3, scatterConfig);
 
 vis1.createBubbleChart();
 vis2.createBubbleScatterChart();
+
+/*
+console.log('getting embedded URL from id           --> ', vis1.getEmbeddedURL ('XI4Na5JW1ns', 'youtube'))
+console.log('getting embedded URL from non-embedded --> ', vis1.getEmbeddedURL ('https://www.youtube.com/watch?v=XI4Na5JW1ns', 'youtube'))
+console.log('getting embedded URL from embedded     --> ', vis1.getEmbeddedURL ('https://www.youtube.com/embed/XI4Na5JW1ns', 'youtube'))
+console.log('*****************')
+console.log('getting non-embedded URL from id           --> ', vis1.getNonEmbeddedURL ('XI4Na5JW1ns', 'youtube'))
+console.log('getting non-embedded URL from non-embedded --> ', vis1.getNonEmbeddedURL ('https://www.youtube.com/watch?v=XI4Na5JW1ns', 'youtube'))
+console.log('getting non-embedded URL from embedded     --> ', vis1.getNonEmbeddedURL ('https://www.youtube.com/embed/XI4Na5JW1ns', 'youtube'))
+*/
 
 //playAll/pauseAll buttons:
 $('#play-vis1').on('click', () => vis1.playAll());
