@@ -200,6 +200,7 @@ let scatterData1 = [{
 
 
 
+
 let scatterData2 = [{
     x: '18-Dec-09',
     y: 34983948,
