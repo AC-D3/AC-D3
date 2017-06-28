@@ -11,9 +11,9 @@ $(window).scroll(collapseNavbar);
 $(document).ready(collapseNavbar);
 
 // jQuery for page scrolling feature - requires jQuery Easing plugin
-$(function() {
-    $('a.page-scroll').bind('click', function(event) {
-      console.log($(this));
+$(function () {
+    $('a.page-scroll').bind('click', function (event) {
+        console.log($(this));
         var $anchor = $(this);
         $('html, body').stop().animate({
             scrollTop: $($anchor.attr('href')).offset().top
@@ -23,7 +23,7 @@ $(function() {
 });
 
 // Closes the Responsive Menu on Menu Item Click
-$('.navbar-collapse ul li a').click(function() {
+$('.navbar-collapse ul li a').click(function () {
     $(".navbar-collapse").collapse('hide');
 });
 
@@ -32,209 +32,209 @@ $('.navbar-collapse ul li a').click(function() {
 ///////////////////////////////////////////////////////////////////////
 
 let data1 = [{
-        "src": "https://www.youtube.com/embed/39udgGPyYMg",
-        "scalingParameter": 7424591,
-        "v_id": "7",
-        "type": "youtube"
-    }, {
-        "src": "https://www.youtube.com/embed/cPeqNTqZNN0",
-        "scalingParameter": 3495856,
-        "v_id": "8",
-        "type": "youtube"
-    }]
+    "src": "https://www.youtube.com/embed/39udgGPyYMg",
+    "scalingParameter": 7424591,
+    "v_id": "7",
+    "type": "youtube"
+}, {
+    "src": "https://www.youtube.com/embed/cPeqNTqZNN0",
+    "scalingParameter": 3495856,
+    "v_id": "8",
+    "type": "youtube"
+}]
 
 let data2 = [{
-        "src": "https://player.vimeo.com/video/12788201",
-        "scalingParameter": 26112988,
-        "v_id": 3,
-        "type": "vimeo"
-    }, {
-        "src": "http://upload.wikimedia.org/wikipedia/commons/7/79/Big_Buck_Bunny_small.ogv",
-        "scalingParameter": 1507944,
-        "v_id": 4,
-        "type": "video"
-    }, {
-        "src": "https://www.youtube.com/embed/cPeqNTqZNN0",
-        "scalingParameter": 3495856,
-        "v_id": 9,
-        "type": "youtube"
-    }]
+    "src": "https://player.vimeo.com/video/12788201",
+    "scalingParameter": 26112988,
+    "v_id": "3",
+    "type": "vimeo"
+}, {
+    "src": "http://upload.wikimedia.org/wikipedia/commons/7/79/Big_Buck_Bunny_small.ogv",
+    "scalingParameter": 1507944,
+    "v_id": "4",
+    "type": "video"
+}, {
+    "src": "https://www.youtube.com/embed/cPeqNTqZNN0",
+    "scalingParameter": 3495856,
+    "v_id": "9",
+    "type": "youtube"
+}]
 
 const youtubeTrailers = [{
-        "src": 'https://www.youtube.com/embed/F-eMt3SrfFU',
-        "scalingParameter": 21097531,
-        "v_id": 1,
-        "type": "youtube"
-    },
-    {
-        "src": "https://www.youtube.com/embed/XI4Na5JW1ns",
-        "scalingParameter": 177639,
-        "v_id": 2,
-        "type": "youtube"
-    }, {
-        "src": "https://www.youtube.com/embed/nsrOCzUwcjE",
-        "scalingParameter": 1073553,
-        "v_id": 3,
-        "type": "youtube"
-    }, {
-        "src": "https://www.youtube.com/embed/GjwfqXTebIY",
-        "scalingParameter": 13652523,
-        "v_id": 4,
-        "type": "youtube"
-    }, {
-        "src": "https://www.youtube.com/embed/JDcAlo8i2y8",
-        "scalingParameter": 4289574,
-        "v_id": 5,
-        "type": "youtube"
-    }, {
-        "src": "https://www.youtube.com/embed/6Vtf0MszgP8",
-        "scalingParameter": 7972246,
-        "v_id": 6,
-        "type": "youtube"
-    }, {
-        "src": "https://www.youtube.com/embed/39udgGPyYMg",
-        "scalingParameter": 7424591,
-        "v_id": 7,
-        "type": "youtube"
-    }, {
-        "src": "https://www.youtube.com/embed/cPeqNTqZNN0",
-        "scalingParameter": 3495856,
-        "v_id": 8,
-        "type": "youtube"
-    }, {
-        "src": "https://www.youtube.com/embed/1xv_FeBGzfk",
-        "scalingParameter": 6522727,
-        "v_id": 9,
-        "type": "youtube"
-    },
-    {
-        "src": "https://www.youtube.com/embed/euz-KBBfAAo",
-        "scalingParameter": 19562920,
-        "v_id": 10,
-        "type": "youtube"
-    }]
+    "src": 'https://www.youtube.com/embed/F-eMt3SrfFU',
+    "scalingParameter": 21097531,
+    "v_id": 1,
+    "type": "youtube"
+},
+{
+    "src": "https://www.youtube.com/embed/XI4Na5JW1ns",
+    "scalingParameter": 177639,
+    "v_id": 2,
+    "type": "youtube"
+}, {
+    "src": "https://www.youtube.com/embed/nsrOCzUwcjE",
+    "scalingParameter": 1073553,
+    "v_id": 3,
+    "type": "youtube"
+}, {
+    "src": "https://www.youtube.com/embed/GjwfqXTebIY",
+    "scalingParameter": 13652523,
+    "v_id": 4,
+    "type": "youtube"
+}, {
+    "src": "https://www.youtube.com/embed/JDcAlo8i2y8",
+    "scalingParameter": 4289574,
+    "v_id": 5,
+    "type": "youtube"
+}, {
+    "src": "https://www.youtube.com/embed/6Vtf0MszgP8",
+    "scalingParameter": 7972246,
+    "v_id": 6,
+    "type": "youtube"
+}, {
+    "src": "https://www.youtube.com/embed/39udgGPyYMg",
+    "scalingParameter": 7424591,
+    "v_id": 7,
+    "type": "youtube"
+}, {
+    "src": "https://www.youtube.com/embed/cPeqNTqZNN0",
+    "scalingParameter": 3495856,
+    "v_id": 8,
+    "type": "youtube"
+}, {
+    "src": "https://www.youtube.com/embed/1xv_FeBGzfk",
+    "scalingParameter": 6522727,
+    "v_id": 9,
+    "type": "youtube"
+},
+{
+    "src": "https://www.youtube.com/embed/euz-KBBfAAo",
+    "scalingParameter": 19562920,
+    "v_id": 10,
+    "type": "youtube"
+}]
 
 const vimeoBestOf2016 = [{
-        "src": "https://player.vimeo.com/video/167054481",
-        "scalingParameter": 1,
-        "v_id": 11,
-        "type": "vimeo"
-    },
-    {
-        "src": "https://player.vimeo.com/video/173524321",
-        "scalingParameter": 2,
-        "v_id": 12,
-        "type": "vimeo"
-    },
-    {
-        "src": "https://player.vimeo.com/video/179936903",
-        "scalingParameter": 3,
-        "v_id": 13,
-        "type": "vimeo"
-    },
-    {
-        "src": "https://player.vimeo.com/video/185717440",
-        "scalingParameter": 4,
-        "v_id": 14,
-        "type": "vimeo"
-    },
-    {
-        "src": "https://player.vimeo.com/video/166807261",
-        "scalingParameter": 5,
-        "v_id": 15,
-        "type": "vimeo"
-    },
-    {
-        "src": "https://player.vimeo.com/video/169599296",
-        "scalingParameter": 6,
-        "v_id": 16,
-        "type": "vimeo"
-    },
-    {
-        "src": "https://player.vimeo.com/video/183252171",
-        "scalingParameter": 7,
-        "v_id": 17,
-        "type": "vimeo"
-    },
-    {
-        "src": "https://player.vimeo.com/video/175629655",
-        "scalingParameter": 8,
-        "v_id": 18,
-        "type": "vimeo"
-    },
-    {
-        "src": "https://player.vimeo.com/video/172431736",
-        "scalingParameter": 9,
-        "v_id": 19,
-        "type": "vimeo"
-    },
-    {
-        "src": "https://player.vimeo.com/video/193391700",
-        "scalingParameter": 10,
-        "v_id": 20,
-        "type": "vimeo"
-    }]
+    "src": "https://player.vimeo.com/video/167054481",
+    "scalingParameter": 1,
+    "v_id": 11,
+    "type": "vimeo"
+},
+{
+    "src": "https://player.vimeo.com/video/173524321",
+    "scalingParameter": 2,
+    "v_id": 12,
+    "type": "vimeo"
+},
+{
+    "src": "https://player.vimeo.com/video/179936903",
+    "scalingParameter": 3,
+    "v_id": 13,
+    "type": "vimeo"
+},
+{
+    "src": "https://player.vimeo.com/video/185717440",
+    "scalingParameter": 4,
+    "v_id": 14,
+    "type": "vimeo"
+},
+{
+    "src": "https://player.vimeo.com/video/166807261",
+    "scalingParameter": 5,
+    "v_id": 15,
+    "type": "vimeo"
+},
+{
+    "src": "https://player.vimeo.com/video/169599296",
+    "scalingParameter": 6,
+    "v_id": 16,
+    "type": "vimeo"
+},
+{
+    "src": "https://player.vimeo.com/video/183252171",
+    "scalingParameter": 7,
+    "v_id": 17,
+    "type": "vimeo"
+},
+{
+    "src": "https://player.vimeo.com/video/175629655",
+    "scalingParameter": 8,
+    "v_id": 18,
+    "type": "vimeo"
+},
+{
+    "src": "https://player.vimeo.com/video/172431736",
+    "scalingParameter": 9,
+    "v_id": 19,
+    "type": "vimeo"
+},
+{
+    "src": "https://player.vimeo.com/video/193391700",
+    "scalingParameter": 10,
+    "v_id": 20,
+    "type": "vimeo"
+}]
 
 let scatterData1 = [{
-        "src": "https://player.vimeo.com/video/12788201",
-        "v_id": 3,
-        "type": "vimeo",
-        'x': '18-Dec-09',
-        'y': 34983948,
-        "r": 26112988
-    }, {
-        "src": "http://upload.wikimedia.org/wikipedia/commons/7/79/Big_Buck_Bunny_small.ogv",
-        "v_id": 4,
-        "type": "video",
-        'x': '18-Dec-11',
-        'y': 53849833,
-        "r": 26112988
-    }, {
-        "src": "https://www.youtube.com/embed/cPeqNTqZNN0",
-        "v_id": 9,
-        "type": "youtube",
-        'x': '19-Dec-10',
-        'y': 93948576,
-        "r": 26112988
-    }]
+    "src": "https://player.vimeo.com/video/12788201",
+    "v_id": 3,
+    "type": "vimeo",
+    'x': '18-Dec-09',
+    'y': 34983948,
+    "r": 26112988
+}, {
+    "src": "http://upload.wikimedia.org/wikipedia/commons/7/79/Big_Buck_Bunny_small.ogv",
+    "v_id": 4,
+    "type": "video",
+    'x': '18-Dec-11',
+    'y': 53849833,
+    "r": 26112988
+}, {
+    "src": "https://www.youtube.com/embed/cPeqNTqZNN0",
+    "v_id": 9,
+    "type": "youtube",
+    'x': '19-Dec-10',
+    'y': 93948576,
+    "r": 26112988
+}]
 
 let scatterData2 = [{
-        x: '18-Dec-09',
-        y: 34983948,
-        r: 26112988,
-        data: {
-              "src": "https://player.vimeo.com/video/12788201",
-              "v_id": 3,
-              "type": "vimeo"
-              }
-        }]
+    x: '18-Dec-09',
+    y: 34983948,
+    r: 26112988,
+    data: {
+        "src": "https://player.vimeo.com/video/12788201",
+        "v_id": 3,
+        "type": "vimeo"
+    }
+}]
 
 const bubbleConfig = {
-  chartType: 'bubble',
-  htmlAnchorID: 'vis1',
-  diameter: 700,
-  zoom: 2.5,
-  resolutionThresholds: [250, 500],
-  autoplay: false,
-  loop: false
+    chartType: 'bubble',
+    htmlAnchorID: 'vis1',
+    diameter: 700,
+    zoom: 2.5,
+    resolutionThresholds: [250, 500],
+    autoplay: false,
+    loop: false
 }
 
 const scatterConfig = {
-  chartType: 'bubbleScatter',
-  htmlAnchorID: 'vis2',
-  zoom: 2.5,
-  resolutionThresholds: [250, 500],
-  autoplay: false,
-  loop: false,
-  dateFormat: '%d-%b-%y',
-  xIsDate: true,
-  yIsDate: false,
-  rIsDate: false,
-  height: 500,
-  width: 1000,
-  plottableAreaMargin: { top: 60, right: 60, bottom: 30, left: 100 },
-  plottableAreaPadding: { top: 200, right: 0, bottom: 0, left: 0 },
-  rLimits: { lower: 20, upper: 120 }
+    chartType: 'bubbleScatter',
+    htmlAnchorID: 'vis2',
+    zoom: 2.5,
+    resolutionThresholds: [250, 500],
+    autoplay: false,
+    loop: false,
+    dateFormat: '%d-%b-%y',
+    xIsDate: true,
+    yIsDate: false,
+    rIsDate: false,
+    height: 500,
+    width: 1000,
+    plottableAreaMargin: { top: 0, right: 0, bottom: 30, left: 65 },
+    plottableAreaPadding: { top: 60, right: 60, bottom: 60, left: 60 },
+    rLimits: { lower: 20, upper: 120 }
 }
 
 const vis1 = new acd3(data1, bubbleConfig);

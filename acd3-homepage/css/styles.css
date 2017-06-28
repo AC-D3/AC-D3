@@ -302,3 +302,14 @@ img::-moz-selection {
 body {
   webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
 }
+.axis line{
+  stroke: white;
+}
+
+.axis path{
+  stroke: white;
+}
+
+.axis text{
+  fill: white;
+}  
