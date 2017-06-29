@@ -10,22 +10,29 @@ class acd3 {
         if (!window.visStore) window.visStore = [this];
         else window.visStore.push(this);
 
+        let tag;
+        let firstScriptTag;
+
+        // append vimeo player API script to HTML if not appended already
         if (!document.getElementById('vimeoScript')) {
-            var tag = document.createElement('script');
-            tag.src = "https://player.vimeo.com/api/player.js";
-            tag.id = "vimeoScript";
-            var firstScriptTag = document.getElementsByTagName('script')[0];
+            tag = document.createElement('script');
+            tag.src = 'https://player.vimeo.com/api/player.js';
+            tag.id = 'vimeoScript';
+            firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         }
 
+        // append youtube player API script to HTML if not appended already
         if (!document.getElementById('youtubeScript')) {
-            var tag = document.createElement('script');
-            tag.src = "https://www.youtube.com/iframe_api";
-            tag.id = "youtubeScript";
-            var firstScriptTag = document.getElementsByTagName('script')[0];
+            tag = document.createElement('script');
+            tag.src = 'https://www.youtube.com/iframe_api';
+            tag.id = 'youtubeScript';
+            firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         }
 
+        // append onYouTubeIframeAPIReady function definition to the window
+        // this is required for using embedded youtube videos
         if (!window.onYouTubeIframeAPIReady) {
             window.onYouTubeIframeAPIReady = () => {
                 window.youTubeIframeAPIReady = true;
@@ -75,9 +82,9 @@ class acd3 {
             .attr("height", this.config.height);
 
         const dataGroup = svg.append("g")
-            .classed("data",true)
+            .classed("data", true)
         const axesGroup = svg.append("g")
-            .classed("axes",true)
+            .classed("axes", true)
 
         const parseTime = d3.timeParse(this.config.dateFormat);
 
@@ -129,7 +136,7 @@ class acd3 {
                 .domain([timeOffset(minY, -padding.bottom), timeOffset(maxY, padding.top)])
             : d3.scaleLinear()
                 .range([height - padding.bottom - margin.bottom, 0 + padding.top])
-                .domain([minY , maxY]);
+                .domain([minY, maxY]);
 
         const rScaleFunc = rIsDate
             ? d3.scaleTime()
@@ -159,7 +166,7 @@ class acd3 {
         // Add the X Axis
         const xAxis = axesGroup.append("g")
             .attr("class", "axis")
-            .attr("transform", `translate(0,${height-margin.bottom})`)
+            .attr("transform", `translate(0,${height - margin.bottom})`)
             .call(d3.axisBottom(xScaleFunc));
 
         // Add the Y Axis
@@ -210,6 +217,7 @@ class acd3 {
             .on('click', (d) => this.handleSingleClick(d.data))
             .on('dblclick', (d) => this.handleDoubleClick(d.data));
             // .on('click', (d) => this.handleClick(d.data));
+
 
         foreignObject = g.append('foreignObject')
             .style('pointer-events', 'none');
@@ -391,6 +399,7 @@ class acd3 {
     }
 
     handleSingleClick(data) {
+
       let clickedPlayer = this.playerStore[data.v_id];
       //youtube:
       if (data.type === 'youtube') {
@@ -399,20 +408,21 @@ class acd3 {
         else clickedPlayer.pauseVideo();
       }
 
-      //vimeo:
-      else if (data.type === 'vimeo') {
-        clickedPlayer.getPaused().then((paused) => {
-          if (paused) clickedPlayer.play();
-          else clickedPlayer.pause();
-        });
-      }
 
-      //html5:
-      else if (data.type === 'video') {
-        const paused = clickedPlayer.paused;
-        if (paused) clickedPlayer.play();
-        else clickedPlayer.pause();
-      }
+        //vimeo:
+        else if (data.type === 'vimeo') {
+            clickedPlayer.getPaused().then((paused) => {
+                if (paused) clickedPlayer.play();
+                else clickedPlayer.pause();
+            });
+        }
+
+        //html5:
+        else if (data.type === 'video') {
+            const paused = clickedPlayer.paused;
+            if (paused) clickedPlayer.play();
+            else clickedPlayer.pause();
+        }
 
     }
 
@@ -426,5 +436,91 @@ class acd3 {
         d3.select('div').attr('height', this.diameter)
         d3.select('div').attr('width', this.diameter)
         d3.select('#' + videoID).attr('height', this.diameter)
+    }
+
+    getEmbeddedURL(inputString, type) {
+        /*
+        type can be
+            youtube
+            vimeo
+            video
+
+        inputString can be
+            embedded video link          --> https://www.youtube.com/embed/39udgGPyYMg
+            non-embedded video link      --> https://www.youtube.com/watch?v=39udgGPyYMg
+            video ID                     --> 39udgGPyYMg
+        inputString can be from sources
+            youtube                      --> https://www.youtube.com/embed/39udgGPyYMg
+            vimeo                        --> https://player.vimeo.com/video/12788201
+            direct link to video         --> http://upload.wikimedia.org/wikipedia/commons/7/79/Big_Buck_Bunny_small.ogv
+
+        function returns
+            for youtube and vimeo        ==> embedded video link
+            for direct links to videos   ==> returns same link
+        */
+
+        const youtubeEmbeddedURLBase = 'https://www.youtube.com/embed/';
+        const vimeoEmbeddedURLBase = 'https://player.vimeo.com/video/';
+
+        if (type === 'video') {
+            return inputString;
+        } else if (type === 'youtube') {
+            if (!inputString.includes('/')) {
+                // handle if video ID is passed as input string
+                return youtubeEmbeddedURLBase + inputString;
+            } else if (inputString.includes('embed')) {
+                // handle if embedded video url is passed as input string
+                return inputString;
+            } else if (inputString.includes('watch')) {
+                // handle if non-embedded video url is passed as input string
+                let arr = inputString.split('=');
+                return youtubeEmbeddedURLBase + arr[arr.length - 1]
+            }
+        } else if (type === 'vimeo') {
+            if (!inputString.includes('/')) {
+                // handle if video ID is passed as input string
+                return vimeoEmbeddedURLBase + inputString;
+            } else if (inputString.includes('player')) {
+                // handle if embedded video url is passed as input string
+                return inputString;
+            } else if (inputString.includes('https://vimeo.com/')) {
+                // handle if non-embedded video url is passed as input string
+                let arr = inputString.split('/');
+                return vimeoEmbeddedURLBase + arr[arr.length - 1]
+            }
+        }
+    }
+
+    getNonEmbeddedURL(inputString, type) {
+        const youtubeNonEmbeddedURLBase = 'https://www.youtube.com/watch?v=';
+        const vimeoNonEmbeddedURLBase = 'https://vimeo.com/';
+
+        if (type === 'video') {
+            return inputString;
+        } else if (type === 'youtube') {
+            if (!inputString.includes('/')) {
+                // handle if video ID is passed as input string
+                return youtubeNonEmbeddedURLBase + inputString;
+            } else if (inputString.includes('embed')) {
+                // handle if embedded video url is passed as input string
+                let arr = inputString.split('/');
+                return youtubeNonEmbeddedURLBase + arr[arr.length - 1]
+            } else if (inputString.includes('watch')) {
+                // handle if non-embedded video url is passed as input string
+                return inputString;
+            }
+        } else if (type === 'vimeo') {
+            if (!inputString.includes('/')) {
+                // handle if video ID is passed as input string
+                return vimeoNonEmbeddedURLBase + inputString;
+            } else if (inputString.includes('player')) {
+                // handle if embedded video url is passed as input string
+                let arr = inputString.split('/');
+                return vimeoNonEmbeddedURLBase + arr[arr.length - 1]
+            } else if (inputString.includes('https://vimeo.com/')) {
+                // handle if non-embedded video url is passed as input string
+                return inputString;
+            }
+        }
     }
 }
