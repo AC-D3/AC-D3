@@ -11,17 +11,6 @@
 
     <title>AC-D3</title>
 
-    <!-- Bootstrap Core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-
-    <!-- Theme CSS -->
-    <link href="css/styles.css" rel="stylesheet">
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -89,22 +78,38 @@
     <!-- Demo Section -->
     <section id="demo1" class="container content-section text-center">
         <div class="row">
-            <h3>Vimeo presents: The Top Videos of 2016</h3>
-            <div id="vis1" class="col-lg-8 col-lg-offset-2"></div>
+
+            <div id="vis1" class="col-lg-8 col-lg-offset-2">
+              <h3 id="vis1-title">Vimeo presents: The Top Videos of 2016</h3>
+            </div>
         </div>
-        <button class="play btn btn-default">Play</button>
-        <button class="pause btn btn-default">Pause</button>
-        <p>Hover over videos to play sound.</p>
+        <div class="button-container">
+          <button id="play-vis1" class="play btn btn-default">Play All</button>
+          <button id="pause-vis1" class="pause btn btn-default">Pause All</button>
+        </div>
+        <div class="button-container">
+          <button id="vis1-data1" class="demo btn btn-default toggled">Dataset 1</button>
+          <button id="vis1-data2" class="demo btn btn-default">Dataset 2</button>
+          <button id="vis1-data3" class="demo btn btn-default">Dataset 3</button>
+        </div>
     </section>
 
     <!-- About Section -->
     <section id="about" class="content-section text-center">
         <div class="about-section">
             <div class="container">
-                <div class="col-lg-8 col-lg-offset-2">
-                    <h2>About AC-D3</h2>
-                    <p>Fully integrated with the YouTube and Vimeo APIs.</p>
-                    <a href="https://github.com/AC-D3/AC-D3" class="btn btn-default btn-lg">Download on Github</a>
+
+                <div class="col-sm-4">
+                    <h2>Robust</h2>
+                    <p>Compatible with YouTube, Vimeo and more</p>
+                </div>
+                <div class="col-sm-4">
+                    <h2>Versatile</h2>
+                    <p>Perfect for news, advertising, education, or any other collection of videos</p>
+                </div>
+                <div class="col-sm-4">
+                    <h2>Configurable</h2>
+                    <p>Choose from a bevy of options to make your visualizations more interactive and user-friendly.</p>
                 </div>
             </div>
         </div>
@@ -112,22 +117,49 @@
 
     <section id="demo2" class="container content-section text-center">
         <div class="row">
-            <h3>Summer Movie Trailers by Number of Views</h3>
-            <div id="vis2" class="col-lg-8 col-lg-offset-2"></div>
+
+            <h3>Film Budget Vs. Gross</h3>
+            <div id="Vis2" class="col-lg-12 col-lg-offset-0"></div>
         </div>
-        <button class="play btn btn-default">Play</button>
-        <button class="pause btn btn-default">Pause</button>
-        <p>Hover over videos to play sound.</p>
+        <div class="button-container">
+          <button id="play-vis2" class="play btn btn-default">Play All</button>
+          <button id="pause-vis2" class="pause btn btn-default">Pause All</button>
+        </div>
+        <div class="button-container">
+          <button id="vis2-data1" class="demo btn btn-default toggled">Dataset 1</button>
+          <button id="vis2-data2" class="demo btn btn-default">Dataset 2</button>
+          <button id="vis2-data3" class="demo btn btn-default">Dataset 3</button>
+        </div>
     </section>
 
     <!-- Contact Section -->
+    <section id="bio" class="content-section text-center">
+        <div class="bio-section">
+            <div class="container">
+                <h2>Meet the AC-D3 Team</h2>
+                <div class="col-lg-4 col-sm-6 text-center">
+                  <img class="img-circle img-responsive img-center" src="img/luke.jpg" width='200' height='200' alt="Luke Michals">
+                  <h3>Luke Michals</h3>
+                  <h7>Software Engineer</h7>
+                </div>
+                <div class="col-lg-4 col-sm-6 text-center">
+                  <img class="img-circle img-responsive img-center" src="http://romejs.com/img/mike.jpg" alt="Jacob Worrel">
+                  <h3>Jacob Worrel</h3>
+                  <h7>Software Engineer</h7>
+                </div>
+                <div class="col-lg-4 col-sm-6 text-center">
+                  <img class="img-circle img-responsive img-center" src="http://romejs.com/img/mike.jpg" alt="John Nunns">
+                  <h3>John Nunns</h3>
+                  <h7>Software Engineer</h7>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="contact" class="container content-section text-center">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2">
-                <h2>Meet the AC-D3 Team</h2>
-                <p>Feel free to email us to provide some feedback on our project, give us suggestions for new features and updates, or to just say hello!</p>
-                <p><a href="mailto:hello@ac-d3.com">hello@ac-d3.com</a>
-                </p>
+                <!-- <p>Feel free to email us to provide some feedback on our project, give us suggestions for new features and updates, or to just say hello!</p> -->
                 <ul class="list-inline banner-social-buttons">
                     <li>
                         <a href="https://twitter.com/SBootstrap" class="btn btn-default btn-lg"><i class="fa fa-twitter fa-fw"></i> <span class="network-name">Twitter</span></a>
@@ -136,7 +168,8 @@
                         <a href="https://github.com/AC-D3/AC-D3" class="btn btn-default btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
                     </li>
                     <li>
-                        <a href="https://www.npmjs.com/package/ac-d3" class="btn btn-default btn-lg"> <span class="network-name">NPM</span></a>
+
+                        <a href="https://www.npmjs.com/package/ac-d3" class="btn btn-default btn-lg"><i class="fa fa-chevron-circle-right fa-fw"></i> <span class="network-name">NPM</span></a>
                     </li>
                 </ul>
             </div>
@@ -146,11 +179,21 @@
     <!-- Footer -->
     <footer>
         <div class="container text-center">
-            <p>Copyright &copy; AC-D3 2017</p>
+
         </div>
     </footer>
 
-    <script type="text/javascript" src="https://player.vimeo.com/api/player.js"></script>
+    <!-- Bootstrap Core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+
+    <!-- Theme CSS -->
+    <link href="css/styles.css" rel="stylesheet">
+
     <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
     <script type="text/javascript" src="./../charts/acd3.js"></script>
 

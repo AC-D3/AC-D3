@@ -21,6 +21,10 @@ h6 {
   font-weight: 700;
   letter-spacing: 1px;
 }
+
+.button-container {
+  margin: 20px 0 20px;
+}
 .bubble-chart {
   border: 1px solid white;
   border-radius: 50%;
@@ -219,7 +223,8 @@ a:focus {
 .content-section {
   padding-top: 100px;
 }
-.about-section {
+
+.about-section, .bio-section {
   width: 100%;
   padding: 50px 0;
   color: white;
@@ -230,13 +235,23 @@ a:focus {
   background-size: cover;
   -o-background-size: cover;
 }
-@media (min-width: 767px) {
+
+/*@media (min-width: 767px) {
   .content-section {
     padding-top: 250px;
-  }
-  .about-section {
-    padding: 100px 0;
-  }
+  }*/
+.about-section h3 {
+  margin: 20px 0;
+  text-transform: none;
+}
+.bio-section h3 {
+  margin: 10px 0;
+}
+.img-center {
+  margin: 0 auto;
+}
+.img-circle {
+  border-radius: 50%;
 }
 .btn {
   text-transform: uppercase;
@@ -253,7 +268,9 @@ a:focus {
   background-color: transparent;
 }
 .btn-default:hover,
-.btn-default:focus {
+
+.btn-default:focus,
+.toggled {
   border: 1px solid #42DCA3;
   outline: none;
   color: black;
@@ -301,4 +318,16 @@ img::-moz-selection {
 }
 body {
   webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
+}
+
+.axis line{
+  stroke: white;
+}
+
+.axis path{
+  stroke: white;
+}
+
+.axis text{
+  fill: white;
 }
