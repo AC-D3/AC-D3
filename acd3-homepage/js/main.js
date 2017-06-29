@@ -11,6 +11,7 @@ $(window).scroll(collapseNavbar);
 $(document).ready(collapseNavbar);
 
 // jQuery for page scrolling feature - requires jQuery Easing plugin
+
 $(function () {
     $('a.page-scroll').bind('click', function (event) {
         console.log($(this));
@@ -23,6 +24,7 @@ $(function () {
 });
 
 // Closes the Responsive Menu on Menu Item Click
+
 $('.navbar-collapse ul li a').click(function () {
     $(".navbar-collapse").collapse('hide');
 });
@@ -32,6 +34,7 @@ $('.navbar-collapse ul li a').click(function () {
 ///////////////////////////////////////////////////////////////////////
 
 let data1 = [{
+
     "src": "https://www.youtube.com/embed/39udgGPyYMg",
     "scalingParameter": 7424591,
     "v_id": "7",
@@ -178,6 +181,7 @@ const vimeoBestOf2016 = [{
         "v_id": 20,
         "type": "vimeo"
     }]
+
 
 let scatterData1 = [{
     "src": "https://player.vimeo.com/video/12788201",

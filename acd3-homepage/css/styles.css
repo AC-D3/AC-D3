@@ -21,6 +21,7 @@ h6 {
   font-weight: 700;
   letter-spacing: 1px;
 }
+
 .button-container {
   margin: 20px 0 20px;
 }
@@ -222,6 +223,7 @@ a:focus {
 .content-section {
   padding-top: 100px;
 }
+
 .about-section, .bio-section {
   width: 100%;
   padding: 50px 0;
@@ -233,6 +235,7 @@ a:focus {
   background-size: cover;
   -o-background-size: cover;
 }
+
 /*@media (min-width: 767px) {
   .content-section {
     padding-top: 250px;
@@ -265,6 +268,7 @@ a:focus {
   background-color: transparent;
 }
 .btn-default:hover,
+
 .btn-default:focus,
 .toggled {
   border: 1px solid #42DCA3;
@@ -315,6 +319,7 @@ img::-moz-selection {
 body {
   webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
 }
+
 .axis line{
   stroke: white;
 }
