@@ -214,8 +214,10 @@ class acd3 {
             .attr("r", (d) => d.r)
             .on('mouseenter', (d) => this.unmuteOnMouseEnter(d.data))
             .on('mouseleave', (d) => this.muteOnMouseLeave(d.data))
-            .on('click', (d) => this.handleSingleClick(d.data));
-        // .on('click', (d) => this.handleClick(d.data));
+            .on('click', (d) => this.handleSingleClick(d.data))
+            .on('dblclick', (d) => this.handleDoubleClick(d.data));
+            // .on('click', (d) => this.handleClick(d.data));
+
 
         foreignObject = g.append('foreignObject')
             .style('pointer-events', 'none');
@@ -274,7 +276,7 @@ class acd3 {
         if (this.config.autoplay) video.attr('autoplay', (d) => d.data.type === 'video' ? '' : null);
         if (this.config.loop) video.attr('loop', (d) => d.data.type === 'video' ? '' : null);
         video.property('volume', (d) => d.data.type === 'video' ? '0.0' : null)
-            .attr('frameborder', (d) => d.data.type === 'iframe' ? 0 : null)
+            .attr('frameborder', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? 0 : null)
 
             .attr('id', (d) => d.data.v_id)
             .attr('src', (d) => {
@@ -294,7 +296,6 @@ class acd3 {
     populatePlayerStore() {
         if (window.youTubeIframeAPIReady) {
             while (visStore.length) {
-
                 let vis = visStore.shift()
                 let data;
                 if (vis.config.chartType === 'bubble') data = vis.data.children;
@@ -398,17 +399,15 @@ class acd3 {
     }
 
     handleSingleClick(data) {
-        let clickedPlayer = this.playerStore[data.v_id];
-        //youtube:
-        if (data.type === 'youtube') {
-            const playerState = clickedPlayer.getPlayerState();
-            console.log(playerState)
-            if (playerState === -1 || playerState === 2 || playerState === 5) clickedPlayer.playVideo();
-            else {
-                console.log('pause!')
-                clickedPlayer.pauseVideo();
-            }
-        }
+
+      let clickedPlayer = this.playerStore[data.v_id];
+      //youtube:
+      if (data.type === 'youtube') {
+        const playerState = clickedPlayer.getPlayerState();
+        if (playerState === -1 || playerState === 2 || playerState === 5) clickedPlayer.playVideo();
+        else clickedPlayer.pauseVideo();
+      }
+
 
         //vimeo:
         else if (data.type === 'vimeo') {
@@ -425,6 +424,10 @@ class acd3 {
             else clickedPlayer.pause();
         }
 
+    }
+
+    handleDoubleClick(data) {
+      window.open(data.src);
     }
 
     handleClick(data) {
