@@ -65,6 +65,23 @@ let data2 = [{
         "type": "youtube"
     }]
 
+  const liveNews = [{
+      "src": 'https://www.youtube.com/embed/69ZylsLJBy8',
+      "scalingParameter": 5,
+      "v_id": 13443,
+      "type": "youtube"
+  }, {
+      "src": "https://www.youtube.com/embed/tI9iJ4085sc",
+      "scalingParameter": 5,
+      "v_id": 45245,
+      "type": "youtube"
+  }, {
+      "src": "https://www.youtube.com/embed/hd4JYQ_QMu8",
+      "scalingParameter": 5,
+      "v_id": 453454,
+      "type": "youtube"
+  }]
+
 const youtubeTrailers = [{
     "src": 'https://www.youtube.com/embed/F-eMt3SrfFU',
     "scalingParameter": 21097531,
@@ -119,26 +136,7 @@ const youtubeTrailers = [{
     "type": "youtube"
 }]
 
-const vimeoBestOf2016 = [
-  {
-        "src": "https://player.vimeo.com/video/167054481",
-        "scalingParameter": 1,
-        "v_id": 11,
-        "type": "vimeo"
-    },
-    {
-        "src": "https://player.vimeo.com/video/173524321",
-        "scalingParameter": 2,
-        "v_id": 12,
-        "type": "vimeo"
-    },
-    {
-        "src": "https://player.vimeo.com/video/179936903",
-        "scalingParameter": 3,
-        "v_id": 13,
-        "type": "vimeo"
-    },
-    {
+const vimeoBestOf2016 = [{
         "src": "https://player.vimeo.com/video/185717440",
         "scalingParameter": 4,
         "v_id": 14,
@@ -203,9 +201,6 @@ let scatterData1 = [{
     'y': 93948576,
     "r": 86112988
 }]
-
-
-
 
 let scatterData2 = [{
     x: '18-Dec-09',
@@ -339,7 +334,19 @@ const bubbleConfig = {
   zoom: 2.5,
   resolutionThresholds: [250, 500],
   autoplay: false,
-  loop: false
+  loop: false,
+  waitTime: 5000
+}
+
+const newsBubbleConfig = {
+  chartType: 'bubble',
+  htmlAnchorID: 'vis1',
+  diameter: 650,
+  zoom: 1,
+  resolutionThresholds: [250, 500],
+  autoplay: false,
+  loop: false,
+  waitTime: 5000
 }
 
 const scatterConfig = {
@@ -360,11 +367,11 @@ const scatterConfig = {
     rLimits: { lower: 20, upper: 120 }
 }
 
-const vis1 = new acd3(data1, bubbleConfig);
-const vis2 = new acd3(scatterData3, scatterConfig);
+let vis1 = new acd3(vimeoBestOf2016, bubbleConfig);
+// let vis2 = new acd3(scatterData3, scatterConfig);
 
 vis1.createBubbleChart();
-vis2.createBubbleScatterChart();
+// vis2.createBubbleScatterChart();
 
 //playAll/pauseAll buttons:
 $('#play-vis1').on('click', () => vis1.playAll());
@@ -377,33 +384,23 @@ $('#pause-vis2').on('click', () => vis2.pauseAll());
 $('#vis1-data1').on('click', () => {
   $('#vis1-title').text('Vimeo Presents: The Top Videos of 2016');
   $('.bubble-chart').remove();
-  vis1 = new acd3(data2, bubbleConfig);
+  vis1 = new acd3(vimeoBestOf2016, bubbleConfig);
   vis1.createBubbleChart();
 });
-
-//vis1-data1:
+//vis1-data2:
 $('#vis1-data2').on('click', () => {
   $('#vis1-title').text('Most Anticipated YouTube Summer Movie Trailers');
   $('.bubble-chart').remove();
   vis1 = new acd3(youtubeTrailers, bubbleConfig);
   vis1.createBubbleChart();
 });
-
-//vis1-data2:
+//vis1-data3:
 $('#vis1-data3').on('click', () => {
-  $('#vis1-title').text('Dummy Text Here');
+  $('#vis1-title').text('CNN, Fox News, MSNBC Live Streams');
   $('.bubble-chart').remove();
-  vis1 = new acd3(data1, bubbleConfig);
+  vis1 = new acd3(liveNews, newsBubbleConfig);
   vis1.createBubbleChart();
 });
-
-
-// $('#vis1-data2').on('click', () => );
-// $('#vis1-data3').on('click', () => );
-//
-// $('#vis2-data1').on('click', () => );
-// $('#vis2-data2').on('click', () => );
-// $('#vis2-data3').on('click', () => );
 
 $('.demo').on('click', () => {
   $(this).addClass('toggled');
