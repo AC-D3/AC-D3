@@ -363,7 +363,6 @@ class acd3 {
         }
     }
 
-
     createVimeoPlayer(id) {
         let vimeoPlayer = new Vimeo.Player(id);
         vimeoPlayer.ready().then(() => {
@@ -475,6 +474,16 @@ class acd3 {
 
     }
 
+    playSolo(data) {
+        let clickedPlayer = this.playerStore[data.v_id];
+        if (data.type === 'youtube') {
+            clickedPlayer.playVideo();
+        }
+        else {
+            clickedPlayer.play();
+        }
+    }
+
     handleDoubleClick(data) {
         window.open(data.src);
     }
@@ -515,14 +524,14 @@ class acd3 {
 
     expandBubbleFirefox(data, i, videoID) {
         let g = d3.select('#' + this.config.htmlAnchorID + 'gID_' + i)
-            .attr("transform", (d) => "translate(" + 0 + "," + 0 + ")")
+            .attr("transform", (d) => "translate(" + 0 + "," + 0 + ")");
 
         d3.select('#' + this.config.htmlAnchorID + 'foreignID_' + i)
             .transition()
             .attr('x', 0)
             .attr('y', 0)
             .attr('width', this.config.diameter)
-            .attr('height', this.config.diameter)
+            .attr('height', this.config.diameter);
 
         d3.selectAll('circle')
             .style('pointer-events', 'none')
@@ -584,7 +593,7 @@ class acd3 {
             .attr('cx', 0);
 
         let g = d3.select('#' + this.config.htmlAnchorID + 'gID_' + i)
-            .attr("transform", (d) => "translate(" + d.x + "," + d.y + ")")
+            .attr("transform", (d) => "translate(" + d.x + "," + d.y + ")");
 
         d3.select('#' + this.config.htmlAnchorID + 'foreignID_' + i)
             .transition()
@@ -613,15 +622,19 @@ class acd3 {
 
     expandBubble(data, i) {
         let videoID = data.v_id;
+       
         if (this.expanded === false) {
             if (typeof InstallTrigger !== 'undefined') {
                 //expand bubble in firefox
                 this.expandBubbleFirefox(data, i, videoID);
+                
             } else {
                 //expand bubble in chrome
                 this.expandBubbleChrome(data, i, videoID);
             }
-            this.expanded = true
+            this.pauseAll();
+            this.playSolo(data);
+            this.expanded = true;
         } else {
             if (typeof InstallTrigger !== 'undefined') {
                 //reduce bubble in firefox
@@ -630,7 +643,8 @@ class acd3 {
                 //reduce bubble in chrome
                 this.reduceBubbleChrome(data, i, videoID);
             }
-            this.expanded = false
+            this.playAll();
+            this.expanded = false;
         }
     }
 
