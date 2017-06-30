@@ -74,9 +74,9 @@ d3.csv("./datasets/bubble-scatter-data.csv", function (error, data) {
     const xPadding = 300;
     const yPadding = 30000000;
 
-
+    
     // const yPadding = 0;
-
+    
     x.domain([d3.timeDay.offset(minDate, -xPadding), d3.timeDay.offset(maxDate, +xPadding)]);
     y.domain([minBudget - yPadding, maxBudget + yPadding]);
     r.domain([minGross, maxGross]);
