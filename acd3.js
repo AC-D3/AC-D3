@@ -4,42 +4,7 @@ class acd3 {
         this.playerStore = {};
         this.data = data;
         this.config = config;
-        this.playerCreated = false;
         this.expanded = false;
-    }
-
-    playAll() {
-        for (let key in this.playerStore) {
-            let currentPlayer = this.playerStore[key];
-            //vimeo:
-            if (currentPlayer.origin === "https://player.vimeo.com") {
-                currentPlayer.play();
-                currentPlayer.setVolume(0);
-            }
-            //html5 video
-            else if (currentPlayer.tagName === 'VIDEO') {
-                currentPlayer.play();
-                currentPlayer.volume = 0.0;
-            }
-            //youtube
-            else if (currentPlayer.playVideo) {
-                currentPlayer.playVideo().mute();
-            }
-        }
-    }
-
-    pauseAll() {
-        for (let key in this.playerStore) {
-            let currentPlayer = this.playerStore[key];
-            //vimeo and html5 video:
-            if (currentPlayer.origin === "https://player.vimeo.com" || currentPlayer.tagName === 'VIDEO') {
-                currentPlayer.pause();
-            }
-            //youtube
-            else if (currentPlayer.pauseVideo) {
-                currentPlayer.pauseVideo();
-            }
-        }
     }
 
     setUpEnvironment() {
@@ -77,7 +42,6 @@ class acd3 {
                 this.populatePlayerStore();
             }
         }
-
     }
 
     createBubbleChart() {
@@ -255,8 +219,10 @@ class acd3 {
             .on('mouseenter', (d) => this.unmuteOnMouseEnter(d.data))
             .on('mouseleave', (d) => this.muteOnMouseLeave(d.data))
             .on('click', (d) => this.handleSingleClick(d.data))
-            // .on('dblclick', (d) => this.handleDoubleClick(d.data))
-            .on('dblclick', (d, i) => this.expandBubble(d.data, i));
+            .on('dblclick', (d, i) => {
+              if (this.config.onDoubleClick === 'openNewWindow') this.openNewWindow(d.data);
+              else if (this.config.onDoubleClick === 'expandBubble') this.expandBubble(d.data, i);
+            });
 
 
         foreignObject = g.append('foreignObject')
@@ -468,29 +434,19 @@ class acd3 {
 
     }
 
-    handleDoubleClick(data) {
+    openNewWindow(data) {
         window.open(data.src);
     }
 
     expandBubble(data, i) {
         let videoID = data.v_id;
         if (this.expanded === false) {
-            if (typeof InstallTrigger !== 'undefined') {
-                //expand bubble in firefox
-                this.expandBubbleFirefox(data, i, videoID);
-            } else {
-                //expand bubble in chrome
-                this.expandBubbleChrome(data, i, videoID);
-            }
+            if (typeof InstallTrigger !== 'undefined') this.expandBubbleFirefox(data, i, videoID);
+            else this.expandBubbleChrome(data, i, videoID);
             this.expanded = true
         } else {
-            if (typeof InstallTrigger !== 'undefined') {
-                //reduce bubble in firefox
-                this.reduceBubbleFirefox(data, i, videoID);
-            } else {
-                //reduce bubble in chrome
-                this.reduceBubbleChrome(data, i, videoID);
-            }
+            if (typeof InstallTrigger !== 'undefined') this.reduceBubbleFirefox(data, i, videoID);
+            else this.reduceBubbleChrome(data, i, videoID);
             this.expanded = false
         }
     }
