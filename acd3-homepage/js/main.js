@@ -74,7 +74,7 @@ let visualization1 = new acd3(youtubeTrailers, bubbleConfig);
 let visualization2 = new acd3(scatterData3, scatterConfig);
 
 visualization1.createBubbleChart();
-// setTimeout(() => visualization2.createBubbleScatterChart(), 3000);
+setTimeout(() => visualization2.createBubbleScatterChart(), 3000);
 
 //playAll/pauseAll buttons:
 $('#play-vis1').on('click', () => visualization1.playAll());
