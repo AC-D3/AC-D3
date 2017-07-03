@@ -20,7 +20,13 @@ h6 {
   font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 700;
   letter-spacing: 1px;
+  /*color: #FE0000;*/
+   /*color: white;
+   -webkit-text-fill-color: black; /* Will override color (regardless of order) */
+   /*-webkit-text-stroke-width: 2px;
+   -webkit-text-stroke-color: white;*/
 }
+
 
 .button-container {
   margin: 20px 0 20px;
@@ -223,7 +229,6 @@ a:focus {
 .content-section {
   padding-top: 100px;
 }
-
 .about-section, .bio-section {
   width: 100%;
   padding: 50px 0;
@@ -235,7 +240,9 @@ a:focus {
   background-size: cover;
   -o-background-size: cover;
 }
-
+.about-section p{
+  font-size: 26px;
+}
 /*@media (min-width: 767px) {
   .content-section {
     padding-top: 250px;
@@ -268,7 +275,6 @@ a:focus {
   background-color: transparent;
 }
 .btn-default:hover,
-
 .btn-default:focus,
 .toggled {
   border: 1px solid #42DCA3;
@@ -319,15 +325,12 @@ img::-moz-selection {
 body {
   webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
 }
-
 .axis line{
   stroke: white;
 }
-
 .axis path{
   stroke: white;
 }
-
 .axis text{
   fill: white;
 }
