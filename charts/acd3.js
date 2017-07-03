@@ -253,6 +253,7 @@ class acd3 {
         g = node.append('g');
         //position circle below video bubble to handle mouse events
         circle = g.append("circle")
+            .attr('class', this.config.htmlAnchorID + '-circle')
             .attr('id', (d, i) => this.config.htmlAnchorID + "circleID_" + i)
             .attr("r", (d) => d.r)
             .on('mouseenter', (d) => this.unmuteOnMouseEnter(d.data))
@@ -284,7 +285,9 @@ class acd3 {
                     : document.createElement('iframe');
             })
 
-            video.style('border-radius', '50%')
+            video
+                .attr('class', this.config.htmlAnchorID + '-video')
+                .style('border-radius', '50%')
                 .style('object-fit', 'cover')
                 .style('width', '100%')
                 .style('height', '100%');
@@ -311,12 +314,14 @@ class acd3 {
                     : document.createElement('iframe');
             })
 
-            video.style('object-fit', (d) => d.data.type === 'video' ? 'cover' : null)
+            video
+                .attr('class', this.config.htmlAnchorID + '-video')
+                .style('object-fit', (d) => d.data.type === 'video' ? 'cover' : null)
                 .attr("xmlns", "http://www.w3.org/1999/xhtml")
                 .style('width', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? `${this.config.zoom * 100}%` : '100%')
                 .style('height', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? `${this.config.zoom * 100}%` : '100%')
-                .style('top', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? -((this.config.zoom - 1) * d.r) + 'px' : null)
-                .style('left', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? -((this.config.zoom - 1) * d.r) + 'px' : null)
+                .style('top', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? -((this.config.zoom - 1) * d.r) + 'px' : 0 + 'px')
+                .style('left', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? -((this.config.zoom - 1) * d.r) + 'px' : 0 + 'px')
                 .style('position', 'absolute');
 
             circle.attr("cx", (d) => d.x)
@@ -509,10 +514,10 @@ class acd3 {
         // select individual iframe that was clicked and increase it's size and center
         d3.select('#' + videoID)
             .transition()
-            .style('top', -((this.config.zoom - 1) * (this.config.diameter / 2)) + 'px')
-            .style('left', -((this.config.zoom - 1) * (this.config.diameter / 2)) + 'px')
-            .style('width', this.config.zoom * this.config.diameter + 'px')
-            .style('height', this.config.zoom * this.config.diameter + 'px');
+            .style('top', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? -((this.config.zoom - 1) * (this.config.diameter / 2)) + 'px' : 0 + 'px')
+            .style('left', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? -((this.config.zoom - 1) * (this.config.diameter / 2)) + 'px' : 0 + 'px')
+            .style('width', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? this.config.zoom * this.config.diameter + 'px' : '100%')
+            .style('height', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? this.config.zoom * this.config.diameter + 'px' : '100%');
 
         //select individual foreignObject which contains div and ifram and position it to desired location
         //also give pointer event(youtube controls) back to on hover
@@ -533,11 +538,11 @@ class acd3 {
             .attr('width', this.config.diameter)
             .attr('height', this.config.diameter);
 
-        d3.selectAll('circle')
+        d3.selectAll('.'+ this.config.htmlAnchorID + '-circle')
             .style('pointer-events', 'none')
             .style('visibility', 'hidden');
 
-        d3.selectAll('iframe')
+        d3.selectAll('.'+ this.config.htmlAnchorID + '-video')
             .style('visibility', 'hidden');
 
         let circle = d3.select('#' + this.config.htmlAnchorID + 'circleID_' + i)
@@ -579,8 +584,8 @@ class acd3 {
             .transition()
             .style('width', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? `${this.config.zoom * 100}%` : '100%')
             .style('height', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? `${this.config.zoom * 100}%` : '100%')
-            .style('top', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? -((this.config.zoom - 1) * d.r) + 'px' : null)
-            .style('left', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? -((this.config.zoom - 1) * d.r) + 'px' : null);
+            .style('top', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? -((this.config.zoom - 1) * d.r) + 'px' : 0 + 'px')
+            .style('left', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? -((this.config.zoom - 1) * d.r) + 'px' : 0 + 'px');
 
         let circles = d3.selectAll('circle')
             .style('pointer-events', 'auto');
@@ -622,12 +627,12 @@ class acd3 {
 
     expandBubble(data, i) {
         let videoID = data.v_id;
-       
+
         if (this.expanded === false) {
             if (typeof InstallTrigger !== 'undefined') {
                 //expand bubble in firefox
                 this.expandBubbleFirefox(data, i, videoID);
-                
+
             } else {
                 //expand bubble in chrome
                 this.expandBubbleChrome(data, i, videoID);
@@ -643,7 +648,7 @@ class acd3 {
                 //reduce bubble in chrome
                 this.reduceBubbleChrome(data, i, videoID);
             }
-            this.playAll();
+
             this.expanded = false;
         }
     }

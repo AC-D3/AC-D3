@@ -372,7 +372,7 @@ const scatterConfig = {
 }
 
 
-let vis1 = new acd3(data1, bubbleConfig);
+let vis1 = new acd3(data2, bubbleConfig);
 let vis2 = new acd3(scatterData3, scatterConfig);
 
 vis1.createBubbleChart();
