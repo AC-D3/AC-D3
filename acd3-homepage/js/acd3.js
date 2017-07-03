@@ -288,16 +288,17 @@ class acd3 {
         if (this.config.autoplay) video.attr('autoplay', (d) => d.data.type === 'video' ? '' : null);
         if (this.config.loop) video.attr('loop', (d) => d.data.type === 'video' ? '' : null);
         video.property('volume', (d) => d.data.type === 'video' ? '0.0' : null)
+            .attr('playsinline', (d) => d.data.type === 'video' ? '' : null)
             .attr('frameborder', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? 0 : null)
             .attr('id', (d) => d.data.v_id)
             .attr('src', (d) => {
                 if (d.data.type === 'youtube') {
                     let videoID = d.data.src.split('/').pop();
-                    let params = `?enablejsapi=1&controls=0&autohide=1&disablekb=1&fs=0&modestbranding=0&showinfo=0&rel=0&version=3&playlist=${videoID}`;
+                    let params = `?enablejsapi=1&playsinline=1&controls=0&autohide=1&disablekb=1&fs=0&modestbranding=0&showinfo=0&rel=0&version=3&playlist=${videoID}`;
                     if (this.config.looop) params += '&loop=1';
                     return d.data.src + params;
                 } else if (d.data.type === 'vimeo') {
-                    return d.data.src + '?' + 'autopause=0'; //+ '&background=1'
+                    return d.data.src + '?' + 'autopause=0';
                 } else {
                     return d.data.src;
                 }
