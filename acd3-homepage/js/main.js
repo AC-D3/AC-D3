@@ -31,7 +31,7 @@ $('.navbar-collapse ul li a').click(function () {
 const bubbleConfig = {
   chartType: 'bubble',
   htmlAnchorID: 'vis1',
-  diameter: 650,
+  diameter: window.innerWidth <= 640 ? 350 : 650,
   zoom: 2.5,
   resolutionThresholds: [250, 500],
   autoplay: false,
@@ -42,7 +42,7 @@ const bubbleConfig = {
 const newsBubbleConfig = {
   chartType: 'bubble',
   htmlAnchorID: 'vis1',
-  diameter: 650,
+  diameter: window.innerWidth <= 640 ? 350 : 650,
   zoom: 1,
   resolutionThresholds: [300, 600],
   autoplay: false,
@@ -62,11 +62,18 @@ const scatterConfig = {
     xIsDate: true,
     yIsDate: false,
     rIsDate: false,
-    height: 600,
-    width: 900,
-    plottableAreaMargin: { top: 0, right: 0, bottom: 30, left: 65 },
-    plottableAreaPadding: { top: 120, right: 100, bottom: 80, left: 60 },
-    rLimits: { lower: 20, upper: 120 }
+    height: window.innerWidth <= 640 ? 300 : 600,
+    width: window.innerWidth <= 640 ? 450 : 900,
+    plottableAreaMargin: { top: 0,
+                           right: 0,
+                           bottom: window.innerWidth <= 640 ? 15 : 30,
+                           left: window.innerWidth <= 640 ? 32.5 : 65 },
+    plottableAreaPadding: { top: window.innerWidth <= 640 ? 60 : 120,
+                            right: window.innerWidth <= 640 ? 50 : 100,
+                            bottom: window.innerWidth <= 640 ? 40 : 80,
+                            left: window.innerWidth <= 640 ? 30 : 60 },
+    rLimits: { lower: window.innerWidth <= 640 ? 10 : 20,
+               upper: window.innerWidth <= 640 ? 60 : 120 }
 }
 
 
