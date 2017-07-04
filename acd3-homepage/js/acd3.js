@@ -214,6 +214,7 @@ class acd3 {
         g = node.append('g');
         //position circle below video bubble to handle mouse events
         circle = g.append("circle")
+            .attr('class', this.config.htmlAnchorID + '-circle')
             .attr('id', (d, i) => this.config.htmlAnchorID + "circleID_" + i)
             .attr("r", (d) => d.r)
             .on('mouseenter', (d) => this.unmuteOnMouseEnter(d.data))
@@ -247,7 +248,8 @@ class acd3 {
                     : document.createElement('iframe');
             })
 
-            video.style('border-radius', '50%')
+            video.attr('class', this.config.htmlAnchorID + '-video')
+                .style('border-radius', '50%')
                 .style('object-fit', 'cover')
                 .style('width', '100%')
                 .style('height', '100%');
@@ -274,7 +276,8 @@ class acd3 {
                     : document.createElement('iframe');
             })
 
-            video.style('object-fit', (d) => d.data.type === 'video' ? 'cover' : null)
+            video.attr('class', this.config.htmlAnchorID + '-video')
+                .style('object-fit', (d) => d.data.type === 'video' ? 'cover' : null)
                 .attr("xmlns", "http://www.w3.org/1999/xhtml")
                 .style('width', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? `${this.config.zoom * 100}%` : '100%')
                 .style('height', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? `${this.config.zoom * 100}%` : '100%')
@@ -496,11 +499,11 @@ class acd3 {
             .attr('width', this.config.diameter)
             .attr('height', this.config.diameter)
 
-        d3.selectAll('circle')
+        d3.selectAll('.'+ this.config.htmlAnchorID + '-circle')
             .style('pointer-events', 'none')
             .style('visibility', 'hidden');
 
-        d3.selectAll('iframe')
+       d3.selectAll('.'+ this.config.htmlAnchorID + '-video')
             .style('visibility', 'hidden');
 
         let circle = d3.select('#' + this.config.htmlAnchorID + 'circleID_' + i)
@@ -565,11 +568,11 @@ class acd3 {
             .attr('x', (d) => -d.r)
             .attr('y', (d) => -d.r);
 
-        d3.selectAll('circle')
+        d3.selectAll('.'+ this.config.htmlAnchorID + '-circle')
             .style('pointer-events', 'auto')
             .style('visibility', 'visible');
 
-        d3.selectAll('iframe')
+        d3.selectAll('.'+ this.config.htmlAnchorID + '-video')
             .style('visibility', 'visible');
 
         d3.select('#' + videoID)
@@ -580,6 +583,7 @@ class acd3 {
             .style('height', '100%')
             .style('visibility', 'visible');
     }
+
 
     getEmbeddedURL(inputString, type) {
         /*
@@ -668,3 +672,5 @@ class acd3 {
         }
     }
 }
+
+//test

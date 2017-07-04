@@ -70,6 +70,7 @@ const scatterConfig = {
 }
 
 
+
 let visualization1 = new acd3(youtubeTrailers, bubbleConfig);
 let visualization2 = new acd3(scatterData3, scatterConfig);
 
