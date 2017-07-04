@@ -584,6 +584,7 @@ class acd3 {
             .style('visibility', 'visible');
     }
 
+
     getEmbeddedURL(inputString, type) {
         /*
         type can be
@@ -671,3 +672,5 @@ class acd3 {
         }
     }
 }
+
+//test
