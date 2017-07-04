@@ -100,7 +100,7 @@ $('#vis1-data2').on('click', () => {
 });
 //visualization1-data3:
 $('#vis1-data3').on('click', () => {
-  $('#vis1-title').text('News Stories');
+  $('#vis1-title').text('Breaking News Stories');
   $('.bubble-chart').remove();
   visualization1 = new acd3(newsClips, newsBubbleConfig);
   visualization1.createBubbleChart();

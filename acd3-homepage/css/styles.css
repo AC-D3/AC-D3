@@ -20,20 +20,16 @@ h6 {
   font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 700;
   letter-spacing: 1px;
-  /*color: #FE0000;*/
-   /*color: white;
-   -webkit-text-fill-color: black; /* Will override color (regardless of order) */
-   /*-webkit-text-stroke-width: 2px;
-   -webkit-text-stroke-color: white;*/
 }
-
-
 .button-container {
   margin: 20px 0 20px;
 }
 .bubble-chart {
   border: 1px solid white;
   border-radius: 50%;
+}
+#vis2 {
+  border: 1px solid white;
 }
 p {
   margin: 0 0 25px;
