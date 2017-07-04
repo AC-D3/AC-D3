@@ -49,23 +49,23 @@ class acd3 {
 
         this.setUpEnvironment();
 
-        this.data.forEach((d) => d.v_id = 'id_' + d.v_id);
+        this.data.forEach((d) => d.v_id = `id_${d.v_id}`);
         this.data = { 'children': this.data };
 
         const bubble = d3.pack(this.data)
             .size([this.config.diameter, this.config.diameter])
             .padding(1.5);
 
-        const svg = d3.select("#" + this.config.htmlAnchorID)
-            .append("svg")
-            .classed("bubble-chart", true)
-            .attr("width", this.config.diameter)
-            .attr("height", this.config.diameter);
+        const svg = d3.select(`#${this.config.htmlAnchorID}`)
+            .append('svg')
+            .classed('bubble-chart', true)
+            .attr('width', this.config.diameter)
+            .attr('height', this.config.diameter);
 
         const root = d3.hierarchy(this.data)
             .sum((d) => d.scalingParameter);
 
-        const node = svg.selectAll("g")
+        const node = svg.selectAll('g')
             .data(bubble(root).descendants())
             .enter()
             .filter((d) => !d.children);
@@ -78,15 +78,15 @@ class acd3 {
         this.setUpEnvironment();
 
         const svg = d3.select(`#${this.config.htmlAnchorID}`)
-            .append("svg")
-            .classed("scatter-chart", true)
-            .attr("width", this.config.width)
-            .attr("height", this.config.height);
+            .append('svg')
+            .classed('scatter-chart', true)
+            .attr('width', this.config.width)
+            .attr('height', this.config.height);
 
-        const dataGroup = svg.append("g")
-            .classed("data", true)
-        const axesGroup = svg.append("g")
-            .classed("axes", true)
+        const dataGroup = svg.append('g')
+            .classed('data', true)
+        const axesGroup = svg.append('g')
+            .classed('axes', true)
 
         const parseTime = d3.timeParse(this.config.dateFormat);
 
@@ -156,24 +156,24 @@ class acd3 {
             d.r = rScaleFunc(d.data.r);
         });
 
-        const node = dataGroup.selectAll("g")
+        const node = dataGroup.selectAll('g')
             .data(this.data)
             .enter()
-            .append("g")
+            .append('g')
 
         this.addBubble(node);
         this.populatePlayerStore();
 
         // Add the X Axis
-        const xAxis = axesGroup.append("g")
-            .attr("class", "axis")
-            .attr("transform", `translate(0,${height - margin.bottom})`)
+        const xAxis = axesGroup.append('g')
+            .attr('class', 'axis')
+            .attr('transform', `translate(0,${height - margin.bottom})`)
             .call(d3.axisBottom(xScaleFunc));
 
         // Add the Y Axis
-        const yAxis = axesGroup.append("g")
-            .attr("class", "axis")
-            .attr("transform", `translate(${margin.left},${margin.top})`)
+        const yAxis = axesGroup.append('g')
+            .attr('class', 'axis')
+            .attr('transform', `translate(${margin.left},${margin.top})`)
             .call(d3.axisLeft(yScaleFunc));
     }
 
@@ -186,9 +186,9 @@ class acd3 {
 
         g = node.append('g');
         //position circle below video bubble to handle mouse events
-        circle = g.append("circle")
-            .attr('id', (d, i) => this.config.htmlAnchorID + "circleID_" + i)
-            .attr("r", (d) => d.r)
+        circle = g.append('circle')
+            .attr('id', (d, i) => `${this.config.htmlAnchorID}circleID_${i}`)
+            .attr('r', (d) => d.r)
             .on('mouseenter', (d) => this.unmuteOnMouseEnter(d.data))
             .on('mouseleave', (d) => this.muteOnMouseLeave(d.data))
             .on('click', (d) => this.handleSingleClick(d.data))
@@ -201,16 +201,15 @@ class acd3 {
 
         //Firefox specific attributes:
         if (typeof InstallTrigger !== 'undefined') {
-            console.log('firefox')
-            g.attr("transform", (d) => "translate(" + d.x + "," + d.y + ")")
-                .attr('id', (d, i) => this.config.htmlAnchorID + 'gID_' + i)
+            g.attr('transform', (d) => `translate(${d.x},${d.y})`)
+                .attr('id', (d, i) => `${this.config.htmlAnchorID}gID_${i}`);
 
             foreignObject
-                .attr('id', (d, i) => this.config.htmlAnchorID + 'foreignID_' + i)
+                .attr('id', (d, i) => `${this.config.htmlAnchorID}foreignID_${i}`)
                 .attr('width', (d) => d.r * 2)
                 .attr('height', (d) => d.r * 2)
                 .attr('x', (d) => -d.r)
-                .attr('y', (d) => -d.r)
+                .attr('y', (d) => -d.r);
 
             video = foreignObject.append((d) => {
                 return d.data.type === 'video'
@@ -227,15 +226,15 @@ class acd3 {
         //specific attributes for other browsers (Chrome, Safari...):
         else {
             foreignObject
-                .attr('id', (d, i) => this.config.htmlAnchorID + 'foreignID_' + i)
+                .attr('id', (d, i) => `${this.config.htmlAnchorID}foreignID_${i}`)
                 .attr('x', (d) => d.x - d.r)
                 .attr('y', (d) => d.y - d.r);
 
             div = foreignObject.append('xhtml:div')
-                .attr('id', (d, i) => this.config.htmlAnchorID + 'divID_' + i)
-                .style('width', (d) => (d.r * 2) + 'px')
-                .style('height', (d) => (d.r * 2) + 'px')
-                .style('border-radius', (d) => d.r + 'px')
+                .attr('id', (d, i) => `${this.config.htmlAnchorID}divID_${i}`)
+                .style('width', (d) => `${(d.r * 2)}px`)
+                .style('height', (d) => `${(d.r * 2)}px`)
+                .style('border-radius', (d) => `${d.r}px`)
                 .style('-webkit-mask-image', '-webkit-radial-gradient(circle, white 100%, black 100%)')
                 .style('position', 'relative')
 
@@ -246,15 +245,15 @@ class acd3 {
             })
 
             video.style('object-fit', (d) => d.data.type === 'video' ? 'cover' : null)
-                .attr("xmlns", "http://www.w3.org/1999/xhtml")
+                .attr('xmlns', 'http://www.w3.org/1999/xhtml')
                 .style('width', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? `${this.config.zoom * 100}%` : '100%')
                 .style('height', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? `${this.config.zoom * 100}%` : '100%')
                 .style('top', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? -((this.config.zoom - 1) * d.r) + 'px' : null)
                 .style('left', (d) => d.data.type === 'youtube' || d.data.type === 'vimeo' ? -((this.config.zoom - 1) * d.r) + 'px' : null)
                 .style('position', 'absolute');
 
-            circle.attr("cx", (d) => d.x)
-                .attr("cy", (d) => d.y)
+            circle.attr('cx', (d) => d.x)
+                .attr('cy', (d) => d.y)
         }
         if (this.config.autoplay) video.attr('autoplay', (d) => d.data.type === 'video' ? '' : null);
         if (this.config.loop) video.attr('loop', (d) => d.data.type === 'video' ? '' : null);
@@ -280,7 +279,7 @@ class acd3 {
                     if (this.config.loop) params += '&loop=1';
                     return d.data.src + params;
                 } else if (d.data.type === 'vimeo') {
-                    return d.data.src + '?' + 'autopause=0';
+                    return `${d.data.src}?autopause=0`;
                 } else {
                     return d.data.src;
                 }
@@ -343,7 +342,7 @@ class acd3 {
         for (let key in this.playerStore) {
             let currentPlayer = this.playerStore[key];
             //logic to play all Vimeo videos:
-            if (currentPlayer.origin === "https://player.vimeo.com") {
+            if (currentPlayer.origin === 'https://player.vimeo.com') {
                 currentPlayer.play();
                 currentPlayer.setVolume(0);
             }
@@ -363,7 +362,7 @@ class acd3 {
         for (let key in this.playerStore) {
             let currentPlayer = this.playerStore[key];
             //logic to pause all Vimeo and HTML5 videos:
-            if (currentPlayer.origin === "https://player.vimeo.com" || currentPlayer.tagName === 'VIDEO') {
+            if (currentPlayer.origin === 'https://player.vimeo.com' || currentPlayer.tagName === 'VIDEO') {
                 currentPlayer.pause();
             }
             //logic to pause all YouTube videos:
@@ -434,30 +433,30 @@ class acd3 {
             .style('pointer-events', 'none');
 
         //give selected circle onhover event listener
-        let circle = d3.select('#' + this.config.htmlAnchorID + 'circleID_' + i)
-            .attr('cx', this.config.diameter / 2 + 'px')
-            .attr('cy', this.config.diameter / 2 + 'px')
-            .attr('r', this.config.diameter / 2 + 'px')
+        let circle = d3.select(`#${this.config.htmlAnchorID}circleID_${i}`)
+            .attr('cx', `${this.config.diameter / 2}px`)
+            .attr('cy', `${this.config.diameter / 2}px`)
+            .attr('r', `${this.config.diameter / 2}px`)
             .style('pointer-events', 'auto');
 
         //select individual div and reassign z-index of individual div to 1. Also increase size.
-        let div = d3.select('#' + this.config.htmlAnchorID + 'divID_' + i)
+        let div = d3.select(`#${this.config.htmlAnchorID}divID_${i}`)
             .style('z-index', '1')
             .style('border-radius', '50%')
-            .style('width', this.config.diameter + 'px')
-            .style('height', this.config.diameter + 'px');
+            .style('width', `${this.config.diameter}px`)
+            .style('height', `${this.config.diameter}px`);
 
         // select individual iframe that was clicked and increase it's size and center
-        d3.select('#' + videoID)
+        d3.select(`#${videoID}`)
             .transition()
-            .style('top', -((this.config.zoom - 1) * (this.config.diameter / 2)) + 'px')
-            .style('left', -((this.config.zoom - 1) * (this.config.diameter / 2)) + 'px')
-            .style('width', this.config.zoom * this.config.diameter + 'px')
-            .style('height', this.config.zoom * this.config.diameter + 'px');
+            .style('top', `${-((this.config.zoom - 1) * (this.config.diameter / 2))}px`)
+            .style('left', `${-((this.config.zoom - 1) * (this.config.diameter / 2))}px`)
+            .style('width', `${this.config.zoom * this.config.diameter}px`)
+            .style('height', `${this.config.zoom * this.config.diameter}px`);
 
         //select individual foreignObject which contains div and ifram and position it to desired location
         //also give pointer event(youtube controls) back to on hover
-        d3.select('#' + this.config.htmlAnchorID + 'foreignID_' + i)
+        d3.select(`#${this.config.htmlAnchorID}foreignID_${i}`)
             .transition()
             .attr('x', 0)
             .attr('y', 0);
@@ -465,7 +464,7 @@ class acd3 {
 
     expandBubbleFirefox(data, i, videoID) {
         let g = d3.select('#' + this.config.htmlAnchorID + 'gID_' + i)
-            .attr("transform", (d) => "translate(" + 0 + "," + 0 + ")")
+            .attr('transform', (d) => 'translate(0,0)')
 
         d3.select('#' + this.config.htmlAnchorID + 'foreignID_' + i)
             .transition()
@@ -498,20 +497,20 @@ class acd3 {
     }
 
     reduceBubbleChrome(data, i, videoID) {
-        let circle = d3.select('#' + this.config.htmlAnchorID + 'circleID_' + i)
+        let circle = d3.select(`#${this.config.htmlAnchorID}circleID_${i}`)
             .attr('r', (d) => d.r)
             .attr('cx', (d) => d.x)
             .attr('cy', (d) => d.y);
 
 
-        d3.select('#' + this.config.htmlAnchorID + 'divID_' + i)
+        d3.select(`#${this.config.htmlAnchorID}divID_${i}`)
             .transition()
-            .style('width', (d) => (d.r * 2) + 'px')
-            .style('height', (d) => (d.r * 2) + 'px')
-            .style('border-radius', (d) => d.r + 'px')
+            .style('width', (d) => `${(d.r * 2)}px`)
+            .style('height', (d) => `${(d.r * 2)}px`)
+            .style('border-radius', (d) => `${d.r}px`)
             .style('z-index', '0');
 
-        d3.select('#' + this.config.htmlAnchorID + 'foreignID_' + i)
+        d3.select(`#${this.config.htmlAnchorID}foreignID_${i}`)
             .transition()
             .attr('x', (d) => d.x - d.r)
             .attr('y', (d) => d.y - d.r);
@@ -528,15 +527,15 @@ class acd3 {
     }
 
     reduceBubbleFirefox(data, i, videoID) {
-        let circle = d3.select('#' + this.config.htmlAnchorID + 'circleID_' + i)
+        let circle = d3.select(`#${this.config.htmlAnchorID}circleID_${i}`)
             .attr('r', (d) => d.r)
             .attr('cy', 0)
             .attr('cx', 0);
 
-        let g = d3.select('#' + this.config.htmlAnchorID + 'gID_' + i)
-            .attr("transform", (d) => "translate(" + d.x + "," + d.y + ")")
+        let g = d3.select(`#${this.config.htmlAnchorID}gID_${i}`)
+            .attr('transform', (d) => `translate(${d.x}, ${d.y})`)
 
-        d3.select('#' + this.config.htmlAnchorID + 'foreignID_' + i)
+        d3.select(`#${this.config.htmlAnchorID}foreignID_${i}`)
             .transition()
             .attr('width', (d) => d.r * 2)
             .attr('height', (d) => d.r * 2)
@@ -550,7 +549,7 @@ class acd3 {
         d3.selectAll('iframe')
             .style('visibility', 'visible');
 
-        d3.select('#' + videoID)
+        d3.select(`#${videoID}`)
             .transition()
             .style('border-radius', '50%')
             .style('object-fit', 'cover')
