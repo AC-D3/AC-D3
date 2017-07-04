@@ -8,14 +8,16 @@ class acd3 {
     }
 
     setUpEnvironment() {
-        if (!window.visStore) window.visStore = [this];
-        else window.visStore.push(this);
+        //instantiates visQueue on window if not already instantiated
+        //this is required to handle multiple visualisations on the same page
+        if (!window.visQueue) window.visQueue = [this];
+        else window.visQueue.push(this);
 
 
         let tag;
         let firstScriptTag;
 
-        // append vimeo player API script to HTML if not appended already
+        // append Vimeo player API script to HTML if not appended already
         if (!document.getElementById('vimeoScript')) {
             tag = document.createElement('script');
             tag.src = 'https://player.vimeo.com/api/player.js';
@@ -24,7 +26,7 @@ class acd3 {
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         }
 
-        // append youtube player API script to HTML if not appended already
+        // append YouTube player API script to HTML if not appended already
         if (!document.getElementById('youtubeScript')) {
             tag = document.createElement('script');
             tag.src = 'https://www.youtube.com/iframe_api';
@@ -34,8 +36,7 @@ class acd3 {
         }
 
         // append onYouTubeIframeAPIReady function definition to the window
-        // this is required for using embedded youtube videos
-
+        // this is required for using embedded YouTube videos
         if (!window.onYouTubeIframeAPIReady) {
             window.onYouTubeIframeAPIReady = () => {
                 window.youTubeIframeAPIReady = true;
@@ -61,14 +62,12 @@ class acd3 {
             .attr("width", this.config.diameter)
             .attr("height", this.config.diameter);
 
-        //calculates radius, x and y positions for all child nodes
         const root = d3.hierarchy(this.data)
-            .sum(function (d) { return d.scalingParameter; });
+            .sum((d) => d.scalingParameter);
 
         const node = svg.selectAll("g")
             .data(bubble(root).descendants())
             .enter()
-            //only keeps objects that don't have children property
             .filter((d) => !d.children);
 
         this.addBubble(node);
@@ -176,32 +175,6 @@ class acd3 {
             .attr("class", "axis")
             .attr("transform", `translate(${margin.left},${margin.top})`)
             .call(d3.axisLeft(yScaleFunc));
-
-        // const chartArea = svg.append("rect")
-        //     .classed("rect",true)
-        //     .attr("height",height)
-        //     .attr("width",width)
-        //     .attr("fill-opacity", "0.3")
-        //     .style('fill', 'green');
-
-        // const plotArea = svg.append("rect")
-        //     .classed("rect",true)
-        //     .attr("x",margin.left)
-        //     .attr("y",margin.top)
-        //     .attr("height",height-margin.top-margin.bottom)
-        //     .attr("width",width-margin.left-margin.right)
-        //     .attr("fill-opacity", "0.3")
-        //     .style('fill', 'blue');
-
-        // const dataArea = svg.append("rect")
-        //     .classed("rect",true)
-        //     .attr("x",margin.left+padding.left)
-        //     .attr("y",margin.top+padding.top)
-        //     .attr("height",height-margin.top-margin.bottom-padding.top-padding.bottom)
-        //     .attr("width",width-margin.left-margin.right-padding.left-padding.right)
-        //     .attr("fill-opacity", "0.3")
-        //     .style('fill', 'red');
-
     }
 
     addBubble(node) {
@@ -223,12 +196,10 @@ class acd3 {
               if (this.config.onDoubleClick === 'openNewWindow') this.openNewWindow(d.data);
               else if (this.config.onDoubleClick === 'expandBubble') this.expandBubble(d.data, i);
             });
-
-
         foreignObject = g.append('foreignObject')
             .style('pointer-events', 'none');
 
-        //firefox specific attributes:
+        //Firefox specific attributes:
         if (typeof InstallTrigger !== 'undefined') {
             console.log('firefox')
             g.attr("transform", (d) => "translate(" + d.x + "," + d.y + ")")
@@ -253,7 +224,7 @@ class acd3 {
                 .style('height', '100%');
         }
 
-        //chrome specific attributes:
+        //specific attributes for other browsers (Chrome, Safari...):
         else {
             foreignObject
                 .attr('id', (d, i) => this.config.htmlAnchorID + 'foreignID_' + i)
@@ -294,8 +265,19 @@ class acd3 {
             .attr('src', (d) => {
                 if (d.data.type === 'youtube') {
                     let videoID = d.data.src.split('/').pop();
-                    let params = `?enablejsapi=1&playsinline=1&controls=0&autohide=1&disablekb=1&fs=0&modestbranding=0&showinfo=0&rel=0&version=3&playlist=${videoID}`;
-                    if (this.config.looop) params += '&loop=1';
+                    let params;
+                    params += '?enablejsapi=1';
+                    params += '&playsinline=1';
+                    params += '&controls=0';
+                    params += '&autohide=1';
+                    params += '&disablekb=1';
+                    params += '&fs=0';
+                    params += '&modestbranding=0';
+                    params += '&showinfo=0';
+                    params += '&rel=0';
+                    params += '&version=3';
+                    params += `&playlist=${videoID}`;
+                    if (this.config.loop) params += '&loop=1';
                     return d.data.src + params;
                 } else if (d.data.type === 'vimeo') {
                     return d.data.src + '?' + 'autopause=0';
@@ -307,8 +289,8 @@ class acd3 {
 
     populatePlayerStore() {
         if (window.youTubeIframeAPIReady) {
-            while (visStore.length) {
-                let vis = visStore.shift()
+            while (visQueue.length) {
+                let vis = visQueue.shift()
                 let data;
                 if (vis.config.chartType === 'bubble') data = vis.data.children;
                 if (vis.config.chartType === 'bubbleScatter') data = vis.data;
@@ -360,17 +342,17 @@ class acd3 {
     playAll() {
         for (let key in this.playerStore) {
             let currentPlayer = this.playerStore[key];
-            //vimeo:
+            //logic to play all Vimeo videos:
             if (currentPlayer.origin === "https://player.vimeo.com") {
                 currentPlayer.play();
                 currentPlayer.setVolume(0);
             }
-            //html5 video
+            //logic to play all HTML5 videos:
             else if (currentPlayer.tagName === 'VIDEO') {
                 currentPlayer.play();
                 currentPlayer.volume = 0.0;
             }
-            //youtube
+            //logic to play all YouTube videos:
             else if (currentPlayer.playVideo) {
                 currentPlayer.playVideo().mute();
             }
@@ -380,11 +362,11 @@ class acd3 {
     pauseAll() {
         for (let key in this.playerStore) {
             let currentPlayer = this.playerStore[key];
-            //vimeo and html5 video:
+            //logic to pause all Vimeo and HTML5 videos:
             if (currentPlayer.origin === "https://player.vimeo.com" || currentPlayer.tagName === 'VIDEO') {
                 currentPlayer.pause();
             }
-            //youtube
+            //logic to pause all YouTube videos:
             else if (currentPlayer.pauseVideo) {
                 currentPlayer.pauseVideo();
             }
@@ -392,7 +374,6 @@ class acd3 {
     }
 
     unmuteOnMouseEnter(data) {
-        console.log('enter')
         let videoID = data.v_id;
         let videoType = data.type;
         if (videoType === 'vimeo') this.playerStore[videoID].setVolume(1);
@@ -401,7 +382,6 @@ class acd3 {
     }
 
     muteOnMouseLeave(data) {
-        console.log('leave')
         let videoID = data.v_id;
         let videoType = data.type;
         if (videoType === 'vimeo') this.playerStore[videoID].setVolume(0);
@@ -410,46 +390,43 @@ class acd3 {
     }
 
     handleSingleClick(data) {
-
-        let clickedPlayer = this.playerStore[data.v_id];
-        //youtube:
-        if (data.type === 'youtube') {
-            const playerState = clickedPlayer.getPlayerState();
-            if (playerState === -1 || playerState === 2 || playerState === 5) clickedPlayer.playVideo();
-            else clickedPlayer.pauseVideo();
-        }
-        //vimeo:
-        else if (data.type === 'vimeo') {
-            clickedPlayer.getPaused().then((paused) => {
-                if (paused) clickedPlayer.play();
-                else clickedPlayer.pause();
-            });
-        }
-
-        //html5:
-        else if (data.type === 'video') {
-            const paused = clickedPlayer.paused;
-            if (paused) clickedPlayer.play();
-            else clickedPlayer.pause();
-        }
-
+      let clickedPlayer = this.playerStore[data.v_id];
+      //logic to play/pause individual YouTube videos:
+      if (data.type === 'youtube') {
+          const playerState = clickedPlayer.getPlayerState();
+          if (playerState === -1 || playerState === 2 || playerState === 5) clickedPlayer.playVideo();
+          else clickedPlayer.pauseVideo();
+      }
+      //logic to play/pause individual Vimeo videos:
+      else if (data.type === 'vimeo') {
+          clickedPlayer.getPaused().then((paused) => {
+              if (paused) clickedPlayer.play();
+              else clickedPlayer.pause();
+          });
+      }
+      //logic to play/pause individual HTML5 videos:
+      else if (data.type === 'video') {
+          const paused = clickedPlayer.paused;
+          if (paused) clickedPlayer.play();
+          else clickedPlayer.pause();
+      }
     }
 
     openNewWindow(data) {
-        window.open(data.src);
+      window.open(data.src);
     }
 
     expandBubble(data, i) {
-        let videoID = data.v_id;
-        if (this.expanded === false) {
-            if (typeof InstallTrigger !== 'undefined') this.expandBubbleFirefox(data, i, videoID);
-            else this.expandBubbleChrome(data, i, videoID);
-            this.expanded = true
-        } else {
-            if (typeof InstallTrigger !== 'undefined') this.reduceBubbleFirefox(data, i, videoID);
-            else this.reduceBubbleChrome(data, i, videoID);
-            this.expanded = false
-        }
+      let videoID = data.v_id;
+      if (this.expanded === false) {
+          if (typeof InstallTrigger !== 'undefined') this.expandBubbleFirefox(data, i, videoID);
+          else this.expandBubbleChrome(data, i, videoID);
+          this.expanded = true
+      } else {
+          if (typeof InstallTrigger !== 'undefined') this.reduceBubbleFirefox(data, i, videoID);
+          else this.reduceBubbleChrome(data, i, videoID);
+          this.expanded = false
+      }
     }
 
     expandBubbleChrome(data, i, videoID) {
