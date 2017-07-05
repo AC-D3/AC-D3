@@ -195,8 +195,8 @@ class acd3 {
             .on('mouseleave', (d) => this.muteOnMouseLeave(d.data))
             .on('click', (d) => this.handleSingleClick(d.data))
             .on('dblclick', (d, i) => {
-              if (this.config.onDoubleClick === 'openNewWindow') this.openNewWindow(d.data);
-              else if (this.config.onDoubleClick === 'expandBubble') this.expandBubble(d.data, i);
+                if (this.config.onDoubleClick === 'openNewWindow') this.openNewWindow(d.data);
+                else if (this.config.onDoubleClick === 'expandBubble') this.expandBubble(d.data, i);
             });
         foreignObject = g.append('foreignObject')
             .style('pointer-events', 'none');
@@ -324,9 +324,24 @@ class acd3 {
         return vimeoPlayer;
     }
 
+    scaleResolution(event) {
+        //implemented this here because we have direct access to player in playerStore, where as in 
+        //the createYoutubePlayerReady method, we had to access the player by the event
+        let youtubeIframe = document.getElementById(event.a.id);
+        if (youtubeIframe.height <= this.config.resolutionThresholds[0]) {
+            event.setPlaybackQuality('small')
+        } else if (youtubeIframe.height > this.config.resolutionThresholds[0]
+            && youtubeIframe.height <= this.config.resolutionThresholds[1]) {
+            event.setPlaybackQuality('medium')
+        } else {
+            event.setPlaybackQuality('large')
+        }
+    }
+
     createYouTubePlayer(id) {
         const onYouTubePlayerReady = (event) => {
             if (this.config.autoplay) event.target.playVideo().mute();
+            // this.scaleResolution(event)
             let youtubeIframe = document.getElementById(event.target.a.id);
             if (youtubeIframe.height <= this.config.resolutionThresholds[0]) {
                 event.target.setPlaybackQuality('small')
@@ -393,43 +408,60 @@ class acd3 {
     }
 
     handleSingleClick(data) {
-      let clickedPlayer = this.playerStore[data.v_id];
-      //logic to play/pause individual YouTube videos:
-      if (data.type === 'youtube') {
-          const playerState = clickedPlayer.getPlayerState();
-          if (playerState === -1 || playerState === 2 || playerState === 5) clickedPlayer.playVideo();
-          else clickedPlayer.pauseVideo();
-      }
-      //logic to play/pause individual Vimeo videos:
-      else if (data.type === 'vimeo') {
-          clickedPlayer.getPaused().then((paused) => {
-              if (paused) clickedPlayer.play();
-              else clickedPlayer.pause();
-          });
-      }
-      //logic to play/pause individual HTML5 videos:
-      else if (data.type === 'video') {
-          const paused = clickedPlayer.paused;
-          if (paused) clickedPlayer.play();
-          else clickedPlayer.pause();
-      }
+        let clickedPlayer = this.playerStore[data.v_id];
+        //logic to play/pause individual YouTube videos:
+        if (data.type === 'youtube') {
+            const playerState = clickedPlayer.getPlayerState();
+            if (playerState === -1 || playerState === 2 || playerState === 5) clickedPlayer.playVideo();
+            else clickedPlayer.pauseVideo();
+        }
+        //logic to play/pause individual Vimeo videos:
+        else if (data.type === 'vimeo') {
+            clickedPlayer.getPaused().then((paused) => {
+                if (paused) clickedPlayer.play();
+                else clickedPlayer.pause();
+            });
+        }
+        //logic to play/pause individual HTML5 videos:
+        else if (data.type === 'video') {
+            const paused = clickedPlayer.paused;
+            if (paused) clickedPlayer.play();
+            else clickedPlayer.pause();
+        }
+    }
+
+    playSolo(data) {
+        let clickedPlayer = this.playerStore[data.v_id];
+        if (data.type === 'youtube') {
+            clickedPlayer.playVideo();
+        }
+        else {
+            clickedPlayer.play();
+        }
     }
 
     openNewWindow(data) {
-      window.open(data.src);
+        window.open(data.src);
     }
 
     expandBubble(data, i) {
-      let videoID = data.v_id;
-      if (this.expanded === false) {
-          if (typeof InstallTrigger !== 'undefined') this.expandBubbleFirefox(data, i, videoID);
-          else this.expandBubbleChrome(data, i, videoID);
-          this.expanded = true
-      } else {
-          if (typeof InstallTrigger !== 'undefined') this.reduceBubbleFirefox(data, i, videoID);
-          else this.reduceBubbleChrome(data, i, videoID);
-          this.expanded = false
-      }
+
+        let videoID = data.v_id;
+        let clickedPlayer = this.playerStore[data.v_id];
+        console.log(clickedPlayer)
+        if (this.expanded === false) {
+            if (typeof InstallTrigger !== 'undefined') this.expandBubbleFirefox(data, i, videoID);
+            else this.expandBubbleChrome(data, i, videoID);
+            if (data.type === 'youtube') clickedPlayer.setPlaybackQuality('hd1080');
+            this.pauseAll();
+            this.playSolo(data);
+            this.expanded = true;
+        } else {
+            if (typeof InstallTrigger !== 'undefined') this.reduceBubbleFirefox(data, i, videoID);
+            else this.reduceBubbleChrome(data, i, videoID);
+            if(data.type === 'youtube') this.scaleResolution(clickedPlayer);
+            this.expanded = false;
+        }
     }
 
     expandBubbleChrome(data, i, videoID) {
@@ -477,11 +509,11 @@ class acd3 {
             .attr('width', this.config.diameter)
             .attr('height', this.config.diameter)
 
-        d3.selectAll('.'+ this.config.htmlAnchorID + '-circle')
+        d3.selectAll('.' + this.config.htmlAnchorID + '-circle')
             .style('pointer-events', 'none')
             .style('visibility', 'hidden');
 
-       d3.selectAll('.'+ this.config.htmlAnchorID + '-video')
+        d3.selectAll('.' + this.config.htmlAnchorID + '-video')
             .style('visibility', 'hidden');
 
         let circle = d3.select('#' + this.config.htmlAnchorID + 'circleID_' + i)
@@ -546,11 +578,11 @@ class acd3 {
             .attr('x', (d) => -d.r)
             .attr('y', (d) => -d.r);
 
-        d3.selectAll('.'+ this.config.htmlAnchorID + '-circle')
+        d3.selectAll('.' + this.config.htmlAnchorID + '-circle')
             .style('pointer-events', 'auto')
             .style('visibility', 'visible');
 
-        d3.selectAll('.'+ this.config.htmlAnchorID + '-video')
+        d3.selectAll('.' + this.config.htmlAnchorID + '-video')
             .style('visibility', 'visible');
 
         d3.select(`#${videoID}`)
