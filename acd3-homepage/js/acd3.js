@@ -440,6 +440,7 @@ class acd3 {
     }
 
     openNewWindow(data) {
+        this.pauseAll();
         window.open(data.src);
     }
 
