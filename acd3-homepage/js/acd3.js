@@ -324,24 +324,23 @@ class acd3 {
         return vimeoPlayer;
     }
 
-    scaleResolution(event) {
-        //implemented this here because we have direct access to player in playerStore, where as in 
-        //the createYoutubePlayerReady method, we had to access the player by the event
-        let youtubeIframe = document.getElementById(event.a.id);
+    scaleResolution(player) {
+        //implemented this here because we have direct access to player in playerStore, where as in
+        //the createYoutubePlayerReady method, we had to access the player by the player
+        let youtubeIframe = document.getElementById(player.a.id);
         if (youtubeIframe.height <= this.config.resolutionThresholds[0]) {
-            event.setPlaybackQuality('small')
+            player.setPlaybackQuality('small')
         } else if (youtubeIframe.height > this.config.resolutionThresholds[0]
             && youtubeIframe.height <= this.config.resolutionThresholds[1]) {
-            event.setPlaybackQuality('medium')
+            player.setPlaybackQuality('medium')
         } else {
-            event.setPlaybackQuality('large')
+            player.setPlaybackQuality('large')
         }
     }
 
     createYouTubePlayer(id) {
         const onYouTubePlayerReady = (event) => {
             if (this.config.autoplay) event.target.playVideo().mute();
-            // this.scaleResolution(event)
             let youtubeIframe = document.getElementById(event.target.a.id);
             if (youtubeIframe.height <= this.config.resolutionThresholds[0]) {
                 event.target.setPlaybackQuality('small')
@@ -448,7 +447,6 @@ class acd3 {
 
         let videoID = data.v_id;
         let clickedPlayer = this.playerStore[data.v_id];
-        console.log(clickedPlayer)
         if (this.expanded === false) {
             if (typeof InstallTrigger !== 'undefined') this.expandBubbleFirefox(data, i, videoID);
             else this.expandBubbleChrome(data, i, videoID);
