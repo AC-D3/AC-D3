@@ -6,6 +6,8 @@ AC-D3 is a Javascript Library for building Audiovisual Charts in D3.
   - Build predefined visualizations
   - Use AC-D3 methods to add audiovisual elements to your D3 visualization
 
+![N|Solid](http://g.recordit.co/8r9HHjn9y1.gif)
+
 ### Installation
 ***
 ```sh
