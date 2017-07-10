@@ -1,18 +1,26 @@
 {
-  "name": "d3-visual",
-  "version": "1.0.0",
-  "description": "d3 bubble demo",
-  "main": "index.html",
+  "name": "ac-d3",
+  "version": "1.0.11",
+  "description": "Audiovisual Charts built with D3",
+  "homepage": "https://ac-d3.com",
+  "main": "acd3.js",
+  "maintainers": [
+    {
+      "name": "jacobworrel",
+      "email": "jacobworrel@gmail.com"
+    },
+    {
+      "name": "lmichals",
+      "email": "luke.michals@gmail.com"
+    }
+  ],
   "scripts": {
-    "start": "browser-sync start -s -f index.html src --no-ui --no-notify"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "readme": "https://github.com/AC-D3/AC-D3#readme",
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "d3": "^4.8.0",
-    "moment": "^2.18.1"
-  },
-  "devDependencies": {
-    "browser-sync": "^2.18.8"
+  "d3": "^4.8.0"
   }
 }
