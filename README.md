@@ -24,11 +24,6 @@ $ npm install ac-d3 --save
 ```html
 <div id='vis1'></div>
 ```
-2) Add script tag
-```html
-<script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
-```
-
 
 ##### Javascript
 1) Require in library
