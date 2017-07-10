@@ -1,6 +1,6 @@
 {
   "name": "ac-d3",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Audiovisual Charts built with D3",
   "homepage": "https://ac-d3.com",
   "main": "acd3.js",
