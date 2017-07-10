@@ -325,7 +325,7 @@ class acd3 {
     }
 
     scaleResolution(event) {
-        //implemented this here because we have direct access to player in playerStore, where as in 
+        //implemented this here because we have direct access to player in playerStore, where as in
         //the createYoutubePlayerReady method, we had to access the player by the event
         let youtubeIframe = document.getElementById(event.a.id);
         if (youtubeIframe.height <= this.config.resolutionThresholds[0]) {
@@ -682,3 +682,5 @@ class acd3 {
         }
     }
 }
+
+module.exports = acd3;
