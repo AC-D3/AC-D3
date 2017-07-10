@@ -19,7 +19,7 @@
   },
   "readme": "https://github.com/AC-D3/AC-D3#readme",
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
   "d3": "^4.8.0"
   }
