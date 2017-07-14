@@ -26,8 +26,5 @@
   "license": "MIT",
   "dependencies": {
     "d3": "^4.8.0"
-  },
-  "devDependencies": {
-  "jasmine": "^2.6.0"
   }
 }
