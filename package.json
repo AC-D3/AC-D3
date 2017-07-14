@@ -1,6 +1,6 @@
 {
   "name": "ac-d3",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Audiovisual Charts built with D3",
   "homepage": "https://ac-d3.com",
   "main": "acd3.js",
@@ -12,6 +12,10 @@
     {
       "name": "lmichals",
       "email": "luke.michals@gmail.com"
+    },
+    {
+      "name": "johnnunns",
+      "email": "johndnunns@gmail.com"
     }
   ],
   "scripts": {
@@ -21,6 +25,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-  "d3": "^4.8.0"
+    "d3": "^4.8.0"
   }
 }
