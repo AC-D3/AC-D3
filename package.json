@@ -25,7 +25,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "d3": "^4.8.0",
-    "shortid": "^2.2.8"
+    "d3": "^4.8.0"
   }
 }
