@@ -1,12 +1,12 @@
 const data = [
   {
 
-    "src": "https://www.youtube.com/embed/39udgGPyYMg",
+    "src": "https://player.vimeo.com/video/12788201",
     "scalingParameter": 7424591,
-    "type": "youtube"
+    "type": "vimeo"
   },
   {
-    "src": "https://www.youtube.com/embed/cPeqNTqZNN0",
+    "src": "https://www.youtube.com/embed/39udgGPyYMg",
     "scalingParameter": 3495856,
     "type": "youtube"
   }
